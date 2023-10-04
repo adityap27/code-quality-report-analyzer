@@ -1,3 +1,34 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Django
+*.log
+db.sqlite3
+media/
+
+# Environment & packages
+.env
+.venv/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# PyCharm
+.idea/
+*.iml
+
+# Database
+*.sqlite3
+
+# OS specific
+*.DS_Store  # macOS
+Thumbs.db   # Windows
+.DS_Store?  # macOS network share
+._*         # macOS
+
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
