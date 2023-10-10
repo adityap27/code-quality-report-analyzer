@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import DummyData from "../../../data/dummy.json";
-// import axios from "axios";
 import "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import {
