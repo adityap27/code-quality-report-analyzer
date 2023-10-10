@@ -1,4 +1,4 @@
-package code.quality.analyzer.utilities;
+package code.quality.analyzer.util;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
