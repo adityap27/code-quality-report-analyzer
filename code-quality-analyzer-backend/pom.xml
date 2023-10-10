@@ -21,7 +21,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>DesigniteJava</groupId>
+			<artifactId>DesigniteJava</artifactId>
+			<scope>system</scope>
+			<version>1.0</version>
+			<systemPath>${pom.basedir}\src\lib\DesigniteJava.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>6.6.0.202305301015-r</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
