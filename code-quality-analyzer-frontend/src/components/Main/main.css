@@ -1,0 +1,69 @@
+.main{
+    display: flex;
+    height: 80%;
+    align-items: center;
+}
+.col{
+    flex-basis: 47%;
+}
+.col1{
+    
+}
+.col h2{
+    font-size: 45px;
+    color: #fff;
+    font-weight: 600;
+    margin-left: 5px;
+}
+.col p{
+    font-size: 20px;
+    color: gray;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-left: 175px;
+}
+.col button{
+   margin-top: 30px;
+   background-color: #CBC3E3;
+   padding: 5px 10px;
+   border-radius: 4px;
+    
+}
+.col button:focus{
+    outline: 1px solid black;
+
+}
+.card{
+    width: 230px;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 200px;
+    margin: 1px 1px;
+    padding: 15px 25px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: 0.6s ease;
+    cursor: pointer;
+}
+.card1{
+    background-image: url('../../assets/images/bar.jpg');
+}
+.card2{
+    background-image: url('../../assets/images/exp.jpg');
+}
+.card3{
+    background-image: url('../../assets/images/donut.png');
+}
+.card4{
+    background-image: url('../../assets/images/pie.jpg');
+}
+.card5{
+    background-image: url('../../assets/images/graph.jpg');
+}
+.card6{
+    background-image: url('../../assets/images/side.jpg');
+}
+.card:hover{
+    transform: translateY(-10px);
+}
