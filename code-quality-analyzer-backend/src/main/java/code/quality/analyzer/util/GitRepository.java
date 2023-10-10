@@ -1,4 +1,4 @@
-package code.quality.analyzer.utilities;
+package code.quality.analyzer.util;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.URIish;
@@ -55,5 +55,14 @@ public class GitRepository {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Returns the Full Local Path of current git repository.
+     * @return String Local Repo full-path(absolute).
+     * @throws Exception
+     */
+    public String getLocalRepoFullPath() {
+        return new File(localRepoFullPath).getAbsolutePath();
     }
 }
