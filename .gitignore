@@ -33,22 +33,23 @@ Thumbs.db   # Windows
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
+/code-quality-analyzer-frontend/node_modules
+/code-quality-analyzer-frontend/.pnp
+/code-quality-analyzer-frontend.pnp.js
 
 # testing
-/coverage
+/code-quality-analyzer-frontend/coverage
 
 # production
-/build
+/code-quality-analyzer-frontend/build
 
 # misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+/code-quality-analyzer-frontend/.DS_Store
+/code-quality-analyzer-frontend/.env.local
+/code-quality-analyzer-frontend/.env.development.local
+/code-quality-analyzer-frontend/.env.test.local
+/code-quality-analyzer-frontend/.env.production.local
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+/code-quality-analyzer-frontend/npm-debug.log*
+/code-quality-analyzer-frontend/yarn-debug.log*
+/code-quality-analyzer-frontend/yarn-error.log*

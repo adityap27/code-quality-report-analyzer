@@ -1,10 +1,10 @@
-import './App.css';
-import DashboardHome from './components/dashboardHome/DashboardHome';
+import "./App.css";
+import DashboardHome from "./components/dashboardHome/DashboardHome";
 
 function App() {
   return (
     <>
-    <DashboardHome/>
+      <DashboardHome />
     </>
   );
 }

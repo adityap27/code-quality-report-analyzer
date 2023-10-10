@@ -27,9 +27,9 @@ ChartJS.register(
 function Dashboard() {
   return (
     <div className="oneCommit">
-    <div className="oneCommit-heading">
+      <div className="oneCommit-heading">
         <h1>OneCommit Analysis</h1>
-    </div>
+      </div>
       <div className="charts">
         <div className="architechture common-chart">
           <ArchitectureSmell />
