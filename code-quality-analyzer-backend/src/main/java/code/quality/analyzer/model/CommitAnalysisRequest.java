@@ -4,6 +4,7 @@ public class CommitAnalysisRequest {
 
 	private String gitRepoLink;
 	private String branch;
+	private String commitId;
 	private int noOfCommits;
 	
 	public String getGitRepoLink() {
@@ -17,6 +18,12 @@ public class CommitAnalysisRequest {
 	}
 	public void setBranch(String branch) {
 		this.branch = branch;
+	}
+	public String getCommitId() {
+		return commitId;
+	}
+	public void setCommitId(String commitId) {
+		this.commitId = commitId;
 	}
 	public int getNoOfCommits() {
 		return noOfCommits;
