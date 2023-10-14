@@ -1,7 +1,7 @@
 import React from "react";
-import Sidebar from "../sidebar/Sidebar";
-import Dashboard from "../dashboard/Dashboard";
-import "./dashboardHome.css";
+import Sidebar from "../Sidebar/Sidebar";
+import Dashboard from "../Dashboard/Dashboard";
+import "./dashboard-home.css";
 
 function DashboardHome() {
   return (
