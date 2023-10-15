@@ -2,6 +2,7 @@ package code.quality.analyzer.service;
 
 import java.util.List;
 
+import code.quality.analyzer.util.GitRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,9 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	
 	@Override
 	public String cloneRepository(String gitRepoLink) {
-		// TODO Auto-generated method stub
-		return null;
+		GitRepository g = new GitRepository(gitRepoLink, Constants.REPO_PATH);
+		g.cloneRepo();
+		return g.getLocalRepoFullPath();
 	}
 
 	@Override
