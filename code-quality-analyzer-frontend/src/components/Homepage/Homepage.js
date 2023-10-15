@@ -5,7 +5,7 @@ import "./homepage.css";
 
 
 const Homepage = () => {
-    return(
+    return (
         <div className="homepage">
             <Navbar />
             <Main />

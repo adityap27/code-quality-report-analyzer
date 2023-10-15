@@ -1,39 +1,42 @@
-.main{
+.main {
     display: flex;
     height: 80%;
     align-items: center;
 }
-.col{
+
+.col {
     flex-basis: 47%;
 }
-.col1{
-    
-}
-.col h2{
+
+.col h2 {
     font-size: 45px;
     color: #fff;
     font-weight: 600;
     margin-left: 5px;
 }
-.col p{
+
+.col p {
     font-size: 20px;
     color: gray;
     font-weight: 500;
     margin-top: 20px;
     margin-left: 175px;
 }
-.col button{
-   margin-top: 30px;
-   background-color: #CBC3E3;
-   padding: 5px 10px;
-   border-radius: 4px;
-    
+
+.col button {
+    margin-top: 30px;
+    background-color: #CBC3E3;
+    padding: 5px 10px;
+    border-radius: 4px;
+
 }
-.col button:focus{
+
+.col button:focus {
     outline: 1px solid black;
 
 }
-.card{
+
+.card {
     width: 230px;
     display: inline-block;
     box-sizing: border-box;
@@ -46,24 +49,31 @@
     transition: 0.6s ease;
     cursor: pointer;
 }
-.card1{
+
+.card1 {
     background-image: url('../../assets/images/bar.jpg');
 }
-.card2{
+
+.card2 {
     background-image: url('../../assets/images/exp.jpg');
 }
-.card3{
+
+.card3 {
     background-image: url('../../assets/images/donut.png');
 }
-.card4{
+
+.card4 {
     background-image: url('../../assets/images/pie.jpg');
 }
-.card5{
+
+.card5 {
     background-image: url('../../assets/images/graph.jpg');
 }
-.card6{
+
+.card6 {
     background-image: url('../../assets/images/side.jpg');
 }
-.card:hover{
+
+.card:hover {
     transform: translateY(-10px);
 }

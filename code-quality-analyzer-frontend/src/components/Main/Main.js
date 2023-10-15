@@ -1,22 +1,22 @@
-import React, { useState } from  "react";
+import React, { useState } from "react";
 import "./main.css";
 
 
 
-function Main () {
-   
-  
-    
-    return(
+function Main() {
+
+
+
+    return (
         <div className="main">
             <div className="col col1">
                 <h2>Analyze Your Code Now!!!</h2>
                 <input
-                  type="text"
+                    type="text"
                     placeholder="Paste Your Repository Link"
-                     
+
                 />
-                <button   type="button">EXECUTE</button>
+                <button type="button">EXECUTE</button>
             </div>
             <div className="col">
                 <div className="card card1"></div>

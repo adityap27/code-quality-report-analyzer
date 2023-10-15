@@ -7,12 +7,12 @@ import Homepage from './components/Homepage/Homepage';
 function App() {
   return (
     <div className="App">
-    <Navbar/>
-    <Main/>
-    <Homepage/>
-    
+      <Navbar />
+      <Main />
+      <Homepage />
+
     </div>
-    
+
   );
 }
 
