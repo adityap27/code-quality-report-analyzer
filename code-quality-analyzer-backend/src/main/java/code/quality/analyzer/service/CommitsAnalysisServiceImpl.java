@@ -3,14 +3,13 @@ package code.quality.analyzer.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import code.quality.analyzer.util.GitRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.springframework.stereotype.Service;
 
 import code.quality.analyzer.util.CommitsAnalysisUtil;
 import code.quality.analyzer.util.Constants;
+import code.quality.analyzer.util.GitRepository;
 
 @Service
 public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
@@ -28,17 +27,14 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	public String generateOneCommitReport(String repoPath, String branch, String commitId) throws Exception {
 		logger.info("BEGIN generateOneCommitReport()");
 		String reportPath = Constants.EMPTY;
-		if(branch.isBlank()) {
-			throw new RefNotFoundException("Invalid branch name");
-		}
 		List<String> commitIds = new ArrayList<String>();
+		CommitsAnalysisUtil.checkoutAndValidate(repoPath, branch);
 		//If commit id is null or empty, last commit id will be fetched for analysis 
-		if(commitId.isBlank()) {
+		if(commitId == null || commitId.isBlank()) {
 			commitIds = CommitsAnalysisUtil.getCommitIds(repoPath, branch, Constants.OneCommit);
 		} else {
 			commitIds.add(commitId);
 		}
-		
 		try {
 			reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
 		} catch (Exception e) {

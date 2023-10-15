@@ -21,9 +21,7 @@ public class OneCommitAnalysisController {
 	@PostMapping("/getanalysis")
 	ResponseEntity<String> getOneCommitAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
 		String repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
-		System.out.println(repoPath);
 		String reportPath = commitsAnalysisService.generateOneCommitReport(repoPath, commitAnalysisRequest.getBranch(), commitAnalysisRequest.getCommitId());
-		System.out.println(reportPath);
 		String jsonOutput = commitsAnalysisService.callAnalysisService(reportPath);
 		
 		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
