@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./main.css";
+import { Link } from "react-router-dom";
 
 
 
@@ -11,12 +12,12 @@ function Main() {
         <div className="main">
             <div className="col col1">
                 <h2>Analyze Your Code Now!!!</h2>
-                <input
-                    type="text"
-                    placeholder="Paste Your Repository Link"
-
-                />
-                <button type="button">EXECUTE</button>
+                <p><input
+                    type="text" 
+                    placeholder="Insert Your Link" /></p>
+              <button>
+                <Link to='/dashboard'>EXECUTE</Link>
+                </button>  
             </div>
             <div className="col">
                 <div className="card card1"></div>
