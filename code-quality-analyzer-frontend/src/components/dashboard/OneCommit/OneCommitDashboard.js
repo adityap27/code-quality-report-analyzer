@@ -10,11 +10,11 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import ArchitectureSmell from "../../oneCommit/Smells/ArchitectureSmell";
-import DesignSmell from "../../oneCommit/Smells/DesignSmell";
-import TestSmell from "../../oneCommit/Smells/TestSmell";
-import TestabilitySmell from "../../oneCommit/Smells/TestabilitySmell";
-import ImplementationSmell from "../../oneCommit/Smells/ImplementationSmell";
+import ArchitectureSmell from "../../oneCommit/smells/ArchitectureSmell"
+import DesignSmell from "../../oneCommit/smells/DesignSmell";
+import TestSmell from "../../oneCommit/smells/TestSmell";
+import TestabilitySmell from "../../oneCommit/smells/TestabilitySmell";
+import ImplementationSmell from "../../oneCommit/smells/ImplementationSmell";
 ChartJS.register(
   CategoryScale,
   LinearScale,
