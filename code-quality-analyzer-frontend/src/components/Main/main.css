@@ -14,16 +14,40 @@
     font-size: 45px;
     color: #fff;
     font-weight: 600;
-    margin-left: 55px;
+    margin-left: 75px;
 }
+
+.col input {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 5px;
+  }
+  
+  .dropdowns {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  select {
+    width: 50%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 130px;
+  }
 
 
 .col button {
+    width: 20%;
     margin-top: 15px;
     background-color: #CBC3E3;
     padding: 5px 10px;
     border-radius: 5px;
-    margin-left: 55px;
+    margin-left: 255px;
 
 }
 

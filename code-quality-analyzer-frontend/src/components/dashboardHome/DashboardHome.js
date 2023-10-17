@@ -1,9 +1,9 @@
 import React from "react";
 import "./dashboard-home.css";
 import Sidebar from "../Sidebar/Sidebar";
-import OneCommitDashboard from "../Dashboard/OneCommit/OneCommitDashboard";
-import HotspotAnalysis from "../Dashboard/Hotspot/HotspotAnalysis";
-import TrendAnalysis from "../Dashboard/Trend/TrendAnalysis";
+import OneCommitDashboard from "../dashboard/OneCommit/OneCommitDashboard";
+import HotspotAnalysis from "../dashboard/Hotspot/HotspotAnalysis";
+import TrendAnalysis from "../dashboard/Trend/TrendAnalysis";
 import { useParams } from "react-router";
 
 function DashboardHome() {
