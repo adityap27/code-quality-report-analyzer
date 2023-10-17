@@ -21,9 +21,6 @@ import org.junit.jupiter.api.Test;
  */
 class CommitsAnalysisUtilTest {
 
-	private static String repoPath = "C:\\Users\\rosha\\OneDrive\\Desktop\\test\\Retail-Product-Management-System";
-	private static String branch = "main";
-	private static String reportPath = repoPath + Constants.REPORT_PATH;
 	private static List<String> commitIds = null; 
 	
 	@BeforeAll
@@ -34,7 +31,7 @@ class CommitsAnalysisUtilTest {
 	
 	@Test
 	void testGetCommitIdsOneCommit() throws Exception {
-		List<String> ids = CommitsAnalysisUtil.getCommitIds(repoPath, branch, Constants.OneCommit);
+		List<String> ids = CommitsAnalysisUtil.getCommitIds(Constants.TEST_REPO_PATH, Constants.TEST_BRANCH, Constants.OneCommit);
 		assertEquals(false, ids.isEmpty());
 		assertEquals(Constants.OneCommit, ids.size());
 		assertEquals(commitIds.get(0), ids.get(0));
@@ -42,16 +39,17 @@ class CommitsAnalysisUtilTest {
 	
 	@Test
 	void testGetCommitIdsOneCommitException() throws Exception {
-		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, "sss", Constants.OneCommit));
-		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, null, Constants.OneCommit));
-		assertThrows(UnsupportedOperationException.class, () -> CommitsAnalysisUtil.getCommitIds("", branch, Constants.OneCommit));
-		assertThrows(UnsupportedOperationException.class, () -> CommitsAnalysisUtil.getCommitIds(null, branch, Constants.OneCommit));
+		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(Constants.TEST_REPO_PATH, "abc", Constants.OneCommit));
+		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(Constants.TEST_REPO_PATH, " ", Constants.OneCommit));
+		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(Constants.TEST_REPO_PATH, null, Constants.OneCommit));
+		assertThrows(UnsupportedOperationException.class, () -> CommitsAnalysisUtil.getCommitIds("", Constants.TEST_BRANCH, Constants.OneCommit));
+		assertThrows(UnsupportedOperationException.class, () -> CommitsAnalysisUtil.getCommitIds(null, Constants.TEST_BRANCH, Constants.OneCommit));
 	}
 	
 	@Test
 	void testGenerateReports() throws Exception {
-		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
-		assertEquals(reportPath, path);
+		String path = CommitsAnalysisUtil.generateReports(commitIds, Constants.TEST_REPO_PATH, Constants.TEST_BRANCH);
+		assertEquals(Constants.TEST_REPORT_PATH, path);
 		assertEquals(true, Files.exists(Paths.get(path)));
 	}
 }

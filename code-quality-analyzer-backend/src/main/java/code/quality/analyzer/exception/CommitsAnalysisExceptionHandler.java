@@ -19,12 +19,12 @@ public class CommitsAnalysisExceptionHandler extends ResponseEntityExceptionHand
 
 	@ExceptionHandler({UnsupportedOperationException.class, IOException.class})
 	public ResponseEntity<String> handleIncorrectRepoPathException(Exception exception, WebRequest request) {
-		return new ResponseEntity<String>("Repository not found " + exception.getMessage(), HttpStatus.NOT_FOUND);
+		return new ResponseEntity<String>("Repository not found: " + exception.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler({ RefAlreadyExistsException.class, RefNotFoundException.class, InvalidRefNameException.class,
 			CheckoutConflictException.class, GitAPIException.class })
 	public ResponseEntity<String> handleInvalidBranchException(Exception exception, WebRequest request) {
-		return new ResponseEntity<String>("Invalid branch name" + exception.getMessage(), HttpStatus.NOT_FOUND);
+		return new ResponseEntity<String>("Invalid branch name: " + exception.getMessage(), HttpStatus.NOT_FOUND);
 	}
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import code.quality.analyzer.model.CommitAnalysisRequest;
 import code.quality.analyzer.service.CommitsAnalysisService;
-import code.quality.analyzer.util.Constants;
 
 @RestController
 @RequestMapping("/onecommit")
@@ -22,7 +21,7 @@ public class OneCommitAnalysisController {
 	@PostMapping("/getanalysis")
 	ResponseEntity<String> getOneCommitAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
 		String repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
-		String reportPath = commitsAnalysisService.generateCommitsReport(repoPath, commitAnalysisRequest.getBranch(), Constants.OneCommit);
+		String reportPath = commitsAnalysisService.generateOneCommitReport(repoPath, commitAnalysisRequest.getBranch(), commitAnalysisRequest.getCommitId());
 		String jsonOutput = commitsAnalysisService.callAnalysisService(reportPath);
 		
 		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
