@@ -10,14 +10,14 @@ public interface CommitsAnalysisService {
 	String cloneRepository(String gitRepoLink);
 	
 	/**
-	 * Ganenerate report for given repository using designite
+	 * Generate report for one commit analysis
 	 * @param repoPath repository path
 	 * @param branch branch name
-	 * @param noOfCommits no of commits for analysis
-	 * @return String commits report paths
+	 * @param commitId commit id selected by user
+	 * @return String report path
 	 * @throws Exception
 	 */
-	String generateCommitsReport(String repoPath, String branch, int noOfCommits) throws Exception;
+	String generateOneCommitReport(String repoPath, String branch, String commitId) throws Exception;
 	
 	/**
 	 * Call python analysis service

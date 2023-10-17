@@ -27,15 +27,27 @@ public class CommitsAnalysisUtil {
 	public static List<String> getCommitIds(String repoPath, String branchname, int noOfCommits) throws Exception {
 		logger.info("BEGIN getCommitIds()");
 		List<String> commitIds = new ArrayList<String>();
-		Repository repository = new FileRepository(repoPath + Constants.REPO_SUFFIX);
-		Git git = new Git(repository);
-		git.checkout().setCreateBranch(false).setName(branchname).call();
+		Git git = checkoutAndValidate(repoPath, branchname);
 		if (noOfCommits == 0) {
 			return commitIds;
 		}
 		Iterable<RevCommit> commits = git.log().setMaxCount(noOfCommits).call();
 		commitIds.add(commits.iterator().next().getName());
 		return commitIds;
+	}
+	
+	/**
+	 * Validate repoPath and branch name. Checkout to given branch
+	 * @param repoPath repository path
+	 * @param branchname branch name
+	 * @return Git git repository with checked out branch
+	 * @throws Exception
+	 */
+	public static Git checkoutAndValidate(String repoPath, String branchname) throws Exception {
+		Repository repository = new FileRepository(repoPath + Constants.REPO_SUFFIX);
+		Git git = new Git(repository);
+		git.checkout().setCreateBranch(false).setName(branchname).call();
+		return git;
 	}
 	
 	/**

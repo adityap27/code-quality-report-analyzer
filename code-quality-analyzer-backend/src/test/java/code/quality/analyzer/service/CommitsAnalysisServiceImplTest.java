@@ -1,6 +1,3 @@
-/**
- * 
- */
 package code.quality.analyzer.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,10 +18,6 @@ import code.quality.analyzer.util.Constants;
  */
 class CommitsAnalysisServiceImplTest {
 
-	private static String repoPath = "C:\\Users\\rosha\\OneDrive\\Desktop\\test\\Retail-Product-Management-System";
-	private static String branch = "main";
-	private static String reportPath = repoPath + Constants.REPORT_PATH;
-	
 	private static CommitsAnalysisService commitsAnalysisService;
 	
 	@BeforeAll
@@ -33,17 +26,18 @@ class CommitsAnalysisServiceImplTest {
 	}
 	
 	@Test
-	void testGenerateCommitsReport() throws Exception {
-		String path = commitsAnalysisService.generateCommitsReport(repoPath, branch, Constants.OneCommit);
-		assertEquals(reportPath, path);
+	void testGenerateOneCommitReport() throws Exception {
+		String path = commitsAnalysisService.generateOneCommitReport(Constants.TEST_REPO_PATH, Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID);
+		assertEquals(Constants.TEST_REPORT_PATH, path);
 		assertEquals(true, Files.exists(Paths.get(path)));
 	}
 	
 	@Test
-	void testGenerateCommitsReportException() throws Exception {
-		assertThrows(RefNotFoundException.class, () -> commitsAnalysisService.generateCommitsReport(repoPath, "xyz", Constants.OneCommit));
-		assertThrows(InvalidRefNameException.class, () -> commitsAnalysisService.generateCommitsReport(repoPath, null, Constants.OneCommit));
-		assertThrows(UnsupportedOperationException.class, () -> commitsAnalysisService.generateCommitsReport("", branch, Constants.OneCommit));
-		assertThrows(UnsupportedOperationException.class, () -> commitsAnalysisService.generateCommitsReport(null, branch, Constants.OneCommit));
+	void testGenerateOneCommitReportException() throws Exception {
+		assertThrows(RefNotFoundException.class, () -> commitsAnalysisService.generateOneCommitReport(Constants.TEST_REPO_PATH, "xyz", Constants.TEST_COMMIT_ID));
+		assertThrows(InvalidRefNameException.class, () -> commitsAnalysisService.generateOneCommitReport(Constants.TEST_REPO_PATH, " ", Constants.TEST_COMMIT_ID));
+		assertThrows(InvalidRefNameException.class, () -> commitsAnalysisService.generateOneCommitReport(Constants.TEST_REPO_PATH, null, Constants.TEST_COMMIT_ID));
+		assertThrows(UnsupportedOperationException.class, () -> commitsAnalysisService.generateOneCommitReport("", Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID));
+		assertThrows(UnsupportedOperationException.class, () -> commitsAnalysisService.generateOneCommitReport(null, Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID));
 	}
 }
