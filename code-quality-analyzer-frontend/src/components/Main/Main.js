@@ -3,10 +3,7 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-
-
-function Main() {
-
+const Main() {
   const [repoLink, setRepoLink] = useState('');
   const [branches, setBranches] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState('');
@@ -14,9 +11,11 @@ function Main() {
   const [selectedCommit, setSelectedCommit] = useState('');
 
   const API_URL = `https://api.github.com`;
+
   const handleRepoUrlChange = (event) => {
     setRepoLink(event.target.value);
   };
+
   const fetchBranches = () => {
     const ownerAndRepo = repoLink.split('/').slice(-2).join('/');
     const branchUrl = `${API_URL}/repos/${ownerAndRepo}/branches`;
@@ -47,7 +46,6 @@ function Main() {
     }
   };
 
-
   useEffect(() => {
     if (repoLink) {
       fetchBranches();
@@ -58,7 +56,6 @@ function Main() {
     fetchCommits();
   }, [selectedBranch]);
 
-
   return (
     <div className="main">
       <div className="col col1">
@@ -68,7 +65,8 @@ function Main() {
             type="text"
             placeholder="Insert Your GitLab Repository Link"
             value={repoLink}
-            onChange={handleRepoUrlChange} />
+            onChange={handleRepoUrlChange}
+          />
           <button onClick={fetchBranches}>Fetch Branches</button>
         </p>
         <div className="dropdowns">
@@ -90,16 +88,10 @@ function Main() {
             ))}
           </select>
 
-
-
-
           <button>
             <Link to='/dashboard'>EXECUTE</Link>
           </button>
         </div>
-
-
-
       </div>
       <div className="col">
         <div className="card card1"></div>
@@ -110,10 +102,7 @@ function Main() {
         <div className="card card6"></div>
       </div>
     </div>
-
   );
 }
+
 export default Main;
-
-
-
