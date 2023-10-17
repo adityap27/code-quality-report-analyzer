@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const Main() {
+const Main = () => {
   const [repoLink, setRepoLink] = useState('');
   const [branches, setBranches] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState('');
