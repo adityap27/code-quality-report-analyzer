@@ -5,13 +5,13 @@ import Homepage from './components/Homepage/Homepage';
 
 function App() {
   return (
-  <><div className="App">
+    <><div className="App">
     </div><Router>
         <Routes>
-          <Route path='/' element={<Homepage/>}/>
+          <Route path='/' element={<Homepage />} />
           <Route path="dashboard" element={<DashboardHome />} />
           {/* <Route path="/dashboard/:chartType" element={<DashboardHome />} /> */}
-          
+
         </Routes>
       </Router></>
   );

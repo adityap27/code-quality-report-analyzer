@@ -12,12 +12,12 @@ class Navbar extends Component {
         return (
             <>
                 <nav>
-                <div className="logo">
-        <Link to={'/dashboard'}>
-        <img src={Logo} alt="" />
-        </Link>
-      </div>
-                    
+                    <div className="logo">
+                        <Link to={'/dashboard'}>
+                            <img src={Logo} alt="" />
+                        </Link>
+                    </div>
+
                     <div>
                         <ul id="navbar" className={this.state.clicked ? "#navbar active" : "#navbae"}>
                             <li><a className="active"

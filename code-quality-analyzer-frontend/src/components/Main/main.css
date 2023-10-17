@@ -6,8 +6,8 @@
 
 .col {
     flex-basis: 47%;
-    
-    
+
+
 }
 
 .col h2 {
@@ -24,21 +24,21 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-left: 5px;
-  }
-  
-  .dropdowns {
+}
+
+.dropdowns {
     display: flex;
     flex-direction: column;
-  }
-  
-  select {
+}
+
+select {
     width: 50%;
     padding: 10px;
     margin: 5px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-left: 130px;
-  }
+}
 
 
 .col button {
