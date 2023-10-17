@@ -2,6 +2,7 @@ package code.quality.analyzer.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,5 +40,11 @@ class CommitsAnalysisServiceImplTest {
 		assertThrows(InvalidRefNameException.class, () -> commitsAnalysisService.generateOneCommitReport(Constants.TEST_REPO_PATH, null, Constants.TEST_COMMIT_ID));
 		assertThrows(UnsupportedOperationException.class, () -> commitsAnalysisService.generateOneCommitReport("", Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID));
 		assertThrows(UnsupportedOperationException.class, () -> commitsAnalysisService.generateOneCommitReport(null, Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID));
+	}
+
+	@Test
+	void testAnalysisServiceCall() throws Exception {
+		String response = commitsAnalysisService.callAnalysisService(Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID);
+		assertTrue(response.startsWith("{\"Architecture Smell\""));
 	}
 }
