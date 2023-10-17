@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DummyData from "../../../data/dummy.json";
 import "chart.js/auto";
-import { Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -61,17 +61,25 @@ function TestSmell() {
       title: {
         display: true,
         text: "Test Smells",
+        font: {
+          size: 20,
+        }
       },
       legend: {
         display: true,
         position: "top",
+        labels: {
+          font: {
+            size: 12,
+          }
+        }
       },
     },
   };
   return (
     <>
       <div>
-        <Pie data={chartData} options={doughnutOptions} />
+        <Doughnut data={chartData} options={doughnutOptions} />
       </div>
     </>
   );
