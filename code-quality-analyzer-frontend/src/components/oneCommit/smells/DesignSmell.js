@@ -77,7 +77,7 @@ function DesignSmell() {
       },
       legend: {
         display: true,
-        position: "top",
+        position: "left",
         labels: {
           font: {
             size: 12,
@@ -89,7 +89,7 @@ function DesignSmell() {
   return (
     <>
       <div>
-        <Doughnut style={{width: '100%'}} data={chartData} options={doughnutOptions} />
+        <Doughnut height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
       </div>
     </>
   );

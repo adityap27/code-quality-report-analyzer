@@ -16,29 +16,17 @@
   margin: 0;
 }
 
-.smell-heading {
-  margin-left: 10px;
-  margin-bottom: 10px;
-}
-.smell-heading h2 {
-  margin: 0;
-}
-
 .charts {
-  display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
   width: 100%;
 }
 
 .common-chart {
-  background-color: #fff;
-  padding: 5px;
-  margin: 10px 0;
-  width: 500px;
+  display: flex;
+  justify-content: space-around;
+  background-color: #ffffff02;
+  margin: 10px;
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  /* flex-basis: calc(33.33% - 40px); */
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }

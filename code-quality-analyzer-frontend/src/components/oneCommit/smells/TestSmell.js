@@ -44,11 +44,12 @@ function TestSmell() {
           label: "Smells",
           data: values,
           backgroundColor: [
-            "rgb(122, 255, 64)",
-            "rgb(45, 189, 230)",
-            "rgb(255, 87, 152)",
-            "rgb(78, 200, 35)",
-            "rgb(203, 92, 210)",
+            "rgb(0, 64, 192)",
+            "rgb(192, 0, 64)",
+            "rgb(0, 192, 64)",
+            "rgb(128, 192, 0)",
+            "rgb(128, 0, 192)",
+            "rgb(0, 128, 192)"
           ],
           hoverOffset: 4,
         },
@@ -67,7 +68,7 @@ function TestSmell() {
       },
       legend: {
         display: true,
-        position: "top",
+        position: "left",
         labels: {
           font: {
             size: 12,
@@ -79,7 +80,7 @@ function TestSmell() {
   return (
     <>
       <div>
-        <Doughnut data={chartData} options={doughnutOptions} />
+        <Doughnut height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
       </div>
     </>
   );

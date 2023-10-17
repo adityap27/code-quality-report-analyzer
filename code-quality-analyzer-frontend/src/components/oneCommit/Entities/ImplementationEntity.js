@@ -32,12 +32,16 @@ function ImplementationEntity() {
       });
     
       useEffect(() => {
-        const labels = Object.keys(
-          DummyData["Implementation Smells"]["top_entities"]
-        );
-        const values = Object.values(
-          DummyData["Implementation Smells"]["top_entities"]
-        );
+        const topEntities = DummyData["Implementation Smells"]["top_entities"];
+
+        // Extract and display only the last part after the last '||'
+        const labels = Object.keys(topEntities).map((key) => {
+          const parts = key.split("||");
+          const lastPart = parts[parts.length - 1];
+          return lastPart;
+        });
+    
+        const values = Object.values(topEntities);
     
         setChartData({
           labels,
@@ -46,11 +50,15 @@ function ImplementationEntity() {
               label: "Entity Name",
               data: values,
               backgroundColor: [
-                "rgb(122, 255, 64)",
-                "rgb(45, 189, 230)",
-                "rgb(255, 87, 152)",
-                "rgb(78, 200, 35)",
-                "rgb(203, 92, 210)",
+                "rgb(128, 128, 0)",
+                "rgb(128, 0, 128)",
+                "rgb(0, 128, 128)",
+                "rgb(192, 0, 0)",
+                "rgb(0, 192, 0)",
+                "rgb(0, 0, 192)",
+                "rgb(192, 192, 0)",
+                "rgb(192, 0, 192)",
+                "rgb(0, 192, 192)"
               ],
             },
           ],
@@ -92,7 +100,7 @@ function ImplementationEntity() {
       return (
         <>
           <div>
-            <Bar data={chartData} options={doughnutOptions} />
+            <Bar height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
           </div>
         </>
       );

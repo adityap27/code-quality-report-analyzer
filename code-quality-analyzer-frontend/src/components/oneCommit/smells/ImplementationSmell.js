@@ -46,11 +46,13 @@ function ImplementationSmell() {
           label: "Smells",
           data: values,
           backgroundColor: [
-            "rgb(122, 255, 64)",
-            "rgb(45, 189, 230)",
-            "rgb(255, 87, 152)",
-            "rgb(78, 200, 35)",
-            "rgb(203, 92, 210)",
+            "rgb(64, 0, 0)",
+            "rgb(0, 64, 0)",
+            "rgb(0, 0, 64)",
+            "rgb(64, 64, 0)",
+            "rgb(64, 0, 64)",
+            "rgb(0, 64, 64)",
+            "rgb(128, 128, 128)",
           ],
           hoverOffset: 4,
         },
@@ -65,7 +67,7 @@ function ImplementationSmell() {
         text: "Implementation Smells",
         font: {
           size: 20,
-        }
+        },
       },
       legend: {
         display: true,
@@ -73,8 +75,8 @@ function ImplementationSmell() {
         labels: {
           font: {
             size: 12,
-          }
-        }
+          },
+        },
       },
     },
   };
@@ -82,6 +84,8 @@ function ImplementationSmell() {
     <>
       <div>
         <Doughnut
+          height={"500px"}
+          width={"500px"}
           data={chartData}
           options={doughnutOptions}
         />

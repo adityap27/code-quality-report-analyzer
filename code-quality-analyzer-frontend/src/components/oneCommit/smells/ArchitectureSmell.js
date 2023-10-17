@@ -301,7 +301,7 @@ function ArchitectureSmell() {
   return (
     <>
       <div>
-        <Doughnut data={chartData} options={doughnutOptions} />
+        <Doughnut height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
       </div>
     </>
   );
