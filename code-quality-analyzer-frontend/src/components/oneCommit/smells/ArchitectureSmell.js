@@ -244,12 +244,20 @@ function ArchitectureSmell() {
 
     async function fetchData() {
       try {
-        const response = await fetch(`${apiUrl}?gitRepoLink=${gitRepoLink}&branch=${branch}`);
+        const response = await fetch(`${apiUrl}/${gitRepoLink}/${branch}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(),
+        });
+        
+        console.log(response);
         if (!response.ok) {
           throw new Error(`Request failed with status: ${response.status}`);
         }
         const data = await response.json();
-
+        
         const labels = Object.keys(data["Architecture Smells"]["smell_distribution"]);
         const values = Object.values(data["Architecture Smells"]["smell_distribution"]);
 
