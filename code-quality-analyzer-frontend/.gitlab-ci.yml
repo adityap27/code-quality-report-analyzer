@@ -1,7 +1,7 @@
 .frontend-common:
   image: node:18
   before_script:
-    - cd ./code-quality-analyzer-backend
+    - cd ./code-quality-analyzer-frontend
   tags:
     - vm3
 
