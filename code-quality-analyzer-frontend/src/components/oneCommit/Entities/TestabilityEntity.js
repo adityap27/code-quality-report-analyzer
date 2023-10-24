@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json"
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import {
@@ -20,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function TestabilityEntity() {
+function TestabilityEntity(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -32,16 +31,15 @@ function TestabilityEntity() {
   });
 
   useEffect(() => {
-    const topEntities = DummyData["Testability Smells"]["top_entities"];
+    const topEntities = props.testabilityEntityData["Testability Smell"]["top_entities"];
+    const values = Object.values(topEntities);
 
-    // Extract and display only the last part after the last '||'
     const labels = Object.keys(topEntities).map((key) => {
       const parts = key.split("||");
       const lastPart = parts[parts.length - 1];
       return lastPart;
     });
 
-    const values = Object.values(topEntities);
 
     setChartData({
       labels,

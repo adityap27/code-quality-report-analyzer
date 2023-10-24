@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json"
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import {
@@ -20,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function ImplementationEntity() {
+function ImplementationEntity(props) {
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: [
@@ -32,9 +31,8 @@ function ImplementationEntity() {
       });
     
       useEffect(() => {
-        const topEntities = DummyData["Implementation Smells"]["top_entities"];
+        const topEntities = props.implementationEntityData["Implementation Smell"]["top_entities"];
 
-        // Extract and display only the last part after the last '||'
         const labels = Object.keys(topEntities).map((key) => {
           const parts = key.split("||");
           const lastPart = parts[parts.length - 1];

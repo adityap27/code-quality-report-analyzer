@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json"
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import {
@@ -20,7 +19,8 @@ ChartJS.register(
   Legend
 );
 
-function DesignEntity() {
+function DesignEntity(props) {
+  console.log(props.designEntityData);
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -32,7 +32,8 @@ function DesignEntity() {
   });
 
   useEffect(() => {
-    const topEntities = DummyData["Design Smells"]["top_entities"];
+    const topEntities = props.designEntityData["Design Smell"]["top_entities"];
+
 
     const labels = Object.keys(topEntities).map((key) => {
       const parts = key.split("||");

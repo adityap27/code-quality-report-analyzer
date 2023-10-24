@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json";
 import "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import {
@@ -20,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function DesignSmell() {
+function DesignSmell(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -32,12 +31,9 @@ function DesignSmell() {
   });
 
   useEffect(() => {
-    const labels = Object.keys(
-      DummyData["Design Smells"]["smell_distribution"]
-    );
-    const values = Object.values(
-      DummyData["Design Smells"]["smell_distribution"]
-    );
+
+    const labels = Object.keys(props.designSmellData["Design Smell"]["smell_distribution"]);
+    const values = Object.values(props.designSmellData["Design Smell"]["smell_distribution"]);
 
     setChartData({
       labels,

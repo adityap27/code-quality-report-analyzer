@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json"
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import {
@@ -20,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function ArchitechtureEntity() {
+function ArchitechtureEntity(props) {
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: [
@@ -31,14 +30,10 @@ function ArchitechtureEntity() {
         ],
       });
     
-      useEffect(() => {
-        const labels = Object.keys(
-          DummyData["Architecture Smells"]["top_entities"]
-        );
-        const values = Object.values(
-          DummyData["Architecture Smells"]["top_entities"]
-        );
-    
+      useEffect(() => {    
+        const labels = Object.keys(props.architectureEntityData["Architecture Smell"]["top_entities"]);
+        const values = Object.values(props.architectureEntityData["Architecture Smell"]["top_entities"]);
+
         setChartData({
           labels: labels,
           datasets: [

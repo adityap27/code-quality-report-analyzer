@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json";
 import "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import {
@@ -20,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function TestSmell() {
+function TestSmell(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -32,9 +31,11 @@ function TestSmell() {
   });
 
   useEffect(() => {
-    const labels = Object.keys(DummyData["Test Smells"]["smell_distribution"]);
+    const labels = Object.keys(
+      props.testsmSmellData["Test Smell"]["smell_distribution"]
+    );
     const values = Object.values(
-      DummyData["Test Smells"]["smell_distribution"]
+      props.testsmSmellData["Test Smell"]["smell_distribution"]
     );
 
     setChartData({
@@ -49,7 +50,7 @@ function TestSmell() {
             "rgb(0, 192, 64)",
             "rgb(128, 192, 0)",
             "rgb(128, 0, 192)",
-            "rgb(0, 128, 192)"
+            "rgb(0, 128, 192)",
           ],
           hoverOffset: 4,
         },
@@ -64,7 +65,7 @@ function TestSmell() {
         text: "Test Smells",
         font: {
           size: 20,
-        }
+        },
       },
       legend: {
         display: true,
@@ -72,15 +73,20 @@ function TestSmell() {
         labels: {
           font: {
             size: 12,
-          }
-        }
+          },
+        },
       },
     },
   };
   return (
     <>
       <div>
-        <Doughnut height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
+        <Doughnut
+          height={"500px"}
+          width={"500px"}
+          data={chartData}
+          options={doughnutOptions}
+        />
       </div>
     </>
   );

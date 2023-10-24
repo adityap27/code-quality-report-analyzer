@@ -29,7 +29,8 @@ ChartJS.register(
   Legend
 );
 
-function OneCommitDashboard() {
+function OneCommitDashboard(props) {
+  console.log(props.data);
   return (
     <>
       <div className="oneCommit">
@@ -38,24 +39,24 @@ function OneCommitDashboard() {
         </div>
         <div className="charts">
           <div className="architechture common-chart">
-            <ArchitectureSmell />
-            <ArchitechtureEntity />
+            <ArchitectureSmell architectureSmellData={props.data} />
+            <ArchitechtureEntity architectureEntityData={props.data} />
           </div>
           <div className="design common-chart">
-            <DesignSmell />
-            <DesignEntity />
+            <DesignSmell designSmellData={props.data} />
+            <DesignEntity designEntityData={props.data} />
           </div>
           <div className="test common-chart">
-            <TestSmell />
-            <TestEntity />
+            <TestSmell testsmSmellData={props.data} />
+            <TestEntity testEntityData={props.data} />
           </div>
           <div className="testability common-chart">
-            <TestabilitySmell />
-            <TestabilityEntity />
+            <TestabilitySmell testabilitySmellData={props.data} />
+            <TestabilityEntity testabilityEntityData={props.data} />
           </div>
           <div className="implementation common-chart">
-            <ImplementationSmell />
-            <ImplementationEntity />
+            <ImplementationSmell implementationSmellData={props.data} />
+            <ImplementationEntity implementationEntityData={props.data} />
           </div>
         </div>
       </div>

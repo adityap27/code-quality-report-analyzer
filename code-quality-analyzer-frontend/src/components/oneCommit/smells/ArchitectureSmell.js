@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json";
 import "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import {
@@ -20,9 +19,7 @@ ChartJS.register(
   Legend
 );
 
-
-
-function ArchitectureSmell() {
+function ArchitectureSmell(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -35,10 +32,10 @@ function ArchitectureSmell() {
 
   useEffect(() => {
     const labels = Object.keys(
-      DummyData["Architecture Smells"]["smell_distribution"]
+      props.architectureSmellData["Architecture Smell"]["smell_distribution"]
     );
     const values = Object.values(
-      DummyData["Architecture Smells"]["smell_distribution"]
+      props.architectureSmellData["Architecture Smell"]["smell_distribution"]
     );
 
     setChartData({
@@ -49,11 +46,11 @@ function ArchitectureSmell() {
           data: values,
           backgroundColor: [
             "rgb(255, 0, 0)",
-"rgb(0, 0, 255)",
-"rgb(50, 205, 50)",
-"rgb(255, 255, 0)",
-"rgb(0, 128, 128)",
-"rgb(128, 0, 128)"
+            "rgb(0, 0, 255)",
+            "rgb(50, 205, 50)",
+            "rgb(255, 255, 0)",
+            "rgb(0, 128, 128)",
+            "rgb(128, 0, 128)",
           ],
         },
       ],
@@ -67,253 +64,31 @@ function ArchitectureSmell() {
         text: "Architecture Smells",
         font: {
           size: 20,
-        }
+        },
       },
       legend: {
         display: true,
-        position: "top",
+        position: "left",
         labels: {
           font: {
             size: 12,
-          }
-        }
+          },
+        },
       },
     },
   };
   return (
     <>
       <div>
-        <Doughnut height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
+        <Doughnut
+          height={"500px"}
+          width={"500px"}
+          data={chartData}
+          options={doughnutOptions}
+        />
       </div>
     </>
   );
 }
 
 export default ArchitectureSmell;
-
-
-// import React, { useEffect, useState } from "react";
-// import "chart.js/auto";
-// import { Doughnut } from "react-chartjs-2";
-// import {
-//   Chart as ChartJS,
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend,
-// } from "chart.js";
-// ChartJS.register(
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//  Legend
-// );
-
-// function ArchitectureSmell() {
-//   const [chartData, setChartData] = useState({
-//     labels: [],
-//     datasets: [
-//       {
-//         label: "Data from API",
-//         data: [],
-//         backgroundColor: [
-//           "rgb(122, 255, 64)",
-//           "rgb(45, 189, 230)",
-//           "rgb(255, 87, 152)",
-//           "rgb(78, 200, 35)",
-//           "rgb(203, 92, 210)",
-//         ],
-//       },
-//     ],
-//   });
-
-//   useEffect(() => {
-//     const apiUrl = "http://localhost:8080/onecommit/getanalysis";
-//     const gitRepoLink = "https://github.com/apache/maven.git";
-//     const branch = "master";
-//     // const commitId = "80a8e4154043fc29ca15458847c85a4960a020d";
-
-//     fetch(`${apiUrl}?gitRepoLink=${gitRepoLink}&branch=${branch}`)
-//       .then((response) => response.json())
-//       .then((data) => {
-//         const labels = Object.keys(data["Architecture Smells"]["smell_distribution"]);
-//         const values = Object.values(data["Architecture Smells"]["smell_distribution"]);
-
-//         setChartData({
-//           labels,
-//           datasets: [
-//             {
-//               label: "Smells",
-//               data: values,
-//               backgroundColor: [
-//                 "rgb(122, 255, 64)",
-//                 "rgb(45, 189, 230)",
-//                 "rgb(255, 87, 152)",
-//                 "rgb(78, 200, 35)",
-//                 "rgb(203, 92, 210)",
-//               ],
-//             },
-//           ],
-//         });
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching data from the API:", error);
-//       });
-//   }, []);
-
-//   const doughnutOptions = {
-//     plugins: {
-//       title: {
-//         display: true,
-//         text: "Architecture Smells",
-//         font: {
-//           size: 20,
-//         },
-//       },
-//       legend: {
-//         display: true,
-//         position: "top",
-//         labels: {
-//           font: {
-//             size: 12,
-//           },
-//         },
-//       },
-//     },
-//   };
-
-//   return (
-//     <>
-//       <div>
-//         <Doughnut data={chartData} options={doughnutOptions} />
-//       </div>
-//     </>
-//   );
-// }
-
-// export default ArchitectureSmell;
-
-
-// import React, { useEffect, useState } from "react";
-// import "chart.js/auto";
-// import { Doughnut } from "react-chartjs-2";
-// import {
-//   Chart as ChartJS,
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend,
-// } from "chart.js";
-// ChartJS.register(
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend
-// );
-
-// function ArchitectureSmell() {
-//   const [chartData, setChartData] = useState({
-//     labels: [],
-//     datasets: [
-//       {
-//         label: "Data from API",
-//         data: [],
-//         backgroundColor: [
-//           "rgb(122, 255, 64)",
-//           "rgb(45, 189, 230)",
-//           "rgb(255, 87, 152)",
-//           "rgb(78, 200, 35)",
-//           "rgb(203, 92, 210)",
-//         ],
-//       },
-//     ],
-//   });
-
-//   useEffect(() => {
-//     // Define your API URL and parameters
-//     const apiUrl = "http://localhost:8080/onecommit/getanalysis";
-//     const gitRepoLink = "https://github.com/apache/maven.git";
-//     const branch = "master";
-
-//     async function fetchData() {
-//       try {
-//         const response = await fetch(`${apiUrl}/${gitRepoLink}/${branch}`, {
-//           method: "GET",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(),
-//         });
-        
-//         console.log(response);
-//         if (!response.ok) {
-//           throw new Error(`Request failed with status: ${response.status}`);
-//         }
-//         const data = await response.json();
-        
-//         const labels = Object.keys(data["Architecture Smells"]["smell_distribution"]);
-//         const values = Object.values(data["Architecture Smells"]["smell_distribution"]);
-
-//         setChartData({
-//           labels,
-//           datasets: [
-//             {
-//               label: "Smells",
-//               data: values,
-//               backgroundColor: [
-//                 "rgb(122, 255, 64)",
-//                 "rgb(45, 189, 230)",
-//                 "rgb(255, 87, 152)",
-//                 "rgb(78, 200, 35)",
-//                 "rgb(203, 92, 210)",
-//               ],
-//             },
-//           ],
-//         });
-//       } catch (error) {
-//         console.error("Error fetching data from the API:", error);
-//       }
-//     }
-
-//     fetchData();
-//   }, []);
-
-//   const doughnutOptions = {
-//     plugins: {
-//       title: {
-//         display: true,
-//         text: "Architecture Smells",
-//         font: {
-//           size: 20,
-//         },
-//       },
-//       legend: {
-//         display: true,
-//         position: "top",
-//         labels: {
-//           font: {
-//             size: 12,
-//           },
-//         },
-//       },
-//     },
-//   };
-
-//   return (
-//     <>
-//       <div>
-//         <Doughnut height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
-//       </div>
-//     </>
-//   );
-// }
-
-// export default ArchitectureSmell;
