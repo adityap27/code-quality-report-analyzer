@@ -6,7 +6,7 @@ stages:
 - deploy-backend
 
 default:
-  image: maven:latest
+  image: maven:3.9.5-amazoncorretto-17
   before_script:
   - cd ./code-quality-analyzer-backend
   tags:
