@@ -3,9 +3,9 @@ package code.quality.analyzer.util;
 public class Constants {
 	public static String EMPTY = "";
 	public static int OneCommit = 1;
-	public static String REPORT_PATH = "\\..\\Reports";
-	public static String REPO_PATH = ".\\cloned-repos";
-	public static String REPO_SUFFIX = "\\.git";
+	public static String REPORT_PATH = "/../Reports";
+	public static String REPO_PATH = "./cloned-repos";
+	public static String REPO_SUFFIX = "/.git";
 
 	public static String ANALYSIS_SERVICE_BASE_URL = "http://localhost:8000";
 
@@ -18,7 +18,7 @@ public class Constants {
 	public static String TEST_COMMIT_ID_3 = "ec1fdffca506b60e4b1bbccf29931b1d2544c790";
 	public static String TEST_REPO_URL_3 = "https://github.com/roshni-joshi/taxi-ticket-system.git";
 	public static String ONE_COMMIT_URL = "/onecommit/getanalysis";
-	public static String ANALYSIS_SERVICE_TEST_RESPONSE = "{\"Architecture Smells\":{\r\n"
+	public static String ANALYSIS_SERVICE_TEST_RESPONSE = "{\"Architecture Smells\":{\rjgit working fine in windows but thowing error in linux Cannot check out from unborn branch\n"
 			+ "      \"total_smells\": 151,\r\n"
 			+ "      \"smell_distribution\":{\r\n"
 			+ "         \"Cyclic Dependency\":59,\r\n"
