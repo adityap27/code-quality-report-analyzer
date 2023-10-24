@@ -58,7 +58,7 @@ deploy-backend-job:
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container
     rm -f my-backend-container || true"
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run
-    -d -p 8080:8080 --restart=always --name my-backend-container docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:backend-$CI_COMMIT_SHORT_SHA"
+    -d -p 8080:8080 --restart=always --name backend-container docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:backend-$CI_COMMIT_SHORT_SHA"
   environment:
     name: production
     url: http://csci5308vm3.research.cs.dal.ca:8080
