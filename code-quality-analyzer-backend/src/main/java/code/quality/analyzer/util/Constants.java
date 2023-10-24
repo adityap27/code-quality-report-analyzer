@@ -15,6 +15,8 @@ public class Constants {
 	public static String TEST_REPO_URL = "https://github.com/roshni-joshi/Retail-Product-Management-System.git";
 	public static String TEST_COMMIT_ID_2 = "e6012b9fbb79e2ee8aa8252cb873606233d0e531";
 	public static String TEST_REPO_URL_2 = "https://github.com/roshni-joshi/Api-Gateway-CustomRoutes.git";
+	public static String TEST_COMMIT_ID_3 = "ec1fdffca506b60e4b1bbccf29931b1d2544c790";
+	public static String TEST_REPO_URL_3 = "https://github.com/roshni-joshi/taxi-ticket-system.git";
 	public static String ONE_COMMIT_URL = "/onecommit/getanalysis";
 	public static String ANALYSIS_SERVICE_TEST_RESPONSE = "{\"Architecture Smells\":{\r\n"
 			+ "      \"total_smells\": 151,\r\n"

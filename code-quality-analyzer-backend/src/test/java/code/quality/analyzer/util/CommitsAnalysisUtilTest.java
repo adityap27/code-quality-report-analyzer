@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package code.quality.analyzer.util;
 
@@ -27,15 +27,15 @@ class CommitsAnalysisUtilTest {
 	private static List<String> commitIds = null;
 	private static String repoPath;
 	private static CommitsAnalysisService commitsAnalysisService;
-	
+
 	@BeforeAll
 	static void setUp() {
 		commitIds = new ArrayList<String>();
-		commitIds.add("192dbcc594b418324fbb80cf6ea5f6f369178266");
+		commitIds.add(Constants.TEST_COMMIT_ID_3);
 		commitsAnalysisService = new CommitsAnalysisServiceImpl();
-		repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
+		repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL_3);
 	}
-	
+
 	@Test
 	void testGetCommitIdsOneCommit() throws Exception {
 		List<String> ids = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, Constants.OneCommit);
@@ -43,7 +43,7 @@ class CommitsAnalysisUtilTest {
 		assertEquals(Constants.OneCommit, ids.size());
 		assertEquals(commitIds.get(0), ids.get(0));
 	}
-	
+
 	@Test
 	void testGetCommitIdsOneCommitException() throws Exception {
 		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, "abc", Constants.OneCommit));
@@ -52,7 +52,7 @@ class CommitsAnalysisUtilTest {
 		assertThrows(UnsupportedOperationException.class, () -> CommitsAnalysisUtil.getCommitIds("", Constants.TEST_BRANCH, Constants.OneCommit));
 		assertThrows(UnsupportedOperationException.class, () -> CommitsAnalysisUtil.getCommitIds(null, Constants.TEST_BRANCH, Constants.OneCommit));
 	}
-	
+
 	@Test
 	void testGenerateReports() throws Exception {
 		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
