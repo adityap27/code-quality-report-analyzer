@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class CodeQualityAnalyzerBackendApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void main() {
+		CodeQualityAnalyzerBackendApplication.main(new String[] {});
 	}
 
 }

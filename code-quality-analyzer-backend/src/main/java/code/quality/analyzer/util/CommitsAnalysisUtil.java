@@ -28,9 +28,9 @@ public class CommitsAnalysisUtil {
 		logger.info("BEGIN getCommitIds()");
 		List<String> commitIds = new ArrayList<String>();
 		Git git = checkoutAndValidate(repoPath, branchname);
-		if (noOfCommits == 0) {
+		/*if (noOfCommits == 0) {
 			return commitIds;
-		}
+		}*/
 		Iterable<RevCommit> commits = git.log().setMaxCount(noOfCommits).call();
 		commitIds.add(commits.iterator().next().getName());
 		return commitIds;
@@ -62,9 +62,9 @@ public class CommitsAnalysisUtil {
 		logger.info("BEGIN generateReports()");
 		String reportPath = repoPath + Constants.REPORT_PATH;
 		String toCommit = commitIds.get(0);
-		if(!commitIds.isEmpty() && commitIds.size() != 1) {
+		/*if(!commitIds.isEmpty() && commitIds.size() != 1) {
 			toCommit = commitIds.get(1);
-		}
+		}*/
 		String[] args = new String[] 
 			{"-i", repoPath, 
 			"-o", reportPath, 
