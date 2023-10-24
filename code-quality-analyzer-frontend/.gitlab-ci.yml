@@ -1,24 +1,21 @@
-stages:
-- build-frontend
-- publish-frontend
-- deploy-frontend
-
-default:
-  image: maven:3.9.5-amazoncorretto-17
+.frontend-common:
+  image: node:18
   before_script:
-  - cd ./code-quality-analyzer-frontend
+    - cd ./code-quality-analyzer-backend
   tags:
-  - vm3
+    - vm3
 
 build-frontend-job:
-  stage: build-frontend
+  stage: build
+  extends: .frontend-common
   script:
   - npm install --legacy-peer-deps
   - npm run build
 
 publish-frontend-job:
+  stage: publish
+  extends: .frontend-common
   image: docker:latest
-  stage: publish-frontend
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ''
@@ -32,8 +29,9 @@ publish-frontend-job:
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA
   
 deploy-frontend-job:
+  stage: deploy
+  extends: .frontend-common
   image: alpine:latest
-  stage: deploy-frontend
   script:
   - chmod og= $ID_RSA
   - apk update && apk add openssh-client

@@ -1,3 +1,10 @@
+stages:
+  - build
+  - test
+  - package
+  - publish
+  - deploy
+
 include:
   - local: ./code-quality-analyzer-backend/.gitlab-ci.yml
   - local: ./code-quality-analyzer-frontend/.gitlab-ci.yml

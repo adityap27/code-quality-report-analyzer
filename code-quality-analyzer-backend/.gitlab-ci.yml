@@ -1,29 +1,25 @@
-stages:
-- build-backend
-- test-backend
-- package-backend
-- publish-backend
-- deploy-backend
-
-default:
+.backend-common:
   image: maven:3.9.5-amazoncorretto-17
   before_script:
-  - cd ./code-quality-analyzer-backend
+    - cd ./code-quality-analyzer-backend
   tags:
-  - vm3
+    - vm3
 
 build-backend-job:
-  stage: build-backend
+  stage: build
+  extends: .backend-common
   script:
   - mvn compile
 
 test-backend-job:
-  stage: test-backend
+  stage: test
+  extends: .backend-common
   script:
   - mvn test
 
 package-backend-job:
-  stage: package-backend
+  stage: package
+  extends: .backend-common
   script:
   - mvn package
   artifacts:
@@ -31,8 +27,9 @@ package-backend-job:
     - "./code-quality-analyzer-backend/target/*.jar"
 
 publish-backend-job:
+  stage: publish
+  extends: .backend-common
   image: docker:latest
-  stage: publish-backend
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ''
@@ -46,8 +43,9 @@ publish-backend-job:
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:backend-$CI_COMMIT_SHORT_SHA
   
 deploy-backend-job:
+  stage: deploy
+  extends: .backend-common
   image: alpine:latest
-  stage: deploy-backend
   script:
   - chmod og= $ID_RSA
   - apk update && apk add openssh-client
