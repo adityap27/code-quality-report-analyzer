@@ -1,0 +1,50 @@
+stages:
+- build-frontend
+- publish-frontend
+- deploy-frontend
+
+default:
+  image: maven:3.9.5-amazoncorretto-17
+  before_script:
+  - cd ./code-quality-analyzer-frontend
+  tags:
+  - vm3
+
+build-frontend-job:
+  stage: build-frontend
+  script:
+  - npm install --legacy-peer-deps
+  - npm run build
+
+publish-frontend-job:
+  image: docker:latest
+  stage: publish-frontend
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+  services:
+  - docker:dind
+  script:
+  - docker --version
+  - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS docker.io
+  - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA
+    .
+  - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA
+  
+deploy-frontend-job:
+  image: alpine:latest
+  stage: deploy-frontend
+  script:
+  - chmod og= $ID_RSA
+  - apk update && apk add openssh-client
+  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login
+    -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS docker.io"
+  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull
+    docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA"
+  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container
+    rm -f frontend-container || true"
+  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run
+    -d -p 80:3000 --restart=always --name frontend-container docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA"
+  environment:
+    name: production
+    url: http://csci5308vm3.research.cs.dal.ca
