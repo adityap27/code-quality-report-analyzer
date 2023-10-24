@@ -14,12 +14,14 @@ build-backend-job:
 test-backend-job:
   stage: test
   extends: .backend-common
+  needs: ["build-backend-job"]
   script:
   - mvn test
 
 package-backend-job:
   stage: package
   extends: .backend-common
+  needs: ["test-backend-job"]
   script:
   - mvn package
   artifacts:
@@ -29,6 +31,7 @@ package-backend-job:
 publish-backend-job:
   stage: publish
   extends: .backend-common
+  needs: ["package-backend-job"]
   image: docker:latest
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -45,6 +48,7 @@ publish-backend-job:
 deploy-backend-job:
   stage: deploy
   extends: .backend-common
+  needs: ["publish-backend-job"]
   image: alpine:latest
   script:
   - chmod og= $ID_RSA

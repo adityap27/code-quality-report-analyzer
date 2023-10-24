@@ -15,6 +15,7 @@ build-frontend-job:
 publish-frontend-job:
   stage: publish
   extends: .frontend-common
+  needs: ["build-frontend-job"]
   image: docker:latest
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -31,6 +32,7 @@ publish-frontend-job:
 deploy-frontend-job:
   stage: deploy
   extends: .frontend-common
+  needs: ["publish-frontend-job"]
   image: alpine:latest
   script:
   - chmod og= $ID_RSA
