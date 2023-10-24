@@ -41,7 +41,7 @@ class CommitsAnalysisServiceImplTest {
     @Test
     void testGenerateOneCommitReport() throws Exception {
         String path = commitsAnalysisService.generateOneCommitReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID_2);
-        assertEquals(repoPath + Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID_2, path);
+        assertEquals(repoPath + Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_2, path);
         assertEquals(true, Files.exists(Paths.get(path)));
     }
 
@@ -66,7 +66,7 @@ class CommitsAnalysisServiceImplTest {
                         .withHeader("Content-Type", "application/json")
                         .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
 
-        String response = commitsAnalysisService.callAnalysisService(Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID);
+        String response = commitsAnalysisService.callAnalysisService(Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID);
         assertNotNull(response);
         assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
     }

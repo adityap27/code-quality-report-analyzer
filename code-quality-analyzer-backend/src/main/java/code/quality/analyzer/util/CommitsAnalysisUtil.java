@@ -73,6 +73,6 @@ public class CommitsAnalysisUtil {
 			"-to", toCommit};
 		
 		Designite.main(args);
-		return reportPath + "\\" + commitIds.get(0);
+		return reportPath + "/" + commitIds.get(0);
 	}
 }
