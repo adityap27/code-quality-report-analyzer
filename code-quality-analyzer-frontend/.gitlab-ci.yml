@@ -11,6 +11,10 @@ build-frontend-job:
   script:
   - npm install --legacy-peer-deps
   - CI=false npm run build
+  artifacts:
+      paths:
+        - "./code-quality-analyzer-frontend/build"
+        - "./code-quality-analyzer-frontend/package.json"
 
 publish-frontend-job:
   stage: publish
