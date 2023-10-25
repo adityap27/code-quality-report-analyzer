@@ -258,7 +258,6 @@ const Main = () => {
     })
       .then((response) => {
         setIsLoading(false);
-        console.log(response.data);
         if(response.status === 200) {
           navigate('/dashboard', { state: response.data });
         }

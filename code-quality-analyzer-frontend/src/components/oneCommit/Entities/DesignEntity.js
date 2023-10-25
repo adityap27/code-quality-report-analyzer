@@ -20,7 +20,6 @@ ChartJS.register(
 );
 
 function DesignEntity(props) {
-  console.log(props.designEntityData);
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [

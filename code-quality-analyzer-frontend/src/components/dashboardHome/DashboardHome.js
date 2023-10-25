@@ -10,7 +10,6 @@ function DashboardHome(props) {
   const { chartType } = useParams();
   const location = useLocation();
   const data = location.state;
-  console.log(data);
   let chart;
   if (chartType === "one-commit") {
     chart = <OneCommitDashboard data={data} />;

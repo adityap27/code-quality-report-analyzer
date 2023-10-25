@@ -30,7 +30,6 @@ ChartJS.register(
 );
 
 function OneCommitDashboard(props) {
-  console.log(props.data);
   return (
     <>
       <div className="oneCommit">
