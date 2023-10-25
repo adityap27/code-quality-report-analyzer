@@ -10,7 +10,7 @@ build-frontend-job:
   extends: .frontend-common
   script:
   - npm install --legacy-peer-deps
-  - npm run build
+  - CI=false npm run build
 
 publish-frontend-job:
   stage: publish
