@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json";
 import "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import {
@@ -20,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function ArchitectureSmell() {
+function ArchitectureSmell(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -33,10 +32,10 @@ function ArchitectureSmell() {
 
   useEffect(() => {
     const labels = Object.keys(
-      DummyData["Architecture Smells"]["smell_distribution"]
+      props.architectureSmellData["Architecture Smell"]["smell_distribution"]
     );
     const values = Object.values(
-      DummyData["Architecture Smells"]["smell_distribution"]
+      props.architectureSmellData["Architecture Smell"]["smell_distribution"]
     );
 
     setChartData({
@@ -46,11 +45,12 @@ function ArchitectureSmell() {
           label: "Smells",
           data: values,
           backgroundColor: [
-            "rgb(122, 255, 64)",
-            "rgb(45, 189, 230)",
-            "rgb(255, 87, 152)",
-            "rgb(78, 200, 35)",
-            "rgb(203, 92, 210)",
+            "rgb(255, 0, 0)",
+            "rgb(0, 0, 255)",
+            "rgb(50, 205, 50)",
+            "rgb(255, 255, 0)",
+            "rgb(0, 128, 128)",
+            "rgb(128, 0, 128)",
           ],
         },
       ],
@@ -62,17 +62,30 @@ function ArchitectureSmell() {
       title: {
         display: true,
         text: "Architecture Smells",
+        font: {
+          size: 20,
+        },
       },
       legend: {
         display: true,
-        position: "top",
+        position: "left",
+        labels: {
+          font: {
+            size: 12,
+          },
+        },
       },
     },
   };
   return (
     <>
       <div>
-        <Doughnut data={chartData} options={doughnutOptions} />
+        <Doughnut
+          height={"500px"}
+          width={"500px"}
+          data={chartData}
+          options={doughnutOptions}
+        />
       </div>
     </>
   );
