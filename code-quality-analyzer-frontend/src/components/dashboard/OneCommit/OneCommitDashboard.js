@@ -10,11 +10,16 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import ArchitectureSmell from "../../oneCommit/smells/ArchitectureSmell"
-import DesignSmell from "../../oneCommit/smells/DesignSmell";
-import TestSmell from "../../oneCommit/smells/TestSmell";
-import TestabilitySmell from "../../oneCommit/smells/TestabilitySmell";
-import ImplementationSmell from "../../oneCommit/smells/ImplementationSmell";
+import ArchitectureSmell from "../../oneCommit/Smells/ArchitectureSmell";
+import DesignSmell from "../../oneCommit/Smells/DesignSmell";
+import TestSmell from "../../oneCommit/Smells/TestSmell";
+import TestabilitySmell from "../../oneCommit/Smells/TestabilitySmell";
+import ImplementationSmell from "../../oneCommit/Smells/ImplementationSmell";
+import ArchitechtureEntity from "../../oneCommit/Entities/ArchitechtureEntity";
+import DesignEntity from "../../oneCommit/Entities/DesignEntity";
+import TestEntity from "../../oneCommit/Entities/TestEntity";
+import TestabilityEntity from "../../oneCommit/Entities/TestabilityEntity";
+import ImplementationEntity from "../../oneCommit/Entities/ImplementationEntity";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -24,7 +29,8 @@ ChartJS.register(
   Legend
 );
 
-function OneCommitDashboard() {
+function OneCommitDashboard(props) {
+  console.log(props.data);
   return (
     <>
       <div className="oneCommit">
@@ -33,19 +39,24 @@ function OneCommitDashboard() {
         </div>
         <div className="charts">
           <div className="architechture common-chart">
-            <ArchitectureSmell />
+            <ArchitectureSmell architectureSmellData={props.data} />
+            <ArchitechtureEntity architectureEntityData={props.data} />
           </div>
           <div className="design common-chart">
-            <DesignSmell />
+            <DesignSmell designSmellData={props.data} />
+            <DesignEntity designEntityData={props.data} />
           </div>
           <div className="test common-chart">
-            <TestSmell />
+            <TestSmell testsmSmellData={props.data} />
+            <TestEntity testEntityData={props.data} />
           </div>
           <div className="testability common-chart">
-            <TestabilitySmell />
+            <TestabilitySmell testabilitySmellData={props.data} />
+            <TestabilityEntity testabilityEntityData={props.data} />
           </div>
           <div className="implementation common-chart">
-            <ImplementationSmell />
+            <ImplementationSmell implementationSmellData={props.data} />
+            <ImplementationEntity implementationEntityData={props.data} />
           </div>
         </div>
       </div>

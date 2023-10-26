@@ -1,24 +1,20 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import DashboardHome from "./components/DashboardHome/DashboardHome";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Homepage from './components/Homepage/Homepage';
+import DashboardHome from './components/DashboardHome/DashboardHome'
 
 function App() {
   return (
-    <><div className="App">
-    </div><Router>
+    <div className="App">
+      <Router>
         <Routes>
           <Route path='/' element={<Homepage />} />
-          <Route path="dashboard" element={<DashboardHome />} />
-          {/* <Route path="/dashboard/:chartType" element={<DashboardHome />} /> */}
-
+          <Route path="/Dashboard" element={<DashboardHome />} />
+          <Route path="/Dashboard/:chartType" element={<DashboardHome />} />
         </Routes>
-      </Router></>
+      </Router>
+    </div>
   );
 }
 
 export default App;
-
-
-
-
