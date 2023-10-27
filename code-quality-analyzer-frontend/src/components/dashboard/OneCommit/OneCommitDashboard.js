@@ -10,16 +10,16 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import ArchitectureSmell from "../../oneCommit/Smells/ArchitectureSmell";
-import DesignSmell from "../../oneCommit/Smells/DesignSmell";
-import TestSmell from "../../oneCommit/Smells/TestSmell";
-import TestabilitySmell from "../../oneCommit/Smells/TestabilitySmell";
-import ImplementationSmell from "../../oneCommit/Smells/ImplementationSmell";
-import ArchitechtureEntity from "../../oneCommit/Entities/ArchitechtureEntity";
-import DesignEntity from "../../oneCommit/Entities/DesignEntity";
-import TestEntity from "../../oneCommit/Entities/TestEntity";
-import TestabilityEntity from "../../oneCommit/Entities/TestabilityEntity";
-import ImplementationEntity from "../../oneCommit/Entities/ImplementationEntity";
+import ArchitectureSmell from "../../oneCommit/smells/ArchitectureSmell";
+import DesignSmell from "../../oneCommit/smells/DesignSmell";
+import TestSmell from "../../oneCommit/smells/TestSmell";
+import TestabilitySmell from "../../oneCommit/smells/TestabilitySmell";
+import ImplementationSmell from "../../oneCommit/smells/ImplementationSmell";
+import ArchitechtureEntity from "../../oneCommit/entities/ArchitechtureEntity";
+import DesignEntity from "../../oneCommit/entities/DesignEntity";
+import TestEntity from "../../oneCommit/entities/TestEntity";
+import TestabilityEntity from "../../oneCommit/entities/TestabilityEntity";
+import ImplementationEntity from "../../oneCommit/entities/ImplementationEntity";
 ChartJS.register(
   CategoryScale,
   LinearScale,
