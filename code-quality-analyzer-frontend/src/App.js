@@ -4,6 +4,7 @@ import Homepage from './components/homepage/Homepage';
 import DashboardHome from './components/dashboardHome/DashboardHome'
 
 function App() {
+  document.title = "Code Quality Analyzer";
   return (
     <div className="App">
       <Router>
