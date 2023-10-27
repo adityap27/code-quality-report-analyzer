@@ -19,7 +19,8 @@ ChartJS.register(
   Legend
 );
 
-function TestabilityEntity(props) {
+function DesignEntity(props) {
+  console.log(props.designEntityData);
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -31,8 +32,8 @@ function TestabilityEntity(props) {
   });
 
   useEffect(() => {
-    const topEntities = props.testabilityEntityData["Testability Smell"]["top_entities"];
-    const values = Object.values(topEntities);
+    const topEntities = props.designEntityData["Design Smell"]["top_entities"];
+
 
     const labels = Object.keys(topEntities).map((key) => {
       const parts = key.split("||");
@@ -40,20 +41,22 @@ function TestabilityEntity(props) {
       return lastPart;
     });
 
+    const values = Object.values(topEntities);
 
     setChartData({
-      labels,
+      labels: labels,
       datasets: [
         {
           label: "Entity Name",
           data: values,
           backgroundColor: [
-            "rgb(255, 128, 0)",
-            "rgb(128, 255, 0)",
-            "rgb(128, 0, 255)",
-            "rgb(0, 128, 255)",
-            "rgb(255, 0, 128)",
-            "rgb(0, 255, 128)",
+            "rgb(192, 128, 0)",
+            "rgb(192, 0, 128)",
+            "rgb(0, 192, 128)",
+            "rgb(64, 128, 0)",
+            "rgb(64, 0, 128)",
+            "rgb(0, 64, 128)",
+            "rgb(128, 64, 0)"
           ],
         },
       ],
@@ -66,7 +69,7 @@ function TestabilityEntity(props) {
         ticks: {
           callback: function (v) {
             if (v.length > 10) {
-              return v.toString().substring(0, 1) + "...";
+              return v.toString().substring(0, 10) + '...';
             }
             return v;
           },
@@ -76,7 +79,7 @@ function TestabilityEntity(props) {
     plugins: {
       title: {
         display: true,
-        text: "Testability Entities",
+        text: "Design Entities",
         font: {
           size: 20,
         },
@@ -92,18 +95,14 @@ function TestabilityEntity(props) {
       },
     },
   };
+
   return (
     <>
       <div>
-        <Bar
-          height={"500px"}
-          width={"500px"}
-          data={chartData}
-          options={doughnutOptions}
-        />
+        <Bar height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
       </div>
     </>
   );
 }
 
-export default TestabilityEntity;
+export default DesignEntity;

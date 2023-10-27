@@ -19,8 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function DesignEntity(props) {
-  console.log(props.designEntityData);
+function TestEntity(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -32,8 +31,7 @@ function DesignEntity(props) {
   });
 
   useEffect(() => {
-    const topEntities = props.designEntityData["Design Smell"]["top_entities"];
-
+    const topEntities = props.testEntityData["Test Smell"]["top_entities"];
 
     const labels = Object.keys(topEntities).map((key) => {
       const parts = key.split("||");
@@ -42,21 +40,19 @@ function DesignEntity(props) {
     });
 
     const values = Object.values(topEntities);
-
     setChartData({
-      labels: labels,
+      labels,
       datasets: [
         {
           label: "Entity Name",
           data: values,
           backgroundColor: [
-            "rgb(192, 128, 0)",
-            "rgb(192, 0, 128)",
-            "rgb(0, 192, 128)",
-            "rgb(64, 128, 0)",
-            "rgb(64, 0, 128)",
-            "rgb(0, 64, 128)",
-            "rgb(128, 64, 0)"
+            "rgb(128, 255, 255)",
+            "rgb(255, 128, 255)",
+            "rgb(255, 255, 128)",
+            "rgb(192, 64, 0)",
+            "rgb(64, 192, 0)",
+            "rgb(64, 0, 192)",
           ],
         },
       ],
@@ -69,7 +65,7 @@ function DesignEntity(props) {
         ticks: {
           callback: function (v) {
             if (v.length > 10) {
-              return v.toString().substring(0, 10) + '...';
+              return v.toString().substring(0, 1) + "...";
             }
             return v;
           },
@@ -79,7 +75,7 @@ function DesignEntity(props) {
     plugins: {
       title: {
         display: true,
-        text: "Design Entities",
+        text: "Test Entities",
         font: {
           size: 20,
         },
@@ -95,14 +91,18 @@ function DesignEntity(props) {
       },
     },
   };
-
   return (
     <>
       <div>
-        <Bar height={'500px'} width={'500px'} data={chartData} options={doughnutOptions} />
+        <Bar
+          height={"500px"}
+          width={"500px"}
+          data={chartData}
+          options={doughnutOptions}
+        />
       </div>
     </>
   );
 }
 
-export default DesignEntity;
+export default TestEntity;

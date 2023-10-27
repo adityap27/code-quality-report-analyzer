@@ -9,7 +9,7 @@ import hsl from "hsl-to-hex";
 import debounce from "debounce";
 import banner from "../../assets/images/banner.gif";
 import "./main.css";
-import Navbar from "../Navbar/Navbar";
+import Navbar from "../navbar/Navbar";
 
 
 const Main = () => {

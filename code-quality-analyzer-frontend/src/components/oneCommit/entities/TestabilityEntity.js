@@ -19,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function TestEntity(props) {
+function TestabilityEntity(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -31,7 +31,8 @@ function TestEntity(props) {
   });
 
   useEffect(() => {
-    const topEntities = props.testEntityData["Test Smell"]["top_entities"];
+    const topEntities = props.testabilityEntityData["Testability Smell"]["top_entities"];
+    const values = Object.values(topEntities);
 
     const labels = Object.keys(topEntities).map((key) => {
       const parts = key.split("||");
@@ -39,7 +40,7 @@ function TestEntity(props) {
       return lastPart;
     });
 
-    const values = Object.values(topEntities);
+
     setChartData({
       labels,
       datasets: [
@@ -47,12 +48,12 @@ function TestEntity(props) {
           label: "Entity Name",
           data: values,
           backgroundColor: [
-            "rgb(128, 255, 255)",
-            "rgb(255, 128, 255)",
-            "rgb(255, 255, 128)",
-            "rgb(192, 64, 0)",
-            "rgb(64, 192, 0)",
-            "rgb(64, 0, 192)",
+            "rgb(255, 128, 0)",
+            "rgb(128, 255, 0)",
+            "rgb(128, 0, 255)",
+            "rgb(0, 128, 255)",
+            "rgb(255, 0, 128)",
+            "rgb(0, 255, 128)",
           ],
         },
       ],
@@ -75,7 +76,7 @@ function TestEntity(props) {
     plugins: {
       title: {
         display: true,
-        text: "Test Entities",
+        text: "Testability Entities",
         font: {
           size: 20,
         },
@@ -105,4 +106,4 @@ function TestEntity(props) {
   );
 }
 
-export default TestEntity;
+export default TestabilityEntity;
