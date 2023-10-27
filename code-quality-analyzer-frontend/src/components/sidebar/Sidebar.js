@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../../assets/images/code-analyzer.png";
+import Logo from "../../assets/images/logo.png";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
 
