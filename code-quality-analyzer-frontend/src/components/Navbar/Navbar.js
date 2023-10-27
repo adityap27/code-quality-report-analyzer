@@ -1,10 +1,10 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
-import Logo from "../../assets/code-analyzer.png";
+import Logo from "../../assets/images/logo.png";
 import "./navbar.css";
 
 class Navbar extends Component {
-    state = { clciked: false };
+    state = { clicked: false };
     handleClick = () => {
         this.setState({ clicked: !this.state.clicked })
     }
@@ -12,7 +12,7 @@ class Navbar extends Component {
         return (
             <>
                 <nav>
-                    <div className="logo">
+                    <div className="mylogo">
                         <Link to={'/dashboard'}>
                             <img src={Logo} alt="" />
                         </Link>
@@ -25,17 +25,9 @@ class Navbar extends Component {
                             <li><a href="index.html">Blog</a></li>
                             <li><a href="index.html">About</a></li>
                             <li><a href="index.html">Contact</a></li>
-
                         </ul>
                     </div>
-                    <div id="mobile" onClick={this.handleClick}>
-                        <i id="bar" className=
-                            {this.state.clicked ?
-                                "fas fa-times" : "fas fa-bars"}></i>
-
-                    </div>
                 </nav>
-
             </>
         )
     }
