@@ -104,4 +104,4 @@ function ImplementationEntity(props) {
       );
 }
 
-export default ImplementationEntity
+export default ImplementationEntity;
