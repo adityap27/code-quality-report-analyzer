@@ -9,8 +9,9 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' element={<Homepage />} />
-          <Route path="/Dashboard" element={<DashboardHome />} />
-          <Route path="/Dashboard/:chartType" element={<DashboardHome />} />
+          <Route path="dashboard" element={<DashboardHome />} />
+          <Route path="/dashboard/:chartType" element={<DashboardHome />} />
+
         </Routes>
       </Router>
     </div>
