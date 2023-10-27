@@ -6,6 +6,7 @@
 
 .App {
   text-align: center;
+  /* background: linear-gradient(rgb(93, 144, 126), rgba(0, 0, 0, 0) ); */
 }
 
 .App-logo {
@@ -20,7 +21,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /*background-color: #282c34;*/
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -47,4 +48,8 @@
 :root {
   --sideBar: #132043;
   --sideBarText: #ffffff;
+}
+
+body {
+  height: 1vh;
 }

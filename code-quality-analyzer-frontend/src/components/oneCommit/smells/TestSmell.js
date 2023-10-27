@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import DummyData from "../../../Data/dummy.json";
 import "chart.js/auto";
-import { Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function TestSmell() {
+function TestSmell(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -32,9 +31,11 @@ function TestSmell() {
   });
 
   useEffect(() => {
-    const labels = Object.keys(DummyData["Test Smells"]["smell_distribution"]);
+    const labels = Object.keys(
+      props.testsmSmellData["Test Smell"]["smell_distribution"]
+    );
     const values = Object.values(
-      DummyData["Test Smells"]["smell_distribution"]
+      props.testsmSmellData["Test Smell"]["smell_distribution"]
     );
 
     setChartData({
@@ -44,11 +45,12 @@ function TestSmell() {
           label: "Smells",
           data: values,
           backgroundColor: [
-            "rgb(122, 255, 64)",
-            "rgb(45, 189, 230)",
-            "rgb(255, 87, 152)",
-            "rgb(78, 200, 35)",
-            "rgb(203, 92, 210)",
+            "rgb(0, 64, 192)",
+            "rgb(192, 0, 64)",
+            "rgb(0, 192, 64)",
+            "rgb(128, 192, 0)",
+            "rgb(128, 0, 192)",
+            "rgb(0, 128, 192)",
           ],
           hoverOffset: 4,
         },
@@ -61,17 +63,30 @@ function TestSmell() {
       title: {
         display: true,
         text: "Test Smells",
+        font: {
+          size: 20,
+        },
       },
       legend: {
         display: true,
-        position: "top",
+        position: "left",
+        labels: {
+          font: {
+            size: 12,
+          },
+        },
       },
     },
   };
   return (
     <>
       <div>
-        <Pie data={chartData} options={doughnutOptions} />
+        <Doughnut
+          height={"500px"}
+          width={"500px"}
+          data={chartData}
+          options={doughnutOptions}
+        />
       </div>
     </>
   );
