@@ -7,4 +7,4 @@ function HotspotAnalysis() {
   )
 }
 
-export default HotspotAnalysis
+export default HotspotAnalysis;

@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../../assets/code-analyzer.png";
+import Logo from "../../assets/images/code-analyzer.png";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
 
@@ -8,7 +8,7 @@ function Sidebar() {
     <div className="sidebar">
       <div className="logo">
         <Link to={'/dashboard'}>
-          <img src={Logo} alt="" />
+        <img src={Logo} alt="" />
         </Link>
       </div>
       <div className="sidebar-menu-items">

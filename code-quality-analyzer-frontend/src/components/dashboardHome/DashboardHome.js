@@ -1,36 +1,30 @@
 import React from "react";
 import "./dashboard-home.css";
 import Sidebar from "../Sidebar/Sidebar";
-import OneCommitDashboard from "../dashboard/OneCommit/OneCommitDashboard";
-import HotspotAnalysis from "../dashboard/Hotspot/HotspotAnalysis";
-import TrendAnalysis from "../dashboard/Trend/TrendAnalysis";
-import { useParams } from "react-router";
+import OneCommitDashboard from "../Dashboard/OneCommit/OneCommitDashboard";
+import HotspotAnalysis from "../Dashboard/Hotspot/HotspotAnalysis";
+import TrendAnalysis from "../Dashboard/Trend/TrendAnalysis";
+import { useParams, useLocation } from "react-router";
 
-function DashboardHome() {
+function DashboardHome(props) {
   const { chartType } = useParams();
+  const location = useLocation();
+  const data = location.state;
+  console.log(data);
   let chart;
   if (chartType === "one-commit") {
-    chart = <OneCommitDashboard />;
+    chart = <OneCommitDashboard data={data} />;
   } else if (chartType === "trend") {
-    chart = <TrendAnalysis />;
+    chart = <TrendAnalysis data={data} />;
   } else if (chartType === "hotspot") {
-    chart = <HotspotAnalysis />;
+    chart = <HotspotAnalysis data={data} />;
   } else {
-    chart = <OneCommitDashboard />;
+    chart = <OneCommitDashboard data={data} />;
   }
   return (
     <>
       <div className="dashboardHome">
         <Sidebar />
-        {/* <div className="one-commit">
-          <OneCommitDashboard />
-        </div>
-        <div className="trend-analysis">
-          <TrendAnalysis />
-        </div>
-        <div className="hotspot-analysis">
-          <HotspotAnalysis />
-        </div> */}
         {chart}
       </div>
     </>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "chart.js/auto";
-import { Doughnut } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-function TestSmell(props) {
+function TestEntity(props) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -31,45 +31,58 @@ function TestSmell(props) {
   });
 
   useEffect(() => {
-    const labels = Object.keys(
-      props.testsmSmellData["Test Smell"]["smell_distribution"]
-    );
-    const values = Object.values(
-      props.testsmSmellData["Test Smell"]["smell_distribution"]
-    );
+    const topEntities = props.testEntityData["Test Smell"]["top_entities"];
 
+    const labels = Object.keys(topEntities).map((key) => {
+      const parts = key.split("||");
+      const lastPart = parts[parts.length - 1];
+      return lastPart;
+    });
+
+    const values = Object.values(topEntities);
     setChartData({
       labels,
       datasets: [
         {
-          label: "Smells",
+          label: "Entity Name",
           data: values,
           backgroundColor: [
-            "rgb(0, 64, 192)",
-            "rgb(192, 0, 64)",
-            "rgb(0, 192, 64)",
-            "rgb(128, 192, 0)",
-            "rgb(128, 0, 192)",
-            "rgb(0, 128, 192)",
+            "rgb(128, 255, 255)",
+            "rgb(255, 128, 255)",
+            "rgb(255, 255, 128)",
+            "rgb(192, 64, 0)",
+            "rgb(64, 192, 0)",
+            "rgb(64, 0, 192)",
           ],
-          hoverOffset: 4,
         },
       ],
     });
   }, []);
 
   const doughnutOptions = {
+    scales: {
+      x: {
+        ticks: {
+          callback: function (v) {
+            if (v.length > 10) {
+              return v.toString().substring(0, 1) + "...";
+            }
+            return v;
+          },
+        },
+      },
+    },
     plugins: {
       title: {
         display: true,
-        text: "Test Smells",
+        text: "Test Entities",
         font: {
           size: 20,
         },
       },
       legend: {
         display: true,
-        position: "left",
+        position: "top",
         labels: {
           font: {
             size: 12,
@@ -81,7 +94,7 @@ function TestSmell(props) {
   return (
     <>
       <div>
-        <Doughnut
+        <Bar
           height={"500px"}
           width={"500px"}
           data={chartData}
@@ -92,4 +105,4 @@ function TestSmell(props) {
   );
 }
 
-export default TestSmell;
+export default TestEntity;
