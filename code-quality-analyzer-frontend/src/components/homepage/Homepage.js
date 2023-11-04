@@ -1,12 +1,12 @@
-import React from "react";
-import Main from "../main/Main";
-import "./homepage.css";
+import React from 'react'
+import Main from '../main/Main'
+import './homepage.css'
 
 const Homepage = () => {
-    return (
-        <div className="homepage">
-            <Main />
-        </div>
-    );
+  return (
+    <div className="homepage">
+      <Main />
+    </div>
+  )
 }
-export default Homepage;
+export default Homepage
