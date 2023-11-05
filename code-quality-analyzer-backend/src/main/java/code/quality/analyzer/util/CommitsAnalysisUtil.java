@@ -11,6 +11,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import Designite.Designite;
+import code.quality.analyzer.exception.InvalidCommitsException;
 
 public class CommitsAnalysisUtil {
 	
@@ -28,9 +29,9 @@ public class CommitsAnalysisUtil {
 		logger.info("BEGIN getCommitIds()");
 		List<String> commitIds = new ArrayList<String>();
 		Git git = checkoutAndValidate(repoPath, branchname);
-		/*if (noOfCommits == 0) {
+		if (noOfCommits == 0) {
 			return commitIds;
-		}*/
+		}
 		Iterable<RevCommit> commits = git.log().setMaxCount(noOfCommits).call();
 		commitIds.add(commits.iterator().next().getName());
 		return commitIds;
@@ -44,6 +45,7 @@ public class CommitsAnalysisUtil {
 	 * @throws Exception
 	 */
 	public static Git checkoutAndValidate(String repoPath, String branchname) throws Exception {
+		logger.info("BEGIN checkoutAndValidate()");
 		Repository repository = new FileRepository(repoPath + Constants.REPO_SUFFIX);
 		Git git = new Git(repository);
 		git.checkout().setCreateBranch(false).setName(branchname).call();
@@ -60,11 +62,14 @@ public class CommitsAnalysisUtil {
 	 */
 	public static String generateReports(List<String> commitIds, String repoPath, String branch) throws Exception {
 		logger.info("BEGIN generateReports()");
+		if(commitIds == null || commitIds.isEmpty()) {
+			throw new InvalidCommitsException("Invalid commits");
+		}
 		String reportPath = repoPath + Constants.REPORT_PATH;
 		String toCommit = commitIds.get(0);
-		/*if(!commitIds.isEmpty() && commitIds.size() != 1) {
+		if(!commitIds.isEmpty() && commitIds.size() != 1) {
 			toCommit = commitIds.get(1);
-		}*/
+		}
 		String[] args = new String[] 
 			{"-i", repoPath, 
 			"-o", reportPath, 
