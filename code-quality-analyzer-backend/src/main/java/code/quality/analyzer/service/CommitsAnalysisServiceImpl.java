@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import code.quality.analyzer.util.CommitsAnalysisUtil;
 import code.quality.analyzer.util.Constants;
 import code.quality.analyzer.model.SmellAnalysisRequest;
+import code.quality.analyzer.model.TrendAnalysisRequest;
 import code.quality.analyzer.util.GitRepository;
 
 @Service
@@ -63,5 +64,11 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 				.exchange(Constants.ANALYSIS_SERVICE_BASE_URL+"/smell_analysis/", HttpMethod.POST, request, String.class);
 
 		return response.getBody();
+	}
+
+	@Override
+	public TrendAnalysisRequest generateTrendAnalysisReport(String repoPath, String branch, int noOfCommits)
+			throws Exception {
+		return null;
 	}
 }

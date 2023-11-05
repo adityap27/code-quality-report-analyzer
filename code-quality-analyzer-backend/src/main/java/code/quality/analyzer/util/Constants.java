@@ -11,6 +11,8 @@ public class Constants {
 
 	//Test file constants
 	public static String TEST_BRANCH = "main";
+	public static String TEST_BRANCH_TREND = "master";
+	public static int TEST_NO_OF_COMMITS = 3;
 	public static String TEST_COMMIT_ID = "a2c6353a0ad9150a205c0d1af381665909a10a30";
 	public static String TEST_REPO_URL = "https://github.com/roshni-joshi/Retail-Product-Management-System.git";
 	public static String TEST_COMMIT_ID_2 = "e6012b9fbb79e2ee8aa8252cb873606233d0e531";
@@ -18,6 +20,7 @@ public class Constants {
 	public static String TEST_COMMIT_ID_3 = "ec1fdffca506b60e4b1bbccf29931b1d2544c790";
 	public static String TEST_REPO_URL_3 = "https://github.com/roshni-joshi/taxi-ticket-system.git";
 	public static String ONE_COMMIT_URL = "/onecommit/getanalysis";
+	public static String TEST_REPO_URL_TREND = "https://github.com/ZYRzyr/FastJsonConverter.git";
 	public static String ANALYSIS_SERVICE_TEST_RESPONSE = "{\"Architecture Smells\":{\r\n"
 			+ "      \"total_smells\": 151,\r\n"
 			+ "      \"smell_distribution\":{\r\n"

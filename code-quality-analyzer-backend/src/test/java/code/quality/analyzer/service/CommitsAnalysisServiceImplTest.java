@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import code.quality.analyzer.model.TrendAnalysisRequest;
 import code.quality.analyzer.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -69,5 +70,12 @@ class CommitsAnalysisServiceImplTest {
         String response = commitsAnalysisService.callAnalysisService(Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID);
         assertNotNull(response);
         assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+    }
+    
+    @Test
+    void testGenerateTrendAnalysisReport() throws Exception {
+    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH_TREND, Constants.TEST_NO_OF_COMMITS);
+    	assertNotNull(trendAnalysisRequest);
+    	assertEquals(Constants.TEST_NO_OF_COMMITS, trendAnalysisRequest.getCommitIds().size());
     }
 }
