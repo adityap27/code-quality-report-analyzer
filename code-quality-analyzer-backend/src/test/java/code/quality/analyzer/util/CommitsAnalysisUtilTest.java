@@ -15,6 +15,8 @@ import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import code.quality.analyzer.exception.InvalidCommitsException;
 import code.quality.analyzer.service.CommitsAnalysisService;
@@ -38,11 +40,19 @@ class CommitsAnalysisUtilTest {
 	}
 
 	@Test
-	void testGetCommitIdsOneCommit() throws Exception {
+	void testGetCommitIdsForOneCommit() throws Exception {
 		List<String> ids = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, Constants.OneCommit);
 		assertEquals(false, ids.isEmpty());
 		assertEquals(Constants.OneCommit, ids.size());
 		assertEquals(commitIds.get(0), ids.get(0));
+	}
+	
+	@ParameterizedTest
+	@CsvSource({"2,2", "1,1", "5,3"})
+	void testGetCommitIdsForTrend(int noOfCommits, int expectedSize) throws Exception {
+		List<String> ids = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, noOfCommits);
+		assertEquals(false, ids.isEmpty());
+		assertEquals(expectedSize, ids.size());
 	}
 
 	@Test
