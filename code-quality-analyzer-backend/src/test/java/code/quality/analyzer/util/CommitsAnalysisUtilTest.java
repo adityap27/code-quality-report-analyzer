@@ -16,6 +16,7 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import code.quality.analyzer.exception.InvalidCommitsException;
 import code.quality.analyzer.service.CommitsAnalysisService;
 import code.quality.analyzer.service.CommitsAnalysisServiceImpl;
 
@@ -58,5 +59,11 @@ class CommitsAnalysisUtilTest {
 		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
 		assertEquals(repoPath + Constants.REPORT_PATH + "\\" + commitIds.get(0), path);
 		assertEquals(true, Files.exists(Paths.get(path)));
+	}
+	
+	@Test
+	void testGenerateReportsForException() {
+		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(null, repoPath, Constants.TEST_BRANCH));
+		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(new ArrayList<String>(), repoPath, Constants.TEST_BRANCH));
 	}
 }
