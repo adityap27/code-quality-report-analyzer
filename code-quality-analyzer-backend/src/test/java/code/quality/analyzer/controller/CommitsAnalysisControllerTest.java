@@ -2,9 +2,6 @@ package code.quality.analyzer.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,10 +29,10 @@ import code.quality.analyzer.util.Constants;
  */
 @WebMvcTest
 @ExtendWith(MockitoExtension.class)
-public class OneCommitAnalysisControllerTest {
+public class CommitsAnalysisControllerTest {
 
 	@InjectMocks
-	OneCommitAnalysisController oneCommitAnalysisController;
+	CommitsAnalysisController oneCommitAnalysisController;
 	
 	@Autowired
 	@Mock CommitsAnalysisServiceImpl commitsAnalysisService;
@@ -52,11 +49,9 @@ public class OneCommitAnalysisControllerTest {
 	}
 	
 	@Test
-	void testGetOneCommitAnalysis() throws Exception {
-		when(commitsAnalysisService.callAnalysisService(anyString())).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		when(commitsAnalysisService.cloneRepository(any())).thenCallRealMethod();
-		when(commitsAnalysisService.generateOneCommitReport(any(), any(), any())).thenCallRealMethod();
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(Constants.ONE_COMMIT_URL)
+	void testGetTrendAnalysis() throws Exception {
+		commitAnalysisRequest.setNoOfCommits(2);
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(Constants.TREND_URL)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(commitAnalysisRequest)))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -64,6 +59,6 @@ public class OneCommitAnalysisControllerTest {
 		
 		String response = mvcResult.getResponse().getContentAsString();
 		assertNotNull(response);
-		assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+		assertEquals(Constants.EMPTY, response);
 	}
 }
