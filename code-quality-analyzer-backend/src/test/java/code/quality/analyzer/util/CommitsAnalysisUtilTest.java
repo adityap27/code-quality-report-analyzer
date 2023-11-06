@@ -50,6 +50,7 @@ class CommitsAnalysisUtilTest {
 	@ParameterizedTest
 	@CsvSource({"2,2", "1,1", "5,3", "0,0"})
 	void testGetCommitIdsForTrend(int noOfCommits, int expectedSize) throws Exception {
+		repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
 		List<String> ids = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, noOfCommits);
 		if(noOfCommits == 0) {
 			assertEquals(true, ids.isEmpty());
