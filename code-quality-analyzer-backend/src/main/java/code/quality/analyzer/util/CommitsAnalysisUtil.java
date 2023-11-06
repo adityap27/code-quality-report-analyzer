@@ -28,12 +28,12 @@ public class CommitsAnalysisUtil {
 	public static List<String> getCommitIds(String repoPath, String branchname, int noOfCommits) throws Exception {
 		logger.info("BEGIN getCommitIds()");
 		List<String> commitIds = new ArrayList<String>();
-		Git git = checkoutAndValidate(repoPath, branchname);
 		if (noOfCommits == 0) {
 			return commitIds;
 		}
+		Git git = checkoutAndValidate(repoPath, branchname);
 		Iterable<RevCommit> commits = git.log().setMaxCount(noOfCommits).call();
-		commitIds.add(commits.iterator().next().getName());
+		commits.forEach(commit -> commitIds.add(commit.getName()));
 		return commitIds;
 	}
 	
