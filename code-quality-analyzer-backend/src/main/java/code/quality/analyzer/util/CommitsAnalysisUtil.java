@@ -22,7 +22,7 @@ public class CommitsAnalysisUtil {
 	 * @param repoPath repository path
 	 * @param branchname branch name
 	 * @param noOfCommits number of commits
-	 * @return List<String> from and to commit ids
+	 * @return List<String> list of commit ids
 	 * @throws Exception
 	 */
 	public static List<String> getCommitIds(String repoPath, String branchname, int noOfCommits) throws Exception {
@@ -68,7 +68,7 @@ public class CommitsAnalysisUtil {
 		String reportPath = repoPath + Constants.REPORT_PATH;
 		String toCommit = commitIds.get(0);
 		if(!commitIds.isEmpty() && commitIds.size() != 1) {
-			toCommit = commitIds.get(1);
+			toCommit = commitIds.get(commitIds.size()-1);
 		}
 		String[] args = new String[] 
 			{"-i", repoPath, 
@@ -78,6 +78,9 @@ public class CommitsAnalysisUtil {
 			"-to", toCommit};
 		
 		Designite.main(args);
-		return reportPath + "\\" + commitIds.get(0);
+		if(commitIds.size() == 1) {
+			reportPath = reportPath + "\\" + commitIds.get(0);
+		}
+		return reportPath;
 	}
 }
