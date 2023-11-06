@@ -70,7 +70,7 @@ class CommitsAnalysisUtilTest {
 	}
 
 	@Test
-	void testGenerateReports() throws Exception {
+	void testGenerateReportsForOneCommit() throws Exception {
 		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
 		assertEquals(repoPath + Constants.REPORT_PATH + "\\" + commitIds.get(0), path);
 		assertEquals(true, Files.exists(Paths.get(path)));
@@ -80,5 +80,12 @@ class CommitsAnalysisUtilTest {
 	void testGenerateReportsForException() {
 		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(null, repoPath, Constants.TEST_BRANCH));
 		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(new ArrayList<String>(), repoPath, Constants.TEST_BRANCH));
+	}
+	
+	@Test
+	void testGenerateReportsForTrend() throws Exception {
+		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
+		assertEquals(repoPath + Constants.REPORT_PATH, path);
+		assertEquals(true, Files.exists(Paths.get(path)));
 	}
 }
