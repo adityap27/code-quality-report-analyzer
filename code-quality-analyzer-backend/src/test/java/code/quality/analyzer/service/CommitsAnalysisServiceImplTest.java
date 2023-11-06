@@ -1,5 +1,14 @@
 package code.quality.analyzer.service;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -9,18 +18,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import code.quality.analyzer.model.TrendAnalysisRequest;
-import code.quality.analyzer.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import code.quality.analyzer.exception.InvalidCommitsException;
+import code.quality.analyzer.model.TrendAnalysisRequest;
+import code.quality.analyzer.util.Constants;
 
 /**
  * Test CommitsAnalysisServiceImplTest class methods
@@ -74,8 +80,24 @@ class CommitsAnalysisServiceImplTest {
     
     @Test
     void testGenerateTrendAnalysisReport() throws Exception {
-    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH_TREND, Constants.TEST_NO_OF_COMMITS);
+    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, 2);
     	assertNotNull(trendAnalysisRequest);
-    	assertEquals(Constants.TEST_NO_OF_COMMITS, trendAnalysisRequest.getCommitIds().size());
+    	assertEquals(2, trendAnalysisRequest.getCommitIds().size());
+    	assertEquals("517cef8c8e6637d05635054295fee1b40f17b44d", trendAnalysisRequest.getPreviousCommitId());
+    	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
+    }
+    
+    @Test
+    void testGenerateTrendAnalysisReportForAllCommits() throws Exception {
+    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, 3);
+    	assertNotNull(trendAnalysisRequest);
+    	assertEquals(3, trendAnalysisRequest.getCommitIds().size());
+    	assertNull(trendAnalysisRequest.getPreviousCommitId());
+    	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
+    }
+    
+    @Test
+    void testGenerateTrendAnalysisReportForZeroCommits() throws Exception {
+    	assertThrows(InvalidCommitsException.class, () -> commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, 0));
     }
 }

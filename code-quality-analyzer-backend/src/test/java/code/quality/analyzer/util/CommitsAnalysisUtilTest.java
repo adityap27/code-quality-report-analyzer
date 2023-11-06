@@ -84,7 +84,7 @@ class CommitsAnalysisUtilTest {
 	
 	@Test
 	void testGenerateReportsForTrend() throws Exception {
-		commitIds.add(0, "d9a7bf910760638afa3cfeef09e2f980565b7aab");
+		commitIds.add("d9a7bf910760638afa3cfeef09e2f980565b7aab");
 		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
 		assertEquals(repoPath + Constants.REPORT_PATH, path);
 		assertEquals(true, Files.exists(Paths.get(path)));
