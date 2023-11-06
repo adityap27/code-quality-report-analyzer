@@ -66,16 +66,16 @@ public class CommitsAnalysisUtil {
 			throw new InvalidCommitsException("Invalid commits");
 		}
 		String reportPath = repoPath + Constants.REPORT_PATH;
-		String toCommit = commitIds.get(0);
+		String fromCommit = commitIds.get(0);
 		if(!commitIds.isEmpty() && commitIds.size() != 1) {
-			toCommit = commitIds.get(commitIds.size()-1);
+			fromCommit = commitIds.get(commitIds.size()-1);
 		}
 		String[] args = new String[] 
 			{"-i", repoPath, 
 			"-o", reportPath, 
 			"-ac", branch, 
-			"-fr", commitIds.get(0), 
-			"-to", toCommit};
+			"-fr", fromCommit, 
+			"-to", commitIds.get(0)};
 		
 		Designite.main(args);
 		if(commitIds.size() == 1) {
