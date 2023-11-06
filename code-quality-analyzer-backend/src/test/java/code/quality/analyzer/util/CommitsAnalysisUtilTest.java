@@ -48,10 +48,14 @@ class CommitsAnalysisUtilTest {
 	}
 	
 	@ParameterizedTest
-	@CsvSource({"2,2", "1,1", "5,3"})
+	@CsvSource({"2,2", "1,1", "5,3", "0,0"})
 	void testGetCommitIdsForTrend(int noOfCommits, int expectedSize) throws Exception {
 		List<String> ids = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, noOfCommits);
-		assertEquals(false, ids.isEmpty());
+		if(noOfCommits == 0) {
+			assertEquals(true, ids.isEmpty());
+		} else {
+			assertEquals(false, ids.isEmpty());
+		}
 		assertEquals(expectedSize, ids.size());
 	}
 
