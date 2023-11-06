@@ -1,0 +1,59 @@
+.oneCommit {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 100%;
+}
+
+.oneCommit-heading {
+  font-size: 1.2rem;
+  color: #333;
+  text-align: start;
+  margin: 10px;
+}
+
+.oneCommit-heading h1 {
+  margin: 0;
+}
+
+.charts {
+  width: 100%;
+}
+
+.common-chart {
+  display: flex;
+  justify-content: space-around;
+  background-color: #ffffff02;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.common-chart:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Entities Part */
+.entities {
+  display: flex;
+  flex-direction: column;
+}
+
+.entity-common-chart {
+  display: flex;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 500px;
+  margin: 10px 0;
+}
+
+.entities h2 {
+  margin: 0;
+}
