@@ -1,22 +1,22 @@
 package code.quality.analyzer.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import code.quality.analyzer.util.CommitsAnalysisUtil;
-import code.quality.analyzer.util.Constants;
+import code.quality.analyzer.exception.InvalidCommitsException;
 import code.quality.analyzer.model.SmellAnalysisRequest;
 import code.quality.analyzer.model.TrendAnalysisRequest;
+import code.quality.analyzer.util.CommitsAnalysisUtil;
+import code.quality.analyzer.util.Constants;
 import code.quality.analyzer.util.GitRepository;
 
 @Service
@@ -69,6 +69,21 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	@Override
 	public TrendAnalysisRequest generateTrendAnalysisReport(String repoPath, String branch, int noOfCommits)
 			throws Exception {
-		return null;
+		TrendAnalysisRequest trendAnalysisRequest = null;
+		if(noOfCommits == 0) {
+			throw new InvalidCommitsException("Invalid number of commits");
+		}
+		List<String> commitIds = CommitsAnalysisUtil.getCommitIds(repoPath, branch, noOfCommits+1);
+		String reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
+		String previousCommitId = null;
+		if(commitIds.size() == noOfCommits+1) {
+			previousCommitId = commitIds.remove(commitIds.size()-1);
+		}
+		Collections.reverse(commitIds);
+		trendAnalysisRequest = new TrendAnalysisRequest();
+		trendAnalysisRequest.setCommitIds(commitIds);
+		trendAnalysisRequest.setPreviousCommitId(previousCommitId);
+		trendAnalysisRequest.setReportPath(reportPath);
+		return trendAnalysisRequest;
 	}
 }
