@@ -7,6 +7,12 @@
 build-analysis-service-job:
   stage: build
   extends: .analysis-service-common
+  image: docker:latest
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+  services:
+    - docker:dind
   script:
   - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA .
 
