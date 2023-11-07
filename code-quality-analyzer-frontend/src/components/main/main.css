@@ -10,7 +10,7 @@
       hsl(var(--hue), 15%, 14%));
 }
 
-input {
+.repo-link {
   width: 100%;
   height: 100%;
   border: 1px rgba(128, 128, 128, 0.362);
@@ -137,14 +137,6 @@ strong {
   align-items: center;
 }
 
-.main-container__buttons {
-  width: 200px;
-  display: flex;
-  height: 50px;
-  margin: 20px;
-  margin-top: 10px;
-  margin-left: 9rem;
-}
 
 .main-container__button {
   width: 200px;
@@ -176,6 +168,43 @@ strong {
   margin-right: 0.75rem;
 }
 
+.main-container__buttons {
+  width: 150px;
+  display: flex;
+  height: 50px;
+  align-items: center;
+}
+
+.radio-buttons {
+  display: flex;
+}
+
+.radio-label1 {
+  display: flex;
+  align-items: center;
+  font-size:1rem;
+  color: white;
+  cursor: pointer;
+  margin-top: 30PX;
+  margin-left: 30px;
+}
+.radio-label2 {
+  display: flex;
+  align-items: center;
+  font-size:1rem;
+  color: white;
+  cursor: pointer;
+  margin-top: 30PX;
+  margin-left: 63px;
+}
+.dropbox{
+  display: flex;
+}
+.execute-button-container {
+  text-align: center;
+  margin-top: 80px;
+  margin-left: 0px;
+}
 .main-container__button-emoji {
   margin-left: 0.375rem;
 }
@@ -254,38 +283,19 @@ a {
   }
 }
 
-.dropdowns {
-  position: relative;
-  display: inline-block;
-  padding: .75rem 0;
-  cursor: pointer;
-
-  &:after {
-    content: '';
-    width: .35rem;
-    height: .35rem;
-    display: block;
-    position: absolute;
-    inset: 50% 1rem auto auto;
-    translate: 0 -75% 0;
-    rotate: 0 0 1 45deg;
-    border-right: .125rem solid #181818;
-    border-bottom: .125rem solid #1f1d1d;
-  }
-
-  .select,
+  .branch_select,
   .custom-select {
     position: relative;
     appearance: none;
     background: #01010100;
     color: #ddd;
     font-family: inherit;
-    height: 3.5rem;
-    line-height: 3.5rem;
+    height:100%;
+   /* line-height: 3.5rem;*/
     outline: none;
     padding: 0 1.5rem;
     transition: all .35s ease-in-out;
-    width: 250px;
+    width: 100%;
     font-size: .75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -293,8 +303,63 @@ a {
     border: 1px solid #222;
     border-radius: .35rem;
     cursor: pointer;
+    margin-top: 30px;
+    margin-left: auto;
   }
 
+  .commit_select,
+  .custom-select {
+    position: relative;
+    appearance: none;
+    background: #01010100;
+    color: #ddd;
+    font-family: inherit;
+    height: 100%;
+    outline: none;
+    padding: 0 1.5rem;
+    transition: all .35s ease-in-out;
+    width: 200px;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    border: 1px solid #222;
+    border-radius: .35rem;
+    cursor: pointer;
+    margin-top: 30px;
+  }
+
+  .commit_count,
+  .custom-select {
+    position: relative;
+    appearance: none;
+    background: #01010100;
+    color: #ddd;
+    font-family: inherit;
+    height: 100%;
+    outline: none;
+    padding: 0 1.5rem;
+    transition: all .35s ease-in-out;
+    width: 200px;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    border: 1px solid #222;
+    border-radius: .35rem;
+    cursor: pointer;
+    display: flex;
+    margin-top: 30px;
+    
+  }
+  #loop-number-input{
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+    width: 100%;
+    height: 40px;
+    }
+.commit_count{
+  
+}
   .select-options {
     position: absolute;
     inset: 100% 0 auto;
@@ -345,4 +410,3 @@ a {
       pointer-events: all;
     }
   }
-}

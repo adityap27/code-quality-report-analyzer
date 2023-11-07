@@ -23,7 +23,64 @@ const Main = () => {
   const [flag, setFlag] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const [selectedOption, setSelectedOption] = useState('one-commit')
+  const [commitCount, setCommitCount] = useState(''); // Initial value
+  const [maxCommits, setMaxCommits] = useState('');
 
+  const handleRadioChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+  useEffect(() => {
+    // Initialize commits when the component loads
+    if (selectedBranch) {
+      fetchCommits(selectedBranch);
+    }
+  }, [selectedBranch]);
+
+  const executeAnalysis =() => {
+    if (selectedOption === 'one-commit')
+    {
+        setIsLoading(true)
+        const selcommitSHA = selectedCommit.value
+        const requestData = {
+          gitRepoLink: repoLink,
+          branch: selectedBranch.value,
+          commitId: selcommitSHA,
+        }
+    
+        axios
+          .post('http://localhost:8080/onecommit/getanalysis', requestData, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          .then((response) => {
+            setIsLoading(false)
+            if (response.status === 200) {
+              setAnalysisData(response.data)
+              navigate('/dashboard/oneCommit')
+            }
+          })
+          .catch((error) => {
+            setIsLoading(false)
+            setErrorMessage(
+              'Failed to load analysis. Try again later.'
+            )
+          })
+      
+    }
+
+    else if (selectedOption === 'trend-analysis'){
+      setIsLoading(true)
+      navigate('/dashboard/trend')
+  
+       }
+
+  }
+
+  const handleCommitCountChange = (event) => {
+    setCommitCount(parseInt(event.target.value, 10) || 0);
+  };
   const styles = {
     backColor: 'grey',
   }
@@ -265,40 +322,16 @@ const Main = () => {
 
         if (commitOptions.length > 0) {
           setSelectedCommit(commitOptions[0])
+          setMaxCommits(commitOptions.length);
         }
       })
       .catch((error) => {
         console.error(error)
+        
       })
   }
 
-  const executeAnalysis = () => {
-    setIsLoading(true)
-    const selcommitSHA = selectedCommit.value
-    const requestData = {
-      gitRepoLink: repoLink,
-      branch: selectedBranch.value,
-      commitId: selcommitSHA,
-    }
-
-    axios
-      .post('http://localhost:8080/onecommit/getanalysis', requestData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((response) => {
-        setIsLoading(false)
-        if (response.status === 200) {
-          setAnalysisData(response.data)
-          navigate('/dashboard')
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false)
-      })
-  }
-
+  
   return (
     <>
       <Navbar />
@@ -317,7 +350,7 @@ const Main = () => {
                   <span className="text-gradient"> CODE</span> Now !!
                 </h1>
                 <div className="search-bar">
-                  <input
+                  <input className="repo-link"
                     type="text"
                     placeholder="Insert Your GitHub Repository Link"
                     value={repoLink}
@@ -336,9 +369,9 @@ const Main = () => {
 
                 {flag ? (
                   <>
-                    <div className="dropdowns" style={{ display: 'flex' }}>
+                   
                       <Select
-                        className="select"
+                        className="branch_select"
                         value={selectedBranch}
                         styles={styles.select}
                         onChange={(option) => setSelectedBranch(option)}
@@ -346,8 +379,32 @@ const Main = () => {
                         isSearchable={true}
                         placeholder=" Branch..."
                       />
-                      <Select
-                        className="select"
+                  
+                    <div className="main-container__buttons">
+                  <div className="radio-buttons">
+                    <label className="radio-label1" style={{width: '131px'}}>
+                      <input
+                        type="radio"
+                        value="one-commit"
+                        checked={selectedOption === 'one-commit'}
+                        onChange={handleRadioChange}
+                      />
+                        One-Commit
+                    </label>
+                    <label className="radio-label2" style={{width: '131px'}}>
+                      <input
+                        type="radio"
+                        value="trend-analysis"
+                        checked={selectedOption === 'trend-analysis'}
+                        onChange={handleRadioChange}
+                      />
+                        Trend Analysis
+                    </label>
+                    </div>
+                    </div>
+                    <div className="dropbox">
+                    <Select
+                        className="commit_select"
                         value={selectedCommit}
                         onChange={(option) => setSelectedCommit(option)}
                         options={commits}
@@ -356,15 +413,21 @@ const Main = () => {
                         getOptionValue={(option) => option.value}
                         placeholder="Commit..."
                       />
-                    </div>
-                    <div className="main-container__buttons">
+                      
+                      <div className="commit_count">
+                            <input class="form-control" type="number" placeholder="No. Of Commits" id="loop-number-input" min="1"
+        max={maxCommits} value={commitCount} onChange={handleCommitCountChange}></input>
+                        </div>
+                        </div>
+                      <div className="execute-button-container">
                       <button
                         className="main-container__button"
                         onClick={executeAnalysis}
                       >
                         Execute
                       </button>
-                    </div>
+                      </div>
+                
                   </>
                 ) : null}
               </div>
@@ -390,4 +453,4 @@ const Main = () => {
   )
 }
 
-export default Main
+export default Main;
