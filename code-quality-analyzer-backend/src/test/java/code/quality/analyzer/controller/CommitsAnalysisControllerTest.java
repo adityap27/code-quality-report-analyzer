@@ -3,6 +3,7 @@ package code.quality.analyzer.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import code.quality.analyzer.model.CommitAnalysisRequest;
+import code.quality.analyzer.model.TrendAnalysisRequest;
 import code.quality.analyzer.service.CommitsAnalysisServiceImpl;
 import code.quality.analyzer.util.Constants;
 
@@ -49,13 +51,13 @@ public class CommitsAnalysisControllerTest {
 		commitAnalysisRequest.setGitRepoLink(Constants.TEST_REPO_URL);
 		commitAnalysisRequest.setBranch("main");
 		mockMvc = MockMvcBuilders.standaloneSetup(oneCommitAnalysisController).build();
+		when(commitsAnalysisService.cloneRepository(anyString())).thenCallRealMethod();
 	}
 	
 	@Test
 	void testGetOneCommitAnalysis() throws Exception {
+		when(commitsAnalysisService.generateOneCommitReport(anyString(), anyString(), any())).thenCallRealMethod();
 		when(commitsAnalysisService.callAnalysisServiceOneCommit(anyString())).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		when(commitsAnalysisService.cloneRepository(any())).thenCallRealMethod();
-		when(commitsAnalysisService.generateOneCommitReport(any(), any(), any())).thenCallRealMethod();
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(Constants.ONE_COMMIT_URL)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(commitAnalysisRequest)))
@@ -70,6 +72,8 @@ public class CommitsAnalysisControllerTest {
 	@Test
 	void testGetTrendAnalysis() throws Exception {
 		commitAnalysisRequest.setNoOfCommits(2);
+		when(commitsAnalysisService.generateTrendAnalysisReport(anyString(), anyString(), anyInt())).thenCallRealMethod();
+		when(commitsAnalysisService.callAnalysisServiceTrend(any(TrendAnalysisRequest.class))).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(Constants.TREND_URL)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(commitAnalysisRequest)))
@@ -78,6 +82,6 @@ public class CommitsAnalysisControllerTest {
 		
 		String response = mvcResult.getResponse().getContentAsString();
 		assertNotNull(response);
-		assertEquals(Constants.EMPTY, response);
+		assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
 	}
 }
