@@ -89,7 +89,10 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 
 	@Override
 	public String callAnalysisServiceTrend(TrendAnalysisRequest trendAnalysisRequest) {
-		// TODO Auto-generated method stub
-		return Constants.EMPTY;
+		RestTemplate restTemplate = new RestTemplate();
+		HttpEntity<TrendAnalysisRequest> request = new HttpEntity<>(trendAnalysisRequest);
+		ResponseEntity<String> response = restTemplate
+				.exchange(Constants.ANALYSIS_SERVICE_BASE_URL + Constants.ANALYSIS_SERVICE_TREND_URL, HttpMethod.POST, request, String.class);
+		return response.getBody();
 	}
 }
