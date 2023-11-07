@@ -50,7 +50,7 @@ class TestTrendAnalysis(unittest.TestCase):
     }
 
     full_repo_mock = {
-        "full-repo": {
+        "full_repo": {
             "c0": analyze_smell_files_empty_mock,
             "c1": analyze_smell_files_in_folder_without_top_entities_mock,
             "c2": analyze_smell_files_empty_mock,
@@ -83,7 +83,7 @@ class TestTrendAnalysis(unittest.TestCase):
     def test_analyze_commit_folders_in_folder(self, _, __):
         result = analyze_commit_folders_in_folder("/sample_folder/", ["c1", "c2", "c3"], "c0")
         expected = {
-            "full-repo": {
+            "full_repo": {
                 "c1": self.analyze_smell_files_in_folder_without_top_entities_mock,
                 "c2": self.analyze_smell_files_empty_mock,
                 "c3": self.analyze_smell_files_in_folder_without_top_entities_mock
@@ -94,7 +94,7 @@ class TestTrendAnalysis(unittest.TestCase):
     def test_get_smell_commit_changes(self):
         commits = ["c0", "c1", "c2", "c3"]
         full_repo_mock = {
-            "full-repo": {
+            "full_repo": {
                 "c0": self.analyze_smell_files_empty_mock,
                 "c1": self.analyze_smell_files_in_folder_without_top_entities_mock,
                 "c2": self.analyze_smell_files_empty_mock,
@@ -103,7 +103,7 @@ class TestTrendAnalysis(unittest.TestCase):
         }
         result = get_smell_commit_changes(full_repo_mock, commits)
         expected = {
-            "full-repo": full_repo_mock["full-repo"],
+            "full_repo": full_repo_mock["full_repo"],
             "commit_changes": {
                 "c1": {
                     "Architecture Smell": {

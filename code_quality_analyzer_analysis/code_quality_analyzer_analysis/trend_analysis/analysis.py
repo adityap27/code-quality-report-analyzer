@@ -54,8 +54,8 @@ def get_smell_commit_changes(trend_analysis_dict: dict, commits: list) -> dict:
             "total_smells": 0
         }
 
-        current_commit_dict = trend_analysis_dict["full-repo"][current_commit]
-        previous_commit_dict = trend_analysis_dict["full-repo"][previous_commit]
+        current_commit_dict = trend_analysis_dict["full_repo"][current_commit]
+        previous_commit_dict = trend_analysis_dict["full_repo"][previous_commit]
 
         total_smells = 0
         # Iterate over the smell types
@@ -96,15 +96,15 @@ def analyze_commit_folders_in_folder(folder_path: str, commits: list, before_old
     :param before_oldest_commit: Commit hash of the previous commit of the oldest commit in oldest_to_latest_ordered_commits
     :return: Dictionary containing analysis of all the commits
     """
-    trend_analysis_dict = {"full-repo": {}}
+    trend_analysis_dict = {"full_repo": {}}
     commits.insert(0, before_oldest_commit)
 
     for commit in commits:
         path = folder_path + "/" + commit
 
-        trend_analysis_dict["full-repo"][commit] = analyze_smell_files_in_folder_without_top_entities(path)
+        trend_analysis_dict["full_repo"][commit] = analyze_smell_files_in_folder_without_top_entities(path)
 
     trend_analysis_dict = get_smell_commit_changes(trend_analysis_dict, commits)
-    trend_analysis_dict["full-repo"].pop(before_oldest_commit, None)
+    trend_analysis_dict["full_repo"].pop(before_oldest_commit, None)
 
     return trend_analysis_dict
