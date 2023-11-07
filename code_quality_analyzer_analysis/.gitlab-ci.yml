@@ -15,6 +15,10 @@ build-analysis-service-job:
     - docker:dind
   script:
   - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA .
+  - docker save -o django_image.tar docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA
+  artifacts:
+    paths:
+    - "./code_quality_analyzer_analysis/*.tar"
 
 test-analysis-service-job:
   stage: test
@@ -26,7 +30,8 @@ test-analysis-service-job:
   services:
     - docker:dind
   script:
-  - docker run --entrypoint "python" my_django_app manage.py test
+  - docker load -i django_image.tar
+  - docker run --entrypoint "python" docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA manage.py test
 
 publish-analysis-service-job:
   stage: publish
