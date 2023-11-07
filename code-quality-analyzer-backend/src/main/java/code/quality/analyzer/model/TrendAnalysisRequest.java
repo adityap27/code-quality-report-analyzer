@@ -1,6 +1,3 @@
-/**
- * 
- */
 package code.quality.analyzer.model;
 
 import java.util.List;
