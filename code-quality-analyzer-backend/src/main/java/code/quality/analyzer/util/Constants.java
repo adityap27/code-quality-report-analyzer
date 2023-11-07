@@ -8,6 +8,8 @@ public class Constants {
 	public static String REPO_SUFFIX = "\\.git";
 
 	public static String ANALYSIS_SERVICE_BASE_URL = "http://localhost:8000";
+	public static String ANALYSIS_SERVICE_TREND_URL = "/trend_analysis/";
+	public static String ANALYSIS_SERVICE_ONE_COMMIT_URL = "/smell_analysis/";
 
 	//Test file constants
 	public static String TEST_BRANCH = "main";

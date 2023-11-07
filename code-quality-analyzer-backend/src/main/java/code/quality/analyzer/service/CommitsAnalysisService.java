@@ -22,11 +22,11 @@ public interface CommitsAnalysisService {
 	String generateOneCommitReport(String repoPath, String branch, String commitId) throws Exception;
 	
 	/**
-	 * Call python analysis service
+	 * Call python analysis service for one commit analysis
 	 * @param reportPath commit reports path
 	 * @return String Output json with analysis data
 	 */
-	String callAnalysisService(String reportPath);
+	String callAnalysisServiceOneCommit(String reportPath);
 	
 	/**
 	 * Generate report for trend analysis

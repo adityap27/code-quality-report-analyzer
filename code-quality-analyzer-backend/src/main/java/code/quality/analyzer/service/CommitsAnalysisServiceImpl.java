@@ -53,7 +53,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	}
 
 	@Override
-	public String callAnalysisService(String repoPath) {
+	public String callAnalysisServiceOneCommit(String repoPath) {
 		RestTemplate restTemplate = new RestTemplate();
 
 		SmellAnalysisRequest req = new SmellAnalysisRequest();
@@ -61,7 +61,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 
 		HttpEntity<SmellAnalysisRequest> request = new HttpEntity<>(req);
 		ResponseEntity<String> response = restTemplate
-				.exchange(Constants.ANALYSIS_SERVICE_BASE_URL+"/smell_analysis/", HttpMethod.POST, request, String.class);
+				.exchange(Constants.ANALYSIS_SERVICE_BASE_URL + Constants.ANALYSIS_SERVICE_ONE_COMMIT_URL, HttpMethod.POST, request, String.class);
 
 		return response.getBody();
 	}

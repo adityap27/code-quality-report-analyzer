@@ -62,18 +62,18 @@ class CommitsAnalysisServiceImplTest {
     }
 
     @Test
-    void testAnalysisServiceCall() throws Exception {
+    void testCallAnalysisServiceOneCommit() throws Exception {
         wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));
         wireMockServer.start();
         WireMock.configureFor("localhost", 8000);
 
-        stubFor(post(urlEqualTo("/smell_analysis/"))
+        stubFor(post(urlEqualTo(Constants.ANALYSIS_SERVICE_ONE_COMMIT_URL))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
 
-        String response = commitsAnalysisService.callAnalysisService(Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID);
+        String response = commitsAnalysisService.callAnalysisServiceOneCommit(Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID);
         assertNotNull(response);
         assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
     }
@@ -99,5 +99,5 @@ class CommitsAnalysisServiceImplTest {
     @Test
     void testGenerateTrendAnalysisReportForZeroCommits() throws Exception {
     	assertThrows(InvalidCommitsException.class, () -> commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, 0));
-    }
+    }    
 }

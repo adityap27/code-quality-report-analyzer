@@ -23,7 +23,7 @@ public class CommitsAnalysisController {
 	ResponseEntity<String> getOneCommitAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
 		String repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
 		String reportPath = commitsAnalysisService.generateOneCommitReport(repoPath, commitAnalysisRequest.getBranch(), commitAnalysisRequest.getCommitId());
-		String jsonOutput = commitsAnalysisService.callAnalysisService(reportPath);
+		String jsonOutput = commitsAnalysisService.callAnalysisServiceOneCommit(reportPath);
 		
 		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
 	}
