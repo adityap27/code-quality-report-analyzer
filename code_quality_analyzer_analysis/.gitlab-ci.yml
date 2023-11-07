@@ -20,6 +20,11 @@ test-analysis-service-job:
   stage: test
   extends: .analysis-service-common
   needs: ["build-analysis-service-job"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+  services:
+    - docker:dind
   script:
   - docker run --entrypoint "python" my_django_app manage.py test
 
