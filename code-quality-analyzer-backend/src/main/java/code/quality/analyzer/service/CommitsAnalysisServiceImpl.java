@@ -54,6 +54,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 
 	@Override
 	public String callAnalysisServiceOneCommit(String repoPath) {
+		logger.info("BEGIN callAnalysisServiceOneCommit()");
 		RestTemplate restTemplate = new RestTemplate();
 
 		SmellAnalysisRequest req = new SmellAnalysisRequest();
@@ -69,6 +70,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	@Override
 	public TrendAnalysisRequest generateTrendAnalysisReport(String repoPath, String branch, int noOfCommits)
 			throws Exception {
+		logger.info("BEGIN generateTrendAnalysisReport()");
 		TrendAnalysisRequest trendAnalysisRequest = null;
 		if(noOfCommits == 0) {
 			throw new InvalidCommitsException("Invalid number of commits");
@@ -89,6 +91,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 
 	@Override
 	public String callAnalysisServiceTrend(TrendAnalysisRequest trendAnalysisRequest) {
+		logger.info("BEGIN callAnalysisServiceTrend()");
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<TrendAnalysisRequest> request = new HttpEntity<>(trendAnalysisRequest);
 		ResponseEntity<String> response = restTemplate
