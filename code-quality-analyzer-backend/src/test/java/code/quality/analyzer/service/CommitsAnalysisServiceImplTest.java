@@ -100,4 +100,21 @@ class CommitsAnalysisServiceImplTest {
     void testGenerateTrendAnalysisReportForZeroCommits() throws Exception {
     	assertThrows(InvalidCommitsException.class, () -> commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, 0));
     }    
+    
+    @Test
+    void testCallAnalysisServiceTrend() throws Exception {
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));
+        wireMockServer.start();
+        WireMock.configureFor("localhost", 8000);
+
+        stubFor(post(urlEqualTo(Constants.ANALYSIS_SERVICE_TREND_URL))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
+
+        String response = commitsAnalysisService.callAnalysisServiceTrend(new TrendAnalysisRequest());
+        assertNotNull(response);
+        assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+    }
 }

@@ -86,4 +86,10 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		trendAnalysisRequest.setReportPath(reportPath);
 		return trendAnalysisRequest;
 	}
+
+	@Override
+	public String callAnalysisServiceTrend(TrendAnalysisRequest trendAnalysisRequest) {
+		// TODO Auto-generated method stub
+		return Constants.EMPTY;
+	}
 }

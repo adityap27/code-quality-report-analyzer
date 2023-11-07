@@ -38,4 +38,10 @@ public interface CommitsAnalysisService {
 	 */
 	TrendAnalysisRequest generateTrendAnalysisReport(String repoPath, String branch, int noOfCommits) throws Exception;
 
+	/**
+	 * Call python analysis service for trend analysis
+	 * @param trendAnalysisRequest request object
+	 * @return String output json data
+	 */
+	String callAnalysisServiceTrend(TrendAnalysisRequest trendAnalysisRequest);
 }
