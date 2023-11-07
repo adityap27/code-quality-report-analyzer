@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import SmellAnalysisView
+from .views import SmellAnalysisView, TrendAnalysisView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('smell_analysis/', SmellAnalysisView.as_view(), name='smell_analysis')
+    path('smell_analysis/', SmellAnalysisView.as_view(), name='smell_analysis'),
+    path('trend_analysis/', TrendAnalysisView.as_view(), name='trend_analysis')
 ]
