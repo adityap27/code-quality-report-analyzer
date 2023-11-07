@@ -111,10 +111,6 @@ def retrieve_smell_files(folder_path: str) -> dict:
     """
     # List all files in the provided folder
     files = []
-    for file in os.listdir(folder_path):
-        if os.path.isfile(os.path.join(folder_path, file)):
-            files.append(file)
-
     smell_files = {
         "Architecture": None,
         "Design": None,
@@ -122,6 +118,12 @@ def retrieve_smell_files(folder_path: str) -> dict:
         "Testability": None,
         "Test": None
     }
+    try:
+        for file in os.listdir(folder_path):
+            if os.path.isfile(os.path.join(folder_path, file)):
+                files.append(file)
+    except FileNotFoundError:
+        return smell_files
     
     # Check for each type of smell individually and save the path for it
     for file in files:
