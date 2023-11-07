@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
-import dummyData from "../../data/Dummy.json"; // Import your dummy data
-
+import dummyData from '../../data/Dummy.json';
 import './trend-analysis.css';
 
 const TrendAnalysis = () => {
-  // Process your dummy data to prepare it for the chart
+  const [selectedSmell, setSelectedSmell] = useState('Design Smell');
+  const [selectedSubtype, setSelectedSubtype] = useState('Unutilized Abstraction');
+
   const commits = Object.keys(dummyData.commit_changes);
 
-  // Extract code smell names from the first commit
   const codeSmellNames = Object.keys(dummyData.commit_changes[commits[0]]);
+  const subtypes = codeSmellNames.includes(selectedSmell)
+    ? Object.keys(dummyData.commit_changes[commits[0]][selectedSmell].smell_distribution)
+    : [];
 
-  const data = {
+  const chartData = {
     labels: commits,
-    datasets: codeSmellNames.map((smellName) => ({
-      label: smellName,
-      data: commits.map((commit) => dummyData.commit_changes[commit][smellName].total_smells),
-      fill: false,
-      borderColor: getRandomColor(),
-    })),
+    datasets: [
+      {
+        label: selectedSubtype,
+        data: commits.map((commit) => {
+          if (codeSmellNames.includes(selectedSmell)) {
+            return dummyData.commit_changes[commit][selectedSmell].smell_distribution[selectedSubtype];
+          }
+          return 0;
+        }),
+        fill: false,
+        borderColor: getRandomColor(),
+      },
+    ],
   };
 
   const options = {
@@ -32,11 +42,42 @@ const TrendAnalysis = () => {
     },
   };
 
+  const handleSmellChange = (event) => {
+    setSelectedSmell(event.target.value);
+  };
+
+  const handleSubtypeChange = (event) => {
+    setSelectedSubtype(event.target.value);
+  };
+
   return (
     <div className="trend-analysis-container">
       <h1>Code Smell Trend Analysis</h1>
+
+      {/* Dropdown to select the code smell type */}
+      <div className="dropdown-container">
+        <select value={selectedSmell} onChange={handleSmellChange}>
+          {codeSmellNames.map((smell) => (
+            <option key={smell} value={smell}>
+              {smell}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Dropdown to select the code smell subtype */}
+      <div className="dropdown-container">
+        <select value={selectedSubtype} onChange={handleSubtypeChange}>
+          {subtypes.map((subtype) => (
+            <option key={subtype} value={subtype}>
+              {subtype}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="line-chart">
-        <Line data={data} options={options} />
+        <Line data={chartData} options={options} />
       </div>
     </div>
   );
@@ -44,7 +85,6 @@ const TrendAnalysis = () => {
 
 export default TrendAnalysis;
 
-// Helper function to generate random colors
 function getRandomColor() {
   const letters = '0123456789ABCDEF';
   let color = '#';
