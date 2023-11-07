@@ -8,4 +8,4 @@ stages:
 include:
   - local: code-quality-analyzer-backend/.gitlab-ci.yml
   - local: code-quality-analyzer-frontend/.gitlab-ci.yml
-  - local: code-quality-analyzer-analysis/.gitlab-ci.yml
+  - local: code_quality_analyzer_analysis/.gitlab-ci.yml
