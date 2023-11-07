@@ -92,6 +92,14 @@ def analyze_smell_files(architecture_path: str, design_path: str, implementation
         test_df = load_and_prepare_data(test_path, ["Project Name", "Package Name", "Type Name", "Method Name"])
         analysis_dict["Test Smell"] = analyze_smells(test_df, "Test Smell")
 
+    # Total of all smells counts
+    sum = 0
+    for smell_data in analysis_dict.values():
+        if smell_data is not None:
+            sum += smell_data["total_smells"]
+
+    analysis_dict["total_smells"] = sum
+
     return analysis_dict
 
 
