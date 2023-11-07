@@ -1,5 +1,4 @@
 .analysis-service-common:
-  image: python:3.8.2-alpine
   before_script:
     - cd ./code_quality_analyzer_analysis
   tags:
