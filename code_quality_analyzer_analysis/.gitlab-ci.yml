@@ -17,9 +17,6 @@
   - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA .
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS docker.io
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA
-  artifacts:
-    paths:
-    - "./code_quality_analyzer_analysis/*.tar"
 
 1-test-analysis-service-job:
   stage: test
