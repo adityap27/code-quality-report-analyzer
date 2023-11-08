@@ -20,7 +20,7 @@
   stage: publish
   extends: .frontend-common
   needs: ["3-build-frontend-job"]
-  image: docker:latest
+  image: docker:stable
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ''

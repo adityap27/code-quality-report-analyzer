@@ -7,7 +7,7 @@
 2-build-analysis-service-job:
   stage: build
   extends: .analysis-service-common
-  image: docker:latest
+  image: docker:stable
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ''
