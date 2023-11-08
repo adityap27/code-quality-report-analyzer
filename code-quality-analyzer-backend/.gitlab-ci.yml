@@ -41,7 +41,7 @@
   script:
   - docker --version
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS docker.io
-  - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:backend-$CI_COMMIT_SHORT_SHA
+  - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:backend-$CI_COMMIT_SHORT_SHA .
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:backend-$CI_COMMIT_SHORT_SHA
   
 1-deploy-backend-job:

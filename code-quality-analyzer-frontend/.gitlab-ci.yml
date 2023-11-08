@@ -29,7 +29,7 @@
   script:
   - docker --version
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS docker.io
-  - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA
+  - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA .
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA
   
 3-deploy-frontend-job:
