@@ -14,7 +14,7 @@ public class OneCommitAnalysisController {
 	
 	@Autowired
 	CommitsAnalysisService commitsAnalysisService;
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = {"http://localhost:3000", "http://csci5308vm3.research.cs.dal.ca"})
 	@PostMapping("/getanalysis")
 	ResponseEntity<String> getOneCommitAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
 		String repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
