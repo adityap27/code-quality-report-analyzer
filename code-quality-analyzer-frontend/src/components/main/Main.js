@@ -282,7 +282,7 @@ const Main = () => {
     }
 
     axios
-      .post('http://localhost:8080/onecommit/getanalysis', requestData, {
+      .post(process.env.REACT_APP_BACKEND_URL+'/onecommit/getanalysis', requestData, {
         headers: {
           'Content-Type': 'application/json',
         },
