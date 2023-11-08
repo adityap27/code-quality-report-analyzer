@@ -5,33 +5,33 @@
   tags:
     - vm3
 
-2-build-backend-job:
+1-build-backend-job:
   stage: build
   extends: .backend-common
   script:
   - mvn compile
 
-2-test-backend-job:
+1-test-backend-job:
   stage: test
   extends: .backend-common
-  needs: ["2-build-backend-job"]
+  needs: ["1-build-backend-job"]
   script:
   - mvn test
 
-2-package-backend-job:
+1-package-backend-job:
   stage: package
   extends: .backend-common
-  needs: ["2-test-backend-job"]
+  needs: ["1-test-backend-job"]
   script:
   - mvn package
   artifacts:
     paths:
     - "./code-quality-analyzer-backend/target/*.jar"
 
-2-publish-backend-job:
+1-publish-backend-job:
   stage: publish
   extends: .backend-common
-  needs: ["2-package-backend-job"]
+  needs: ["1-package-backend-job"]
   image: docker:latest
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -44,10 +44,10 @@
   - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:backend-$CI_COMMIT_SHORT_SHA
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:backend-$CI_COMMIT_SHORT_SHA
   
-2-deploy-backend-job:
+1-deploy-backend-job:
   stage: deploy
   extends: .backend-common
-  needs: ["2-publish-backend-job"]
+  needs: ["1-publish-backend-job"]
   image: alpine:latest
   script:
   - chmod og= $ID_RSA

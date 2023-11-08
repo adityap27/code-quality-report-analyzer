@@ -4,7 +4,7 @@
   tags:
     - vm3
 
-1-build-analysis-service-job:
+2-build-analysis-service-job:
   stage: build
   extends: .analysis-service-common
   image: docker:latest
@@ -18,19 +18,19 @@
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS docker.io
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA
 
-1-test-analysis-service-job:
+2-test-analysis-service-job:
   stage: test
   extends: .analysis-service-common
-  needs: ["1-build-analysis-service-job"]
+  needs: ["2-build-analysis-service-job"]
   image: python:3.12-alpine
   script:
   - pip install -r requirements.txt
   - python manage.py test
   
-1-deploy-analysis-service-job:
+2-deploy-analysis-service-job:
   stage: deploy
   extends: .analysis-service-common
-  needs: ["1-test-analysis-service-job"]
+  needs: ["2-test-analysis-service-job"]
   image: alpine:latest
   script:
   - chmod og= $ID_RSA
