@@ -4,7 +4,7 @@
   tags:
     - vm3
 
-build-analysis-service-job:
+1-build-analysis-service-job:
   stage: build
   extends: .analysis-service-common
   image: docker:latest
@@ -21,10 +21,10 @@ build-analysis-service-job:
     paths:
     - "./code_quality_analyzer_analysis/*.tar"
 
-test-analysis-service-job:
+1-test-analysis-service-job:
   stage: test
   extends: .analysis-service-common
-  needs: ["build-analysis-service-job"]
+  needs: ["1-build-analysis-service-job"]
   image: python:3.12-alpine
   script:
   - pip install -r requirements.txt
@@ -33,7 +33,7 @@ test-analysis-service-job:
 1-deploy-analysis-service-job:
   stage: deploy
   extends: .analysis-service-common
-  needs: ["publish-analysis-service-job"]
+  needs: ["1-test-analysis-service-job"]
   image: alpine:latest
   script:
   - chmod og= $ID_RSA
