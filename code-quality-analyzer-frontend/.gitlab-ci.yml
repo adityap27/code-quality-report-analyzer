@@ -3,7 +3,7 @@
   before_script:
     - cd ./code-quality-analyzer-frontend
   tags:
-    - dalfcs_docker_autoscale
+    - vm3
 
 3-build-frontend-job:
   stage: build
