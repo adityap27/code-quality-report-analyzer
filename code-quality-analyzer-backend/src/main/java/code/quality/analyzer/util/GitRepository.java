@@ -18,8 +18,8 @@ public class GitRepository {
     /**
      * Constructs a GitRepository class object, with the specified remote repository URL and local base path.
      * Also, assigns a value for localRepoFullPath using remoteRepoURL and local base path.
-     * Eg: If remoteRepoURL="https://github.com/foo/bar.git" and localBasePath="./MyFolder"
-     * Then, localRepoFullPath becomes "./MyFolder/bar"
+     * Eg: If remoteRepoURL="https://github.com/foo/bar.git" and localBasePath="MyFolder"
+     * Then, localRepoFullPath becomes "MyFolder/bar"
      *
      * @param remoteURL     The URL of the remote Git repository.
      * @param localBasePath The base path where the local repository will be stored.
