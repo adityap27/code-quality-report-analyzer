@@ -5,7 +5,7 @@
   tags:
     - vm3
 
-3-build-frontend-job:
+build-frontend-job:
   stage: build
   extends: .frontend-common
   script:
@@ -16,27 +16,31 @@
         - "./code-quality-analyzer-frontend/build"
         - "./code-quality-analyzer-frontend/package.json"
 
-3-publish-frontend-job:
+publish-frontend-job:
   stage: publish
   extends: .frontend-common
-  needs: ["3-build-frontend-job"]
+  needs: ["build-frontend-job"]
   image: docker:stable
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ''
   services:
   - docker:dind
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
   script:
   - docker --version
   - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS docker.io
   - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA .
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA
   
-3-deploy-frontend-job:
+deploy-frontend-job:
   stage: deploy
   extends: .frontend-common
-  needs: ["3-publish-frontend-job"]
+  needs: ["publish-frontend-job"]
   image: alpine:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
   script:
   - chmod og= $ID_RSA
   - apk update && apk add openssh-client

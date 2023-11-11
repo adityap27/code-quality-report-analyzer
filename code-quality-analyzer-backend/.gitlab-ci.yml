@@ -5,34 +5,36 @@
   tags:
     - vm3
 
-1-build-backend-job:
+build-backend-job:
   stage: build
   extends: .backend-common
   script:
   - mvn compile
 
-1-test-backend-job:
+test-backend-job:
   stage: test
   extends: .backend-common
-  needs: ["1-build-backend-job"]
+  needs: ["build-backend-job"]
   script:
   - mvn test
 
-1-package-backend-job:
+package-backend-job:
   stage: package
   extends: .backend-common
-  needs: ["1-test-backend-job"]
+  needs: ["test-backend-job"]
   script:
   - mvn package
   artifacts:
     paths:
     - "./code-quality-analyzer-backend/target/*.jar"
   
-1-deploy-backend-job:
+deploy-backend-job:
   stage: deploy
   extends: .backend-common
-  needs: ["1-package-backend-job"]
+  needs: ["package-backend-job"]
   image: alpine:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
   script:
   - chmod og= $ID_RSA
   - apk update && apk add openssh-client
