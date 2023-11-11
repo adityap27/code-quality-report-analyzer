@@ -37,8 +37,8 @@
   - chmod og= $ID_RSA
   - apk update && apk add openssh-client
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "lsof -t -i :8080 | xargs -r kill"
-  - scp -i $ID_RSA -o StrictHostKeyChecking=no target/code-quality-analyzer-backend-0.0.1-SNAPSHOT.jar $SERVER_USER@$SERVER_IP:/home/deployer/app.jar
-  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /home/deployer && setsid nohup java -cp app.jar:'./lib/DesigniteJava.jar' org.springframework.boot.loader.JarLauncher > output.log 2>&1 &"
+  - scp -i $ID_RSA -o StrictHostKeyChecking=no target/code-quality-analyzer-backend-0.0.1-SNAPSHOT.jar $SERVER_USER@$SERVER_IP:/home/deployer/spring-boot-app/app.jar
+  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /home/deployer/spring-boot-app && setsid nohup java -cp app.jar:'./lib/DesigniteJava.jar' org.springframework.boot.loader.JarLauncher > output.log 2>&1 &"
   environment:
     name: production
     url: http://csci5308vm3.research.cs.dal.ca:8080
