@@ -35,12 +35,13 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	public String generateOneCommitReport(String repoPath, String branch, String commitId) throws Exception {
 		logger.info("BEGIN generateOneCommitReport()");
 		String reportPath = Constants.EMPTY;
-		List<String> commitIds = new ArrayList<String>();
+		List<String> commitIds = null;
 		CommitsAnalysisUtil.checkoutAndValidate(repoPath, branch);
 		//If commit id is null or empty, last commit id will be fetched for analysis
 		if(commitId == null || commitId.isBlank()) {
-			commitIds = CommitsAnalysisUtil.getCommitIds(repoPath, branch, Constants.OneCommit);
+			commitIds = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, branch, Constants.OneCommit).keySet());
 		} else {
+			commitIds = new ArrayList<String>();
 			commitIds.add(commitId);
 		}
 		try {
@@ -75,7 +76,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		if(noOfCommits == 0) {
 			throw new InvalidCommitsException("Invalid number of commits");
 		}
-		List<String> commitIds = CommitsAnalysisUtil.getCommitIds(repoPath, branch, noOfCommits+1);
+		List<String> commitIds = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, branch, noOfCommits+1).keySet());
 		String reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
 		String previousCommitId = null;
 		if(commitIds.size() == noOfCommits+1) {

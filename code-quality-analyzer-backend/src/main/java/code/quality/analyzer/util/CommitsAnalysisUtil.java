@@ -1,7 +1,9 @@
 package code.quality.analyzer.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,23 +20,23 @@ public class CommitsAnalysisUtil {
 	private static Logger logger = LogManager.getLogger(CommitsAnalysisUtil.class);
 
 	/**
-	 * Fetch commit ids for given repository and number of commits
+	 * Fetch commit ids and user info for given repository and number of commits
 	 * @param repoPath repository path
 	 * @param branchname branch name
 	 * @param noOfCommits number of commits
-	 * @return List<String> list of commit ids
+	 * @return Map<String, String> commits id and username
 	 * @throws Exception
 	 */
-	public static List<String> getCommitIds(String repoPath, String branchname, int noOfCommits) throws Exception {
+	public static Map<String, String> getCommitIds(String repoPath, String branchname, int noOfCommits) throws Exception {
 		logger.info("BEGIN getCommitIds()");
-		List<String> commitIds = new ArrayList<String>();
+		Map<String, String> commitsData = new HashMap<String, String>();
 		if (noOfCommits == 0) {
-			return commitIds;
+			return commitsData;
 		}
 		Git git = checkoutAndValidate(repoPath, branchname);
 		Iterable<RevCommit> commits = git.log().setMaxCount(noOfCommits).call();
-		commits.forEach(commit -> commitIds.add(commit.getName()));
-		return commitIds;
+		commits.forEach(commit -> commitsData.put(commit.getName(), commit.getAuthorIdent().getName()));
+		return commitsData;
 	}
 	
 	/**
