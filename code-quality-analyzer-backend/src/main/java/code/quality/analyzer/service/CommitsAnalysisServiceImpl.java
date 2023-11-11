@@ -1,8 +1,9 @@
 package code.quality.analyzer.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +40,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		CommitsAnalysisUtil.checkoutAndValidate(repoPath, branch);
 		//If commit id is null or empty, last commit id will be fetched for analysis
 		if(commitId == null || commitId.isBlank()) {
-			commitIds = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, branch, Constants.OneCommit).keySet());
+			commitIds = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, branch, Constants.ONE).keySet());
 		} else {
 			commitIds = new ArrayList<String>();
 			commitIds.add(commitId);
@@ -76,16 +77,19 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		if(noOfCommits == 0) {
 			throw new InvalidCommitsException("Invalid number of commits");
 		}
-		List<String> commitIds = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, branch, noOfCommits+1).keySet());
+		Map<String, String> commitsData = CommitsAnalysisUtil.getCommitIds(repoPath, branch, noOfCommits+1);
+		List<String> commitIds = new ArrayList<String>(commitsData.keySet());
 		String reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
-		String previousCommitId = null;
+		Map<String, String> previousCommit = null;
 		if(commitIds.size() == noOfCommits+1) {
-			previousCommitId = commitIds.remove(commitIds.size()-1);
+			previousCommit = new HashMap<String, String>();
+			String previousCommitId = commitIds.get(commitIds.size()-1);
+			String previousUser = commitsData.remove(previousCommitId);
+			previousCommit.put(previousCommitId, previousUser);
 		}
-		Collections.reverse(commitIds);
 		trendAnalysisRequest = new TrendAnalysisRequest();
-		trendAnalysisRequest.setCommitIds(commitIds);
-		trendAnalysisRequest.setPreviousCommitId(previousCommitId);
+		trendAnalysisRequest.setCommitsData(commitsData);
+		trendAnalysisRequest.setPreviousCommit(previousCommit);
 		trendAnalysisRequest.setReportPath(reportPath);
 		return trendAnalysisRequest;
 	}

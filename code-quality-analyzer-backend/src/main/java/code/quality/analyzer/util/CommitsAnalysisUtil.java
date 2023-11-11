@@ -1,7 +1,6 @@
 package code.quality.analyzer.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +28,7 @@ public class CommitsAnalysisUtil {
 	 */
 	public static Map<String, String> getCommitIds(String repoPath, String branchname, int noOfCommits) throws Exception {
 		logger.info("BEGIN getCommitIds()");
-		Map<String, String> commitsData = new HashMap<String, String>();
+		Map<String, String> commitsData = new LinkedHashMap<String, String>();
 		if (noOfCommits == 0) {
 			return commitsData;
 		}
