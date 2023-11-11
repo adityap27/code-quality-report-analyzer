@@ -13,7 +13,7 @@ import code.quality.analyzer.model.TrendAnalysisRequest;
 import code.quality.analyzer.service.CommitsAnalysisService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://csci5308vm3.research.cs.dal.ca"})
 public class CommitsAnalysisController {
 	
 	@Autowired

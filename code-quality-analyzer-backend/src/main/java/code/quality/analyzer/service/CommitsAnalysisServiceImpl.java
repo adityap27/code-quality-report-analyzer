@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import code.quality.analyzer.exception.InvalidCommitsException;
-import code.quality.analyzer.model.SmellAnalysisRequest;
+import code.quality.analyzer.model.OneCommitAnalysisRequest;
 import code.quality.analyzer.model.TrendAnalysisRequest;
 import code.quality.analyzer.util.CommitsAnalysisUtil;
 import code.quality.analyzer.util.Constants;
@@ -25,8 +26,18 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 
 	private static Logger logger = LogManager.getLogger(CommitsAnalysisServiceImpl.class);
 
+	@Value("${analysis.service.base.url}")
+	private String baseUrl;
+	
+	@Value("${analysis.service.one.commit.url}")
+	private String oneCommiUrl;
+	
+	@Value("${analysis.service.trend.url}")
+	private String trendUrl;
+	
 	@Override
 	public String cloneRepository(String gitRepoLink) {
+		logger.info("BEGIN cloneRepository()");
 		GitRepository g = new GitRepository(gitRepoLink, Constants.REPO_PATH);
 		g.cloneRepo();
 		return g.getLocalRepoFullPath();
@@ -59,12 +70,11 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		logger.info("BEGIN callAnalysisServiceOneCommit()");
 		RestTemplate restTemplate = new RestTemplate();
 
-		SmellAnalysisRequest req = new SmellAnalysisRequest();
-		req.setPath(repoPath);
-
-		HttpEntity<SmellAnalysisRequest> request = new HttpEntity<>(req);
+		OneCommitAnalysisRequest req = new OneCommitAnalysisRequest();
+		req.setReportPath(repoPath);
+		HttpEntity<OneCommitAnalysisRequest> request = new HttpEntity<>(req);
 		ResponseEntity<String> response = restTemplate
-				.exchange(Constants.ANALYSIS_SERVICE_BASE_URL + Constants.ANALYSIS_SERVICE_ONE_COMMIT_URL, HttpMethod.POST, request, String.class);
+				.exchange(baseUrl + oneCommiUrl, HttpMethod.POST, request, String.class);
 
 		return response.getBody();
 	}
@@ -100,7 +110,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<TrendAnalysisRequest> request = new HttpEntity<>(trendAnalysisRequest);
 		ResponseEntity<String> response = restTemplate
-				.exchange(Constants.ANALYSIS_SERVICE_BASE_URL + Constants.ANALYSIS_SERVICE_TREND_URL, HttpMethod.POST, request, String.class);
+				.exchange(baseUrl + trendUrl, HttpMethod.POST, request, String.class);
 		return response.getBody();
 	}
 }

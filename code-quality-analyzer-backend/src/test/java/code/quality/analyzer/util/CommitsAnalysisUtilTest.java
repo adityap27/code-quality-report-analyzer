@@ -74,7 +74,7 @@ class CommitsAnalysisUtilTest {
 	void testGenerateReportsForOneCommit() throws Exception {
 		commitIds.add(Constants.TEST_COMMIT_ID_1);
 		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
-		assertEquals(repoPath + Constants.REPORT_PATH + "\\" + commitIds.get(0), path);
+		assertEquals(repoPath + Constants.REPORT_PATH + "/" + commitIds.get(0), path);
 		assertEquals(true, Files.exists(Paths.get(path)));
 	}
 	

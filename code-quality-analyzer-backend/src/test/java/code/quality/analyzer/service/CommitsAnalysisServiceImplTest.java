@@ -19,6 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -31,7 +35,9 @@ import code.quality.analyzer.util.Constants;
 /**
  * Test CommitsAnalysisServiceImplTest class methods
  */
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
+@TestPropertySource("classpath:application.properties")
 class CommitsAnalysisServiceImplTest {
     private static CommitsAnalysisService commitsAnalysisService;
     private static String repoPath;
@@ -39,16 +45,28 @@ class CommitsAnalysisServiceImplTest {
     @Autowired
     private static WireMockServer wireMockServer;
 
+    @Value("${analysis.service.base.url}")
+	private String baseUrl;
+	
+	@Value("${analysis.service.one.commit.url}")
+	private String oneCommiUrl;
+	
+	@Value("${analysis.service.trend.url}")
+	private String trendUrl;
+    
     @BeforeEach
     void setUp() {
         commitsAnalysisService = new CommitsAnalysisServiceImpl();
+        ReflectionTestUtils.setField(commitsAnalysisService, "baseUrl", baseUrl);
+        ReflectionTestUtils.setField(commitsAnalysisService, "oneCommiUrl", oneCommiUrl);
+        ReflectionTestUtils.setField(commitsAnalysisService, "trendUrl", trendUrl);
         repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
     }
 
     @Test
     void testGenerateOneCommitReport() throws Exception {
         String path = commitsAnalysisService.generateOneCommitReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID_2);
-        assertEquals(repoPath + Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID_2, path);
+        assertEquals(repoPath + Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_2, path);
         assertEquals(true, Files.exists(Paths.get(path)));
     }
 
@@ -66,13 +84,13 @@ class CommitsAnalysisServiceImplTest {
         wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));
         wireMockServer.start();
         WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
-        stubFor(post(urlEqualTo(Constants.ANALYSIS_SERVICE_ONE_COMMIT_URL))
+        stubFor(post(urlEqualTo(oneCommiUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
 
-        String response = commitsAnalysisService.callAnalysisServiceOneCommit(Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID_1);
+        String response = commitsAnalysisService.callAnalysisServiceOneCommit(Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_1);
         assertNotNull(response);
         assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
         wireMockServer.stop();
@@ -107,8 +125,7 @@ class CommitsAnalysisServiceImplTest {
         wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));
         wireMockServer.start();
         WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
-
-        stubFor(post(urlEqualTo(Constants.ANALYSIS_SERVICE_TREND_URL))
+        stubFor(post(urlEqualTo(trendUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")

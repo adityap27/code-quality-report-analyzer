@@ -3,13 +3,9 @@ package code.quality.analyzer.util;
 public class Constants {
 	public static String EMPTY = "";
 	public static int ONE = 1;
-	public static String REPORT_PATH = "\\..\\Reports";
-	public static String REPO_PATH = ".\\cloned-repos";
-	public static String REPO_SUFFIX = "\\.git";
-
-	public static String ANALYSIS_SERVICE_BASE_URL = "http://localhost:8000";
-	public static String ANALYSIS_SERVICE_TREND_URL = "/trend_analysis/";
-	public static String ANALYSIS_SERVICE_ONE_COMMIT_URL = "/smell_analysis/";
+	public static String REPORT_PATH = "/../Reports";
+	public static String REPO_PATH = "cloned-repos";
+	public static String REPO_SUFFIX = "/.git";
 
 	//Test file constants
 	public static String TEST_BRANCH = "master";

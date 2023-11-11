@@ -80,7 +80,7 @@ public class CommitsAnalysisUtil {
 		
 		Designite.main(args);
 		if(commitIds.size() == 1) {
-			reportPath = reportPath + "\\" + commitIds.get(0);
+			reportPath = reportPath + "/" + commitIds.get(0);
 		}
 		return reportPath;
 	}
