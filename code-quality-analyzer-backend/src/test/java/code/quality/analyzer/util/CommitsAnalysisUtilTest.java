@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -41,7 +42,7 @@ class CommitsAnalysisUtilTest {
 
 	@Test
 	void testGetCommitIdsForOneCommit() throws Exception {
-		List<String> ids = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, Constants.OneCommit);
+		List<String> ids = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, Constants.OneCommit).keySet());
 		assertEquals(false, ids.isEmpty());
 		assertEquals(Constants.OneCommit, ids.size());
 		assertEquals(commitIds.get(0), ids.get(0));
@@ -51,13 +52,14 @@ class CommitsAnalysisUtilTest {
 	@CsvSource({"2,2", "1,1", "5,3", "0,0"})
 	void testGetCommitIdsForTrend(int noOfCommits, int expectedSize) throws Exception {
 		repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
-		List<String> ids = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, noOfCommits);
+		Map<String, String> commitsData = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, noOfCommits);
 		if(noOfCommits == 0) {
-			assertEquals(true, ids.isEmpty());
+			assertEquals(true, commitsData.isEmpty());
 		} else {
-			assertEquals(false, ids.isEmpty());
+			assertEquals(false, commitsData.isEmpty());
+			assertEquals("Roshni", commitsData.get(Constants.TEST_COMMIT_ID_4));
 		}
-		assertEquals(expectedSize, ids.size());
+		assertEquals(expectedSize, commitsData.size());
 	}
 
 	@Test

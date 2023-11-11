@@ -14,6 +14,7 @@ public class Constants {
 	//Test file constants
 	public static String TEST_BRANCH = "main";
 	public static String TEST_COMMIT_ID = "a2c6353a0ad9150a205c0d1af381665909a10a30";
+	public static String TEST_COMMIT_ID_4 = "192dbcc594b418324fbb80cf6ea5f6f369178266";
 	public static String TEST_REPO_URL = "https://github.com/roshni-joshi/Retail-Product-Management-System.git";
 	public static String TEST_COMMIT_ID_2 = "e6012b9fbb79e2ee8aa8252cb873606233d0e531";
 	public static String TEST_REPO_URL_2 = "https://github.com/roshni-joshi/Api-Gateway-CustomRoutes.git";
