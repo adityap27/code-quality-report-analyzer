@@ -5,7 +5,7 @@
   tags:
     - vm3
 
-build-frontend-job:
+3-build-frontend-job:
   stage: build
   extends: .frontend-common
   script:
@@ -16,10 +16,10 @@ build-frontend-job:
         - "./code-quality-analyzer-frontend/build"
         - "./code-quality-analyzer-frontend/package.json"
 
-publish-frontend-job:
+3-publish-frontend-job:
   stage: publish
   extends: .frontend-common
-  needs: ["build-frontend-job"]
+  needs: ["3-build-frontend-job"]
   image: docker:stable
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -34,10 +34,10 @@ publish-frontend-job:
   - docker build -t docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA .
   - docker push docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:frontend-$CI_COMMIT_SHORT_SHA
   
-deploy-frontend-job:
+3-deploy-frontend-job:
   stage: deploy
   extends: .frontend-common
-  needs: ["publish-frontend-job"]
+  needs: ["3-publish-frontend-job"]
   image: alpine:latest
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"

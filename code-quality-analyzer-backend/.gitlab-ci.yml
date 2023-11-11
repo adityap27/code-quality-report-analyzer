@@ -5,33 +5,33 @@
   tags:
     - vm3
 
-build-backend-job:
+1-build-backend-job:
   stage: build
   extends: .backend-common
   script:
   - mvn compile
 
-test-backend-job:
+1-test-backend-job:
   stage: test
   extends: .backend-common
-  needs: ["build-backend-job"]
+  needs: ["1-build-backend-job"]
   script:
   - mvn test
 
-package-backend-job:
+1-package-backend-job:
   stage: package
   extends: .backend-common
-  needs: ["test-backend-job"]
+  needs: ["1-test-backend-job"]
   script:
   - mvn package
   artifacts:
     paths:
     - "./code-quality-analyzer-backend/target/*.jar"
   
-deploy-backend-job:
+1-deploy-backend-job:
   stage: deploy
   extends: .backend-common
-  needs: ["package-backend-job"]
+  needs: ["1-package-backend-job"]
   image: alpine:latest
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
