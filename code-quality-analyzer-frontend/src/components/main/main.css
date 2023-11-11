@@ -288,7 +288,7 @@ a {
     position: relative;
     appearance: none;
     background: #01010100;
-    color: #ddd;
+    color: rgb(0, 0, 0);
     font-family: inherit;
     height:100%;
    /* line-height: 3.5rem;*/
@@ -305,6 +305,7 @@ a {
     cursor: pointer;
     margin-top: 30px;
     margin-left: auto;
+
   }
 
   .commit_select,
@@ -312,7 +313,7 @@ a {
     position: relative;
     appearance: none;
     background: #01010100;
-    color: #ddd;
+    color: #030303;
     font-family: inherit;
     height: 100%;
     outline: none;
@@ -327,39 +328,11 @@ a {
     border-radius: .35rem;
     cursor: pointer;
     margin-top: 30px;
+   
   }
 
-  .commit_count,
-  .custom-select {
-    position: relative;
-    appearance: none;
-    background: #01010100;
-    color: #ddd;
-    font-family: inherit;
-    height: 100%;
-    outline: none;
-    padding: 0 1.5rem;
-    transition: all .35s ease-in-out;
-    width: 200px;
-    font-size: .75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    box-sizing: border-box;
-    border: 1px solid #222;
-    border-radius: .35rem;
-    cursor: pointer;
-    display: flex;
-    margin-top: 30px;
-    
-  }
-  #loop-number-input{
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-    width: 100%;
-    height: 40px;
-    }
-.commit_count{
-  
-}
+
+
   .select-options {
     position: absolute;
     inset: 100% 0 auto;
