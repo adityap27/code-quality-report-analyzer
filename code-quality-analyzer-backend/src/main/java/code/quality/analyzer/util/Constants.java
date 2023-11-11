@@ -21,9 +21,11 @@ public class Constants {
 	public static String TEST_COMMIT_ID_5 = "a8b94b79b697df64b23428c27d65d6a187e9ebf9";
 	public static String TEST_USER_1 = "Yidong Fang";
 	public static String TEST_USER_2 = "darthspectrum";
-	public static int TEST_TOTAL_COMMITS = 34;
+	public static String TEST_REPO_URL_ALLCOMMITS = "https://github.com/hergin/JsonParsing.git";
+	public static int TEST_TOTAL_COMMITS = 4;
 	public static int TEST_ZERO = 0;
 	public static String TEST_LOCALHOST = "localhost";
+	public static int TEST_PORT = 8000;
 	public static String ONE_COMMIT_URL = "/onecommit/getanalysis";
 	public static String TREND_URL = "/trend/getanalysis";
 	public static String ANALYSIS_SERVICE_TEST_RESPONSE = "{\"Architecture Smells\":{\r\n"

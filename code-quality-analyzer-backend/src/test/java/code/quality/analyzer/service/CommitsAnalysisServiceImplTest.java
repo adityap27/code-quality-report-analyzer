@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,8 +39,8 @@ class CommitsAnalysisServiceImplTest {
     @Autowired
     private static WireMockServer wireMockServer;
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         commitsAnalysisService = new CommitsAnalysisServiceImpl();
         repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
     }
@@ -65,8 +65,7 @@ class CommitsAnalysisServiceImplTest {
     void testCallAnalysisServiceOneCommit() throws Exception {
         wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));
         wireMockServer.start();
-        WireMock.configureFor(Constants.TEST_LOCALHOST, 8000);
-
+        WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
         stubFor(post(urlEqualTo(Constants.ANALYSIS_SERVICE_ONE_COMMIT_URL))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -76,6 +75,7 @@ class CommitsAnalysisServiceImplTest {
         String response = commitsAnalysisService.callAnalysisServiceOneCommit(Constants.REPORT_PATH + "\\" + Constants.TEST_COMMIT_ID_1);
         assertNotNull(response);
         assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+        wireMockServer.stop();
     }
     
     @Test
@@ -89,6 +89,7 @@ class CommitsAnalysisServiceImplTest {
     
     @Test
     void testGenerateTrendAnalysisReportForAllCommits() throws Exception {
+    	repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL_ALLCOMMITS);
     	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_TOTAL_COMMITS);
     	assertNotNull(trendAnalysisRequest);
     	assertEquals(Constants.TEST_TOTAL_COMMITS, trendAnalysisRequest.getCommitsData().size());
@@ -105,7 +106,7 @@ class CommitsAnalysisServiceImplTest {
     void testCallAnalysisServiceTrend() throws Exception {
         wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));
         wireMockServer.start();
-        WireMock.configureFor(Constants.TEST_LOCALHOST, 8000);
+        WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
 
         stubFor(post(urlEqualTo(Constants.ANALYSIS_SERVICE_TREND_URL))
                 .willReturn(aResponse()
@@ -116,5 +117,6 @@ class CommitsAnalysisServiceImplTest {
         String response = commitsAnalysisService.callAnalysisServiceTrend(new TrendAnalysisRequest());
         assertNotNull(response);
         assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+        wireMockServer.stop();
     }
 }

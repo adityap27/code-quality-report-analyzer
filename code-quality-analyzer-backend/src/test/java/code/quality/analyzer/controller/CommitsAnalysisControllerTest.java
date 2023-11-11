@@ -30,7 +30,7 @@ import code.quality.analyzer.service.CommitsAnalysisServiceImpl;
 import code.quality.analyzer.util.Constants;
 
 /**
- * Test OneCommitAnalysisController rest api
+ * Test OneCommitAnalysisController rest services
  */
 @WebMvcTest
 @ExtendWith(MockitoExtension.class)
@@ -58,15 +58,7 @@ public class CommitsAnalysisControllerTest {
 	void testGetOneCommitAnalysis() throws Exception {
 		when(commitsAnalysisService.generateOneCommitReport(anyString(), anyString(), any())).thenCallRealMethod();
 		when(commitsAnalysisService.callAnalysisServiceOneCommit(anyString())).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(Constants.ONE_COMMIT_URL)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().writeValueAsString(commitAnalysisRequest)))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		String response = mvcResult.getResponse().getContentAsString();
-		assertNotNull(response);
-		assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+		callServiceAndTest(Constants.ONE_COMMIT_URL);
 	}
 	
 	@Test
@@ -74,12 +66,15 @@ public class CommitsAnalysisControllerTest {
 		commitAnalysisRequest.setNoOfCommits(2);
 		when(commitsAnalysisService.generateTrendAnalysisReport(anyString(), anyString(), anyInt())).thenCallRealMethod();
 		when(commitsAnalysisService.callAnalysisServiceTrend(any(TrendAnalysisRequest.class))).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(Constants.TREND_URL)
+		callServiceAndTest(Constants.TREND_URL);
+	}
+	
+	public void callServiceAndTest(String url) throws Exception {
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(url)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(commitAnalysisRequest)))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
-		
 		String response = mvcResult.getResponse().getContentAsString();
 		assertNotNull(response);
 		assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);

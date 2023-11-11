@@ -5,7 +5,6 @@ package code.quality.analyzer.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.contains;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,7 +14,7 @@ import java.util.Map;
 
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -33,8 +32,8 @@ class CommitsAnalysisUtilTest {
 	private static String repoPath;
 	private static CommitsAnalysisService commitsAnalysisService;
 
-	@BeforeAll
-	static void setUp() {
+	@BeforeEach
+	void setUp() {
 		commitIds = new ArrayList<String>();
 		commitsAnalysisService = new CommitsAnalysisServiceImpl();
 		repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
