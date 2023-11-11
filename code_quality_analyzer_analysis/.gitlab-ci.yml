@@ -42,7 +42,7 @@
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container
     rm -f analysis-service-container || true"
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run
-    -d -p 8000:8000 --restart=always --name analysis-service-container docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA"
+    -d -p 8000:8000 --restart=always -v /home/deployer/spring-boot-app:/home/deployer/spring-boot-app --name analysis-service-container docker.io/$DOCKER_HUB_USER/$DOCKER_HUB_REPO:analysis-service-$CI_COMMIT_SHORT_SHA"
   environment:
     name: production
     url: http://csci5308vm3.research.cs.dal.ca:8000
