@@ -49,7 +49,7 @@ public class CommitsAnalysisControllerTest {
 	void setUp() {
 		commitAnalysisRequest = new CommitAnalysisRequest();
 		commitAnalysisRequest.setGitRepoLink(Constants.TEST_REPO_URL);
-		commitAnalysisRequest.setBranch("main");
+		commitAnalysisRequest.setBranch(Constants.TEST_BRANCH);
 		mockMvc = MockMvcBuilders.standaloneSetup(oneCommitAnalysisController).build();
 		when(commitsAnalysisService.cloneRepository(anyString())).thenCallRealMethod();
 	}
