@@ -47,13 +47,13 @@ class CommitsAnalysisServiceImplTest {
 
     @Value("${analysis.service.base.url}")
 	private String baseUrl;
-	
+
 	@Value("${analysis.service.one.commit.url}")
 	private String oneCommiUrl;
-	
+
 	@Value("${analysis.service.trend.url}")
 	private String trendUrl;
-    
+
     @BeforeEach
     void setUp() {
         commitsAnalysisService = new CommitsAnalysisServiceImpl();
@@ -95,7 +95,7 @@ class CommitsAnalysisServiceImplTest {
         assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
         wireMockServer.stop();
     }
-    
+
     @Test
     void testGenerateTrendAnalysisReport() throws Exception {
     	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, 2);
@@ -104,7 +104,7 @@ class CommitsAnalysisServiceImplTest {
     	assertEquals(Constants.TEST_USER_2, trendAnalysisRequest.getPreviousCommit().get(Constants.TEST_COMMIT_ID_3));
     	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
     }
-    
+
     @Test
     void testGenerateTrendAnalysisReportForAllCommits() throws Exception {
     	repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL_ALLCOMMITS);
@@ -114,12 +114,12 @@ class CommitsAnalysisServiceImplTest {
     	assertNull(trendAnalysisRequest.getPreviousCommit());
     	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
     }
-    
+
     @Test
     void testGenerateTrendAnalysisReportForZeroCommits() throws Exception {
     	assertThrows(InvalidCommitsException.class, () -> commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_ZERO));
-    }    
-    
+    }
+
     @Test
     void testCallAnalysisServiceTrend() throws Exception {
         wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));

@@ -39,7 +39,7 @@ const Main = () => {
   };
 
   useEffect(() => {
- 
+
     if (selectedBranch) {
       fetchCommits(selectedBranch);
     }
@@ -56,7 +56,7 @@ const Main = () => {
       }
       //to make the one-commit api request
       axios
-        .post('http://localhost:8080/onecommit/getanalysis', requestData, {
+        .post(process.env.REACT_APP_BACKEND_URL+'/onecommit/getanalysis', requestData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -87,7 +87,7 @@ const Main = () => {
 
       // to make the trend analysis API request
       axios
-        .post('http://localhost:8080/trend/getanalysis', requestData, {
+        .post(process.env.REACT_APP_BACKEND_URL+'/trend/getanalysis', requestData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -328,13 +328,13 @@ const Main = () => {
           console.error(error);
           setBranches([]);
           if (error.response) {
-            
+
             setErrorMessage(`Failed to fetch branches. Status: ${error.response.status}`);
           } else if (error.request) {
-            
+
             setErrorMessage('Failed to fetch branches. No response received from the server.');
           } else {
-        
+
             setErrorMessage('Failed to fetch branches. Please check your repository link.');
           }
         });

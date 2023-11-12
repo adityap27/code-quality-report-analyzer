@@ -75,7 +75,7 @@ public class CommitsAnalysisUtil {
 			{"-i", repoPath, 
 			"-o", reportPath, 
 			"-ac", branch, 
-			"-fr", fromCommit, 
+			"-fr", fromCommit,
 			"-to", commitIds.get(0)};
 		
 		Designite.main(args);
