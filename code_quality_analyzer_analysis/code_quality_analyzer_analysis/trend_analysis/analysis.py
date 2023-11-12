@@ -17,11 +17,12 @@ def analyze_smell_files_in_folder_without_top_entities(folder_path: str) -> dict
     return smells_data
 
 
-def get_smell_commit_changes(trend_analysis_dict: dict, commits: list) -> dict:
+def get_smell_commit_changes(trend_analysis_dict: dict, commits: list, users: list) -> dict:
     """
     Calculates the difference between adjacent commits smells
     :param trend_analysis_dict: Dictionary containing all commits smells
     :param commits: List representing order of commits
+    :param users: List representing order of users as per commit
     :return: dictionary containing difference between commit smells
     """
     trend_analysis_dict["commit_changes"] = {}
@@ -51,7 +52,8 @@ def get_smell_commit_changes(trend_analysis_dict: dict, commits: list) -> dict:
                 "smell_distribution": {},
                 "total_smells": 0
             },
-            "total_smells": 0
+            "total_smells": 0,
+            "user": users[i],
         }
 
         current_commit_dict = trend_analysis_dict["full_repo"][current_commit]
@@ -88,23 +90,29 @@ def get_smell_commit_changes(trend_analysis_dict: dict, commits: list) -> dict:
     return trend_analysis_dict
 
 
-def analyze_commit_folders_in_folder(folder_path: str, commits: list, before_oldest_commit: str) -> dict:
+def analyze_commit_folders_in_folder(
+        folder_path: str, commits: list, before_oldest_commit: str, users: list, before_oldest_commit_user: str
+) -> dict:
     """
     Analyzes all commit folders in a parent repository folder
     :param folder_path: Path to the folder containing all the commit sub-folders
     :param commits: List of commits in an ordered form. initial commit would be first and followed by the more recent ones
+    :param users: List of users per commit in an ordered form
     :param before_oldest_commit: Commit hash of the previous commit of the oldest commit in oldest_to_latest_ordered_commits
+    :param before_oldest_commit_user: user before the oldest commit
     :return: Dictionary containing analysis of all the commits
     """
     trend_analysis_dict = {"full_repo": {}}
     commits.insert(0, before_oldest_commit)
+    users.insert(0, before_oldest_commit_user)
 
-    for commit in commits:
+    for index, commit in enumerate(commits):
         path = folder_path + "/" + commit
 
         trend_analysis_dict["full_repo"][commit] = analyze_smell_files_in_folder_without_top_entities(path)
+        trend_analysis_dict["full_repo"][commit]["user"] = users[index]
 
-    trend_analysis_dict = get_smell_commit_changes(trend_analysis_dict, commits)
+    trend_analysis_dict = get_smell_commit_changes(trend_analysis_dict, commits, users)
     trend_analysis_dict["full_repo"].pop(before_oldest_commit, None)
 
     return trend_analysis_dict
