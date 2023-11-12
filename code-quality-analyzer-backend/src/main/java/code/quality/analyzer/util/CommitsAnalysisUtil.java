@@ -1,7 +1,8 @@
 package code.quality.analyzer.util;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,29 +12,30 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import Designite.Designite;
+import code.quality.analyzer.exception.InvalidCommitsException;
 
 public class CommitsAnalysisUtil {
 	
 	private static Logger logger = LogManager.getLogger(CommitsAnalysisUtil.class);
 
 	/**
-	 * Fetch commit ids for given repository and number of commits
+	 * Fetch commit ids and user info for given repository and number of commits
 	 * @param repoPath repository path
 	 * @param branchname branch name
 	 * @param noOfCommits number of commits
-	 * @return List<String> from and to commit ids
+	 * @return Map<String, String> commits id and username
 	 * @throws Exception
 	 */
-	public static List<String> getCommitIds(String repoPath, String branchname, int noOfCommits) throws Exception {
+	public static Map<String, String> getCommitIds(String repoPath, String branchname, int noOfCommits) throws Exception {
 		logger.info("BEGIN getCommitIds()");
-		List<String> commitIds = new ArrayList<String>();
+		Map<String, String> commitsData = new LinkedHashMap<String, String>();
+		if (noOfCommits == 0) {
+			return commitsData;
+		}
 		Git git = checkoutAndValidate(repoPath, branchname);
-		/*if (noOfCommits == 0) {
-			return commitIds;
-		}*/
 		Iterable<RevCommit> commits = git.log().setMaxCount(noOfCommits).call();
-		commitIds.add(commits.iterator().next().getName());
-		return commitIds;
+		commits.forEach(commit -> commitsData.put(commit.getName(), commit.getAuthorIdent().getName()));
+		return commitsData;
 	}
 	
 	/**
@@ -44,6 +46,7 @@ public class CommitsAnalysisUtil {
 	 * @throws Exception
 	 */
 	public static Git checkoutAndValidate(String repoPath, String branchname) throws Exception {
+		logger.info("BEGIN checkoutAndValidate()");
 		Repository repository = new FileRepository(repoPath + Constants.REPO_SUFFIX);
 		Git git = new Git(repository);
 		git.checkout().setCreateBranch(false).setName(branchname).call();
@@ -60,19 +63,25 @@ public class CommitsAnalysisUtil {
 	 */
 	public static String generateReports(List<String> commitIds, String repoPath, String branch) throws Exception {
 		logger.info("BEGIN generateReports()");
+		if(commitIds == null || commitIds.isEmpty()) {
+			throw new InvalidCommitsException("Invalid commits");
+		}
 		String reportPath = repoPath + Constants.REPORT_PATH;
-		String toCommit = commitIds.get(0);
-		/*if(!commitIds.isEmpty() && commitIds.size() != 1) {
-			toCommit = commitIds.get(1);
-		}*/
+		String fromCommit = commitIds.get(0);
+		if(!commitIds.isEmpty() && commitIds.size() != 1) {
+			fromCommit = commitIds.get(commitIds.size()-1);
+		}
 		String[] args = new String[] 
 			{"-i", repoPath, 
 			"-o", reportPath, 
 			"-ac", branch, 
-			"-fr", commitIds.get(0), 
-			"-to", toCommit};
+			"-fr", fromCommit,
+			"-to", commitIds.get(0)};
 		
 		Designite.main(args);
-		return reportPath + "/" + commitIds.get(0);
+		if(commitIds.size() == 1) {
+			reportPath = reportPath + "/" + commitIds.get(0);
+		}
+		return reportPath;
 	}
 }
