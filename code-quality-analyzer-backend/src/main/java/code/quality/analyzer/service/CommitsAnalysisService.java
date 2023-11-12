@@ -1,5 +1,7 @@
 package code.quality.analyzer.service;
 
+import code.quality.analyzer.model.TrendAnalysisRequest;
+
 public interface CommitsAnalysisService {
 
 	/**
@@ -20,9 +22,26 @@ public interface CommitsAnalysisService {
 	String generateOneCommitReport(String repoPath, String branch, String commitId) throws Exception;
 	
 	/**
-	 * Call python analysis service
+	 * Call python analysis service for one commit analysis
 	 * @param reportPath commit reports path
 	 * @return String Output json with analysis data
 	 */
-	String callAnalysisService(String reportPath);
+	String callAnalysisServiceOneCommit(String reportPath);
+	
+	/**
+	 * Generate report for trend analysis
+	 * @param repoPath repository path
+	 * @param branch branch name
+	 * @param noOfCommits number of commits
+	 * @return TrendAnalysisRequest object
+	 * @throws Exception
+	 */
+	TrendAnalysisRequest generateTrendAnalysisReport(String repoPath, String branch, int noOfCommits) throws Exception;
+
+	/**
+	 * Call python analysis service for trend analysis
+	 * @param trendAnalysisRequest request object
+	 * @return String output json data
+	 */
+	String callAnalysisServiceTrend(TrendAnalysisRequest trendAnalysisRequest);
 }

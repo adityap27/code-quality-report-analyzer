@@ -27,4 +27,9 @@ public class CommitsAnalysisExceptionHandler extends ResponseEntityExceptionHand
 	public ResponseEntity<String> handleInvalidBranchException(Exception exception, WebRequest request) {
 		return new ResponseEntity<String>("Invalid branch name: " + exception.getMessage(), HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler({InvalidCommitsException.class})
+	public ResponseEntity<String> handleInvalidCommitsException(Exception exception, WebRequest request) {
+		return new ResponseEntity<String>("Invalid commit ids: " + exception.getMessage(), HttpStatus.NOT_FOUND);
+	}
 }
