@@ -59,7 +59,7 @@ const Implementation = ({ data, commits }) => {
         <h2>Implementation Smell</h2>
 
         {/* Dropdown to select the data source (full_repo or commit_changes) */}
-        <div className="dropdowns">
+        <div className="dropdowns-container">
           <div className="dropdown-container">
             <select
               value={selectedDataSource}

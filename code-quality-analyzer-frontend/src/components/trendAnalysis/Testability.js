@@ -54,7 +54,7 @@ const Testability = ({ data, commits }) => {
       <h2>Testability Smell</h2>
 
       {/* Dropdown to select the data source (full_repo or commit_changes) */}
-      <div className='dropdowns'>
+      <div className='dropdowns-container'>
       <div className="dropdown-container">
         <select value={selectedDataSource} onChange={handleDataSourceChange}>
           <option value="commit_changes">Commit Changes</option>
