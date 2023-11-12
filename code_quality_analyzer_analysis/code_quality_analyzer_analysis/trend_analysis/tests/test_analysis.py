@@ -7,47 +7,53 @@ from code_quality_analyzer_analysis.trend_analysis.analysis import (
 
 
 class TestTrendAnalysis(unittest.TestCase):
+    architecture_smell = "Architecture Smell"
+    design_smell = "Design Smell"
+    implementation_smell = "Implementation Smell"
+    testability_smell = "Testability Smell"
+    test_smell = "Test Smell"
+    sample_folder = "/sample_folder/"
     # Mocked return values for functions
     analyze_smell_files_mock = {
-        "Architecture Smell": None,
-        "Design Smell": {
+        architecture_smell: None,
+        design_smell: {
             "smell_distribution": {"Smell1": 2, "Smell2": 1},
             "top_entities": {"EntityA": 2, "EntityB": 1},
             "total_smells": 3,
         },
-        "Implementation Smell": None,
-        "Testability Smell": {
+        implementation_smell: None,
+        testability_smell: {
             "smell_distribution": {"Smell3": 5, "Smell4": 8},
             "top_entities": {"EntityC": 7, "EntityD": 10},
             "total_smells": 13,
         },
-        "Test Smell": None,
+        test_smell: None,
         "total_smells": 16,
         "user": "user1"
     }
 
     analyze_smell_files_empty_mock = {
-        "Architecture Smell": None,
-        "Design Smell": None,
-        "Implementation Smell": None,
-        "Testability Smell": None,
-        "Test Smell": None,
+        architecture_smell: None,
+        design_smell: None,
+        implementation_smell: None,
+        testability_smell: None,
+        test_smell: None,
         "total_smells": 0,
         "user": "user1"
     }
 
     analyze_smell_files_in_folder_without_top_entities_mock = {
-        "Architecture Smell": None,
-        "Design Smell": {
+        architecture_smell: None,
+        design_smell: {
             "smell_distribution": {"Smell1": 2, "Smell2": 1},
             "total_smells": 3,
         },
-        "Implementation Smell": None,
-        "Testability Smell": {
+        implementation_smell: None,
+        testability_smell: {
             "smell_distribution": {"Smell3": 5, "Smell4": 8},
             "total_smells": 13,
         },
-        "Test Smell": None,
+        test_smell: None,
         "total_smells": 16,
         "user": "user1"
     }
@@ -64,14 +70,14 @@ class TestTrendAnalysis(unittest.TestCase):
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.analyze_smell_files_in_folder",
            return_value=analyze_smell_files_mock)
     def test_analyze_smell_files_in_folder_without_top_entities_some(self, _):
-        result = analyze_smell_files_in_folder_without_top_entities("/sample_folder/")
+        result = analyze_smell_files_in_folder_without_top_entities(self.sample_folder)
         expected = self.analyze_smell_files_in_folder_without_top_entities_mock
         self.assertEqual(result, expected)
 
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.analyze_smell_files_in_folder",
            return_value=analyze_smell_files_empty_mock)
     def test_analyze_smell_files_in_folder_without_top_entities_empty(self, _):
-        result = analyze_smell_files_in_folder_without_top_entities("/sample_folder/")
+        result = analyze_smell_files_in_folder_without_top_entities(self.sample_folder)
         self.assertEqual(result, self.analyze_smell_files_empty_mock)
 
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.analyze_smell_files_in_folder_without_top_entities",
@@ -113,33 +119,33 @@ class TestTrendAnalysis(unittest.TestCase):
             "full_repo": full_repo_mock["full_repo"],
             "commit_changes": {
                 "c1": {
-                    "Architecture Smell": {
+                    self.architecture_smell: {
                         "smell_distribution": {
 
                         },
                         "total_smells": 0
                     },
-                    "Design Smell": {
+                    self.design_smell: {
                         "smell_distribution": {
                             "Smell1": 2,
                             "Smell2": 1
                         },
                         "total_smells": 3
                     },
-                    "Implementation Smell": {
+                    self.implementation_smell: {
                         "smell_distribution": {
 
                         },
                         "total_smells": 0
                     },
-                    "Testability Smell": {
+                    self.testability_smell: {
                         "smell_distribution": {
                             "Smell3": 5,
                             "Smell4": 8
                         },
                         "total_smells": 13
                     },
-                    "Test Smell": {
+                    self.test_smell: {
                         "smell_distribution": {
 
                         },
@@ -149,31 +155,31 @@ class TestTrendAnalysis(unittest.TestCase):
                     "user": "user1"
                 },
                 "c2": {
-                    "Architecture Smell": {
+                    self.architecture_smell: {
                         "smell_distribution": {
 
                         },
                         "total_smells": 0
                     },
-                    "Design Smell": {
+                    self.design_smell: {
                         "smell_distribution": {
 
                         },
                         "total_smells": 0
                     },
-                    "Implementation Smell": {
+                    self.implementation_smell: {
                         "smell_distribution": {
 
                         },
                         "total_smells": 0
                     },
-                    "Testability Smell": {
+                    self.testability_smell: {
                         "smell_distribution": {
 
                         },
                         "total_smells": 0
                     },
-                    "Test Smell": {
+                    self.test_smell: {
                         "smell_distribution": {
 
                         },
@@ -183,33 +189,33 @@ class TestTrendAnalysis(unittest.TestCase):
                     "user": "user1"
                 },
                 "c3": {
-                    "Architecture Smell": {
+                    self.architecture_smell: {
                         "smell_distribution": {
 
                         },
                         "total_smells": 0
                     },
-                    "Design Smell": {
+                    self.design_smell: {
                         "smell_distribution": {
                             "Smell1": 2,
                             "Smell2": 1
                         },
                         "total_smells": 3
                     },
-                    "Implementation Smell": {
+                    self.implementation_smell: {
                         "smell_distribution": {
 
                         },
                         "total_smells": 0
                     },
-                    "Testability Smell": {
+                    self.testability_smell: {
                         "smell_distribution": {
                             "Smell3": 5,
                             "Smell4": 8
                         },
                         "total_smells": 13
                     },
-                    "Test Smell": {
+                    self.test_smell: {
                         "smell_distribution": {
 
                         },

@@ -57,48 +57,57 @@ def analyze_smell_files(architecture_path: str, design_path: str, implementation
     :param test_path: Path to the Architecture Test CSV file
     :return: Dictionary containing analysis of all the files
     """
+    architecture_smell = "Architecture Smell"
+    design_smell = "Design Smell"
+    implementation_smell = "Implementation Smell"
+    testability_smell = "Testability Smell"
+    test_smell = "Test Smell"
+    package_name = "Package Name"
+    project_name = "Project Name"
+    type_name = "Type Name"
+    method_name = "Method Name"
     analysis_dict = {
-        "Architecture Smell": None,
-        "Design Smell": None,
-        "Implementation Smell": None,
-        "Testability Smell": None,
-        "Test Smell": None
+        architecture_smell: None,
+        design_smell: None,
+        implementation_smell: None,
+        testability_smell: None,
+        test_smell: None
     }
 
     # Analyze Architecture Smell
     if architecture_path:
-        architecture_df = load_and_prepare_data(architecture_path, ["Project Name", "Package Name"])
-        analysis_dict["Architecture Smell"] = analyze_smells(architecture_df, "Architecture Smell")
+        architecture_df = load_and_prepare_data(architecture_path, [project_name, package_name])
+        analysis_dict[architecture_smell] = analyze_smells(architecture_df, architecture_smell)
 
     # Analyze Design Smell
     if design_path:
-        design_df = load_and_prepare_data(design_path, ["Project Name", "Package Name", "Type Name"])
-        analysis_dict["Design Smell"] = analyze_smells(design_df, "Design Smell")
+        design_df = load_and_prepare_data(design_path, [project_name, package_name, type_name])
+        analysis_dict[design_smell] = analyze_smells(design_df, design_smell)
 
     # Analyze Implementation Smell
     if implementation_path:
         implementation_df = load_and_prepare_data(
-            implementation_path, ["Project Name", "Package Name", "Type Name", "Method Name"]
+            implementation_path, [project_name, package_name, type_name, method_name]
         )
-        analysis_dict["Implementation Smell"] = analyze_smells(implementation_df, "Implementation Smell")
+        analysis_dict[implementation_smell] = analyze_smells(implementation_df, implementation_smell)
 
     # Analyze Testability Smell
     if testability_path:
-        testability_df = load_and_prepare_data(testability_path, ["Project Name", "Package Name", "Type Name"])
-        analysis_dict["Testability Smell"] = analyze_smells(testability_df, "Testability Smell")
+        testability_df = load_and_prepare_data(testability_path, [project_name, package_name, type_name])
+        analysis_dict[testability_smell] = analyze_smells(testability_df, testability_smell)
 
     # Analyze Test Smell
     if test_path:
-        test_df = load_and_prepare_data(test_path, ["Project Name", "Package Name", "Type Name", "Method Name"])
-        analysis_dict["Test Smell"] = analyze_smells(test_df, "Test Smell")
+        test_df = load_and_prepare_data(test_path, [project_name, package_name, type_name, method_name])
+        analysis_dict[test_smell] = analyze_smells(test_df, test_smell)
 
     # Total of all smells counts
-    sum = 0
+    total_smells = 0
     for smell_data in analysis_dict.values():
         if smell_data is not None:
-            sum += smell_data["total_smells"]
+            total_smells += smell_data["total_smells"]
 
-    analysis_dict["total_smells"] = sum
+    analysis_dict["total_smells"] = total_smells
 
     return analysis_dict
 
