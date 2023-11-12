@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
 import PropTypes from 'prop-types'
 
-const Design = ({ data, commits }) => {
+const Design = ({ data, commits, numberOfCommits }) => {
   const [selectedSmell, setSelectedSmell] = useState('Design Smell')
-  const [selectedSubtype, setSelectedSubtype] = useState(
-    'Unutilized Abstraction'
-  )
+  const [selectedSubtype, setSelectedSubtype] = useState('Unutilized Abstraction')
   const [selectedDataSource, setSelectedDataSource] = useState('commit_changes') // State for selecting data source
 
   const subtypes = Object.keys(
@@ -14,16 +12,16 @@ const Design = ({ data, commits }) => {
   )
 
   const chartDataForSubtype = {
-    labels: commits,
+    labels: commits.slice(-numberOfCommits),
     datasets: subtypes.map((subtype) => ({
       label: subtype,
-      data: commits.map((commit) => {
-        if (selectedSmell && selectedSubtype === subtype) {
-          return data[selectedDataSource][commit][selectedSmell]
-            .smell_distribution[subtype]
-        }
-        return 0
-      }),
+      data: commits
+        .slice(-numberOfCommits)
+        .map((commit) =>
+          selectedSmell && selectedSubtype === subtype
+            ? data[selectedDataSource][commit][selectedSmell].smell_distribution[subtype]
+            : 0
+        ),
       fill: false,
       borderColor: getRandomColor(),
     })),
@@ -52,6 +50,10 @@ const Design = ({ data, commits }) => {
   const handleDataSourceChange = (event) => {
     setSelectedDataSource(event.target.value)
   }
+
+  useEffect(() => {
+    // This block will re-run whenever numberOfCommits changes
+  }, [numberOfCommits]);
 
   return (
     <div className="chart-container">
@@ -102,6 +104,7 @@ const Design = ({ data, commits }) => {
 Design.propTypes = {
   data: PropTypes.object.isRequired,
   commits: PropTypes.array.isRequired,
+  numberOfCommits: PropTypes.number.isRequired,
 }
 
 export default Design
