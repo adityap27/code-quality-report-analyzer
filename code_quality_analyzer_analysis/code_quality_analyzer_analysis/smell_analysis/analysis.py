@@ -92,6 +92,14 @@ def analyze_smell_files(architecture_path: str, design_path: str, implementation
         test_df = load_and_prepare_data(test_path, ["Project Name", "Package Name", "Type Name", "Method Name"])
         analysis_dict["Test Smell"] = analyze_smells(test_df, "Test Smell")
 
+    # Total of all smells counts
+    sum = 0
+    for smell_data in analysis_dict.values():
+        if smell_data is not None:
+            sum += smell_data["total_smells"]
+
+    analysis_dict["total_smells"] = sum
+
     return analysis_dict
 
 
@@ -103,10 +111,6 @@ def retrieve_smell_files(folder_path: str) -> dict:
     """
     # List all files in the provided folder
     files = []
-    for file in os.listdir(folder_path):
-        if os.path.isfile(os.path.join(folder_path, file)):
-            files.append(file)
-
     smell_files = {
         "Architecture": None,
         "Design": None,
@@ -114,6 +118,12 @@ def retrieve_smell_files(folder_path: str) -> dict:
         "Testability": None,
         "Test": None
     }
+    try:
+        for file in os.listdir(folder_path):
+            if os.path.isfile(os.path.join(folder_path, file)):
+                files.append(file)
+    except FileNotFoundError:
+        return smell_files
     
     # Check for each type of smell individually and save the path for it
     for file in files:

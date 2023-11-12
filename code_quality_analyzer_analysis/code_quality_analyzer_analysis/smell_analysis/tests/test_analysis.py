@@ -56,7 +56,8 @@ class TestSmellAnalysis(unittest.TestCase):
             "top_entities": {"EntityC": 7, "EntityD": 10},
             "total_smells": 17,
         },
-        "Test Smell": None
+        "Test Smell": None,
+        "total_smells": 20
     }
 
     analyze_smell_files_empty_mock = {
@@ -64,7 +65,8 @@ class TestSmellAnalysis(unittest.TestCase):
         "Design Smell": None,
         "Implementation Smell": None,
         "Testability Smell": None,
-        "Test Smell": None
+        "Test Smell": None,
+        "total_smells": 0
     }
 
     @patch("pandas.read_csv", return_value=pandas_dataframe_mock)
@@ -116,10 +118,14 @@ class TestSmellAnalysis(unittest.TestCase):
             "/sample_folder/ArchitectureSmells.csv", "/sample_folder/DesignSmells.csv", "/sample_folder/ImplementationSmells.csv",
             "/sample_folder/TestabilitySmells.csv", "/sample_folder/TestSmells.csv"
         )
+        self.assertEqual(result["total_smells"], 15)
         for key in result:
-            self.assertEqual(result[key]["total_smells"], 3)
-            self.assertDictEqual(result[key]["smell_distribution"], {"Smell1": 2, "Smell2": 1})
-            self.assertDictEqual(result[key]["top_entities"], {"EntityA": 2, "EntityB": 1})
+            if key is "total_smells":
+                continue
+            else:
+                self.assertEqual(result[key]["total_smells"], 3)
+                self.assertDictEqual(result[key]["smell_distribution"], {"Smell1": 2, "Smell2": 1})
+                self.assertDictEqual(result[key]["top_entities"], {"EntityA": 2, "EntityB": 1})
 
     @patch("code_quality_analyzer_analysis.smell_analysis.analysis.load_and_prepare_data",
            return_value=load_and_prepare_data_mock)
@@ -129,12 +135,15 @@ class TestSmellAnalysis(unittest.TestCase):
         result = analyze_smell_files(
             "", "/sample_folder/DesignSmells.csv", "/sample_folder/ImplementationSmells.csv","", "/sample_folder/TestSmells.csv"
         )
-
+        self.assertEqual(result["total_smells"], 9)
         for key, value in result.items():
             if value:
-                self.assertEqual(result[key]["total_smells"], 3)
-                self.assertDictEqual(result[key]["smell_distribution"], {"Smell1": 2, "Smell2": 1})
-                self.assertDictEqual(result[key]["top_entities"], {"EntityA": 2, "EntityB": 1})
+                if key is "total_smells":
+                    continue
+                else:
+                    self.assertEqual(result[key]["total_smells"], 3)
+                    self.assertDictEqual(result[key]["smell_distribution"], {"Smell1": 2, "Smell2": 1})
+                    self.assertDictEqual(result[key]["top_entities"], {"EntityA": 2, "EntityB": 1})
             else:
                 self.assertIsNone(value)
 
@@ -145,8 +154,12 @@ class TestSmellAnalysis(unittest.TestCase):
     def test_analyze_smell_files_none(self, _, __):
         result = analyze_smell_files("", "", "", "", "")
 
+        self.assertEqual(result["total_smells"], 0)
         for key, value in result.items():
-            self.assertIsNone(value)
+            if key is "total_smells":
+                continue
+            else:
+                self.assertIsNone(value)
 
     @patch("os.listdir", return_value=["ArchitectureSmells.csv", "DesignSmells.csv", "ImplementationSmells.csv",
                                        "TestabilitySmells.csv", "TestSmells.csv"])
