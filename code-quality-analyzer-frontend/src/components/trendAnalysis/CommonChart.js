@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import dummyData from '../data/Dummy.json';
 
 function CommonChart(props) {
   const [data, setData] = useState({});
@@ -8,7 +7,7 @@ function CommonChart(props) {
   const [selectedUser, setSelectedUser] = useState('user1');
 
   // JSON data provided
-  const jsonData = dummyData;
+  const jsonData = props.data;
 
   const handleDataChange = (event) => {
     setSelectedData(event.target.value);
@@ -70,9 +69,9 @@ function CommonChart(props) {
         {/* Dropdown to select the user */}
         <div className="user-dropdown">
           <select onChange={handleUserChange}>
-            {Object.keys(dummyData.commit_changes).map((commit) => (
-              <option key={commit} value={dummyData.commit_changes[commit].user}>
-                {dummyData.commit_changes[commit].user}
+            {Object.keys(props.dat.commit_changes).map((commit) => (
+              <option key={commit} value={props.data.commit_changes[commit].user}>
+                {props.data.commit_changes[commit].user}
               </option>
             ))}
           </select>

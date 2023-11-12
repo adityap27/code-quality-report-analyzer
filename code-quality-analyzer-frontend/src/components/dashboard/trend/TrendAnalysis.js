@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import dummyData from '../../data/Dummy.json'
 import './trend-analysis.css'
 import Architechture from '../../trendAnalysis/Architechture'
 import Design from '../../trendAnalysis/Design'
@@ -9,7 +8,7 @@ import Testability from '../../trendAnalysis/Testability'
 import CommonChart from '../../trendAnalysis/CommonChart'
 
 const TrendAnalysis = (props) => {
-  const commits = Object.keys(dummyData.commit_changes)
+  const commits = Object.keys(props.data.commit_changes)
   const [selectedBranch, setSelectedBranch] = useState('')
   const [numberOfCommits, setNumberOfCommits] = useState(20)
   const [selectedUser, setSelectedUser] = useState('')
@@ -56,16 +55,16 @@ const TrendAnalysis = (props) => {
         </div>
       </div>
       <div className="trend-smell-charts">
-        <CommonChart numberOfCommits={numberOfCommits} />
-        <Architechture data={dummyData} commits={commits} />
+        <CommonChart data={props.data} numberOfCommits={numberOfCommits} />
+        <Architechture data={props.data} commits={commits} />
         <Design
-          data={dummyData}
+          data={props.data}
           commits={commits}
           numberOfCommits={numberOfCommits}
         />
-        <Implementation data={dummyData} commits={commits} />
-        <Test data={dummyData} commits={commits} />
-        <Testability data={dummyData} commits={commits} />
+        <Implementation data={props.data} commits={commits} />
+        <Test data={props.data} commits={commits} />
+        <Testability data={props.data} commits={commits} />
       </div>
     </div>
   )
