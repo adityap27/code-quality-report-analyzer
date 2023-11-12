@@ -22,7 +22,8 @@ class TestTrendAnalysis(unittest.TestCase):
             "total_smells": 13,
         },
         "Test Smell": None,
-        "total_smells": 16
+        "total_smells": 16,
+        "user": "user1"
     }
 
     analyze_smell_files_empty_mock = {
@@ -31,7 +32,8 @@ class TestTrendAnalysis(unittest.TestCase):
         "Implementation Smell": None,
         "Testability Smell": None,
         "Test Smell": None,
-        "total_smells": 0
+        "total_smells": 0,
+        "user": "user1"
     }
 
     analyze_smell_files_in_folder_without_top_entities_mock = {
@@ -46,7 +48,8 @@ class TestTrendAnalysis(unittest.TestCase):
             "total_smells": 13,
         },
         "Test Smell": None,
-        "total_smells": 16
+        "total_smells": 16,
+        "user": "user1"
     }
 
     full_repo_mock = {
@@ -81,7 +84,10 @@ class TestTrendAnalysis(unittest.TestCase):
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.get_smell_commit_changes",
            return_value=full_repo_mock)
     def test_analyze_commit_folders_in_folder(self, _, __):
-        result = analyze_commit_folders_in_folder("/sample_folder/", ["c1", "c2", "c3"], "c0")
+        result = analyze_commit_folders_in_folder(
+            "/sample_folder/", ["c1", "c2", "c3"], "c0",
+            ["user1", "user1", "user1"], "user2"
+        )
         expected = {
             "full_repo": {
                 "c1": self.analyze_smell_files_in_folder_without_top_entities_mock,
@@ -93,6 +99,7 @@ class TestTrendAnalysis(unittest.TestCase):
 
     def test_get_smell_commit_changes(self):
         commits = ["c0", "c1", "c2", "c3"]
+        users = ["user2", "user1", "user1", "user1"]
         full_repo_mock = {
             "full_repo": {
                 "c0": self.analyze_smell_files_empty_mock,
@@ -101,7 +108,7 @@ class TestTrendAnalysis(unittest.TestCase):
                 "c3": self.analyze_smell_files_in_folder_without_top_entities_mock,
             }
         }
-        result = get_smell_commit_changes(full_repo_mock, commits)
+        result = get_smell_commit_changes(full_repo_mock, commits, users)
         expected = {
             "full_repo": full_repo_mock["full_repo"],
             "commit_changes": {
@@ -138,7 +145,8 @@ class TestTrendAnalysis(unittest.TestCase):
                         },
                         "total_smells": 0
                     },
-                    "total_smells": 16
+                    "total_smells": 16,
+                    "user": "user1"
                 },
                 "c2": {
                     "Architecture Smell": {
@@ -171,7 +179,8 @@ class TestTrendAnalysis(unittest.TestCase):
                         },
                         "total_smells": 0
                     },
-                    "total_smells": 0
+                    "total_smells": 0,
+                    "user": "user1"
                 },
                 "c3": {
                     "Architecture Smell": {
@@ -206,7 +215,8 @@ class TestTrendAnalysis(unittest.TestCase):
                         },
                         "total_smells": 0
                     },
-                    "total_smells": 16
+                    "total_smells": 16,
+                    "user": "user1"
                 }
             }
         }
