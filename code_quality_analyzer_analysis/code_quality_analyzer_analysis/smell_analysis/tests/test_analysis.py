@@ -120,7 +120,7 @@ class TestSmellAnalysis(unittest.TestCase):
         )
         self.assertEqual(result["total_smells"], 15)
         for key in result:
-            if key is "total_smells":
+            if key == "total_smells":
                 continue
             else:
                 self.assertEqual(result[key]["total_smells"], 3)
@@ -138,7 +138,7 @@ class TestSmellAnalysis(unittest.TestCase):
         self.assertEqual(result["total_smells"], 9)
         for key, value in result.items():
             if value:
-                if key is "total_smells":
+                if key == "total_smells":
                     continue
                 else:
                     self.assertEqual(result[key]["total_smells"], 3)
@@ -156,7 +156,7 @@ class TestSmellAnalysis(unittest.TestCase):
 
         self.assertEqual(result["total_smells"], 0)
         for key, value in result.items():
-            if key is "total_smells":
+            if key == "total_smells":
                 continue
             else:
                 self.assertIsNone(value)
