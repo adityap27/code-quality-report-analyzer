@@ -36,32 +36,4 @@ p {
     justify-content: center;
 }
 
-#navbar li {
-    list-style: none;
-    padding: 0 20px;
-    position: relative;
-}
 
-#navbar li a {
-    text-decoration: none;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #fff;
-    transition: 0.3s ease-in-out;
-}
-
-#navbar li a:hover,
-#navbar li a.active {
-    color: #4b99b8;
-}
-
-#navbar li a:hover::after,
-#navbar li a.active::after {
-    content: "";
-    width: 30%;
-    height: 2px;
-    background: #4b99b8;
-    position: absolute;
-    bottom: -4px;
-    left: 20px;
-}
