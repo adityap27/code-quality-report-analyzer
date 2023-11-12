@@ -9,9 +9,6 @@ import Testability from '../../trendAnalysis/Testability'
 import CommonChart from '../../trendAnalysis/CommonChart'
 
 const TrendAnalysis = (props) => {
-  // const commits = Object.keys(dummyData.commit_changes)
-  // const [selectedBranch, setSelectedBranch] = useState('') // State for selecting branch
-
   const commits = Object.keys(dummyData.commit_changes);
   const [selectedBranch, setSelectedBranch] = useState('');
   const [numberOfCommits, setNumberOfCommits] = useState(20);
