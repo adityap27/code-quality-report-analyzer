@@ -10,7 +10,7 @@ from code_quality_analyzer_analysis.trend_analysis.analysis import analyze_commi
 class SmellAnalysisView(APIView):
 
     def post(self, request):
-        path = request.data.get('path', None)
+        path = request.data.get('reportPath', None)
 
         if not path:
             return Response({"error": "No path provided"}, status=status.HTTP_400_BAD_REQUEST)
