@@ -17,7 +17,7 @@ class SmellAnalysisViewTests(APITestCase):
     @patch("code_quality_analyzer_analysis.views.analyze_smell_files_in_folder")
     def test_post_with_valid_path(self, mock_analyze):
         mock_analyze.return_value = {"result": "some_result"}
-        data = {"path": "some/valid/path"}
+        data = {"reportPath": "some/valid/path"}
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         mock_analyze.assert_called_once_with("some/valid/path")
