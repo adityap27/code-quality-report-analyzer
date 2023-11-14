@@ -1,3 +1,5 @@
+import copy
+
 import pandas as pd
 
 from code_quality_analyzer_analysis.smell_analysis.analysis import (analyze_smell_files_in_folder)
@@ -116,6 +118,25 @@ def get_smell_density_full_repo(trend_analysis_dict, folder_path) -> dict:
     :return: dictionary containing 1 extra field "full_repo_smell_density", containing smell density
     """
     trend_analysis_dict["full_repo_smell_density"] = {}
+    trend_analysis_dict["full_repo_smell_density"] = copy.deepcopy(trend_analysis_dict["full_repo"])
+    full_repo_density_dict = trend_analysis_dict["full_repo_smell_density"]
+    # Calculate smell densities for each commit
+    for commit_id in full_repo_density_dict:
+        if commit_id == "":
+            continue
+        total_lines_of_code = get_total_lines_of_code(folder_path + "/" + commit_id + "/TypeMetrics.csv", "LOC")
+        # Iterate over the smell types
+        for type in full_repo_density_dict[commit_id]:
+            if isinstance(full_repo_density_dict[commit_id][type], dict):
+                # Iterate over the smell subtypes
+                for subtype in full_repo_density_dict[commit_id][type]["smell_distribution"]:
+                    full_repo_density_dict[commit_id][type]["smell_distribution"][subtype] = round(full_repo_density_dict[commit_id][type]["smell_distribution"][subtype] / (total_lines_of_code / 1000), 2)
+                # Calculate density for total smells of each type
+                full_repo_density_dict[commit_id][type]["total_smells"] = round(full_repo_density_dict[commit_id][type]["total_smells"] / (total_lines_of_code / 1000), 2)
+
+        # Calculate density for total smells
+        full_repo_density_dict[commit_id]["total_smells"] = round(full_repo_density_dict[commit_id]["total_smells"] / (total_lines_of_code / 1000), 2)
+
     return trend_analysis_dict
 
 
