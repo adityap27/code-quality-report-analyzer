@@ -6,9 +6,15 @@ import Implementation from '../../trendAnalysis/Implementation'
 import Test from '../../trendAnalysis/Test'
 import Testability from '../../trendAnalysis/Testability'
 import CommonChart from '../../trendAnalysis/CommonChart'
+import { useLocation } from 'react-router-dom'
 
 const TrendAnalysis = (props) => {
-  const commits = Object.keys(props.data.commit_changes)
+  const location = useLocation()
+  const data = location.state
+  console.log('Data', data)
+  // console.log('Hello');
+  const commits = Object.keys(data.commit_changes)
+  // console.log(commits);
   const [selectedBranch, setSelectedBranch] = useState('')
   const [numberOfCommits, setNumberOfCommits] = useState(20)
   const [selectedUser, setSelectedUser] = useState('')
@@ -46,25 +52,37 @@ const TrendAnalysis = (props) => {
         <div className="commits-container">
           <h4>Number of Commits:</h4>
           <select name="" id="" onChange={handleCommitsChange}>
-            {[...Array(5)].map((_, index) => (
-              <option key={index} value={index * 5 + 5}>
-                {index * 5 + 5}
+            {[...Array(10)].map((_, index) => (
+              <option key={index} value={index + 1}>
+                {index + 1}
               </option>
             ))}
           </select>
         </div>
       </div>
       <div className="trend-smell-charts">
-        <CommonChart data={props.data} numberOfCommits={numberOfCommits} />
-        <Architechture data={props.data} commits={commits} />
-        <Design
-          data={props.data}
+        <CommonChart data={data} numberOfCommits={numberOfCommits} />
+        <Architechture
+          data={data}
           commits={commits}
           numberOfCommits={numberOfCommits}
         />
-        <Implementation data={props.data} commits={commits} />
-        <Test data={props.data} commits={commits} />
-        <Testability data={props.data} commits={commits} />
+        <Design
+          data={data}
+          commits={commits}
+          numberOfCommits={numberOfCommits}
+        />
+        <Implementation
+          data={data}
+          commits={commits}
+          numberOfCommits={numberOfCommits}
+        />
+        <Test data={data} commits={commits} numberOfCommits={numberOfCommits} />
+        <Testability
+          data={data}
+          commits={commits}
+          numberOfCommits={numberOfCommits}
+        />
       </div>
     </div>
   )
