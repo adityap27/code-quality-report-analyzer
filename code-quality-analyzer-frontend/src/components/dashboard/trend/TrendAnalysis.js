@@ -11,17 +11,13 @@ import { useLocation } from 'react-router-dom'
 const TrendAnalysis = (props) => {
   const location = useLocation()
   const data = location.state
-  console.log('Data', data)
-  // console.log('Hello');
   const commits = Object.keys(data.commit_changes)
-  // console.log(commits);
   const [selectedBranch, setSelectedBranch] = useState('')
   const [numberOfCommits, setNumberOfCommits] = useState(20)
   const [selectedUser, setSelectedUser] = useState('')
 
   const handleBranchChange = (event) => {
     setSelectedBranch(event.target.value)
-    console.log(event.target.value)
   }
 
   const handleUserChange = (event) => {
