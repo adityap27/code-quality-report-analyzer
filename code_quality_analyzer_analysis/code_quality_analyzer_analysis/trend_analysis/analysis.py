@@ -1,4 +1,16 @@
+import pandas as pd
+
 from code_quality_analyzer_analysis.smell_analysis.analysis import (analyze_smell_files_in_folder)
+
+def get_total_lines_of_code(metrics_file_path: str, column_sum: str) -> int:
+    """
+    Takes the metrics csv file path as input and fetches the total Lines of Code for the commit eg: TypeMetrics.csv file
+    :param metrics_file_path: Path of csv file containing the metrics of the repository
+    :param column_sum: Name of the column in csv that contains the LOC. This column will be summed
+    :return: integer representing the total Lines of Code
+    """
+
+    return 0
 
 
 def analyze_smell_files_in_folder_without_top_entities(folder_path: str) -> dict:

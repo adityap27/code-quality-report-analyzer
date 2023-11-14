@@ -1,8 +1,9 @@
 import unittest
 from unittest.mock import patch
 
+import pandas as pd
 from code_quality_analyzer_analysis.trend_analysis.analysis import (
-    analyze_smell_files_in_folder_without_top_entities, analyze_commit_folders_in_folder, get_smell_commit_changes
+    analyze_smell_files_in_folder_without_top_entities, analyze_commit_folders_in_folder, get_smell_commit_changes, get_total_lines_of_code
 )
 
 
@@ -66,6 +67,18 @@ class TestTrendAnalysis(unittest.TestCase):
             "c3": analyze_smell_files_in_folder_without_top_entities_mock,
         }
     }
+
+    pandas_dataframe_mock = pd.DataFrame({
+        "Project Name": ["maven", "maven-core", "maven-compact"],
+        "Package Name": ["org.apache.maven.api", "org.apache.maven.artifact", "org.apache.maven.toolchain.building"],
+        "LOC": [20, 40, 10]
+    })
+
+    pandas_dataframe_empty_mock = pd.DataFrame({
+        "Project Name": [],
+        "Package Name": [],
+        "LOC": []
+    })
 
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.analyze_smell_files_in_folder",
            return_value=analyze_smell_files_mock)
@@ -228,3 +241,25 @@ class TestTrendAnalysis(unittest.TestCase):
         }
 
         self.assertEqual(result, expected)
+
+    @patch("pandas.read_csv", return_value=pandas_dataframe_mock)
+    def test_get_total_lines_of_code(self, _):
+
+        metrics_file_path = "test.csv"
+        column_sum = "LOC"
+        expected_lines_of_code = 70
+
+        total_lines_of_code = get_total_lines_of_code(metrics_file_path, column_sum)
+
+        self.assertEqual(total_lines_of_code, expected_lines_of_code)
+
+    @patch("pandas.read_csv", return_value=pandas_dataframe_empty_mock)
+    def test_get_total_lines_of_code_empty_case(self, _):
+
+        metrics_file_path = "test.csv"
+        column_sum = "LOC"
+        expected_lines_of_code = 0
+
+        total_lines_of_code = get_total_lines_of_code(metrics_file_path, column_sum)
+
+        self.assertEqual(total_lines_of_code, expected_lines_of_code)
