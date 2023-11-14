@@ -10,7 +10,13 @@ def get_total_lines_of_code(metrics_file_path: str, column_sum: str) -> int:
     :return: integer representing the total Lines of Code
     """
 
-    return 0
+    # Read CSV file, to extract the LOC
+    df = pd.read_csv(metrics_file_path)
+
+    # Calculate the SUM of LOC, as the file has LOC for each class/type, but we need total LOC of project
+    total_lines_of_code = df[column_sum].sum()
+
+    return total_lines_of_code
 
 
 def analyze_smell_files_in_folder_without_top_entities(folder_path: str) -> dict:
