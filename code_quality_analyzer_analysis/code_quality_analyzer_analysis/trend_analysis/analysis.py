@@ -162,7 +162,9 @@ def analyze_commit_folders_in_folder(
         trend_analysis_dict["full_repo"][commit] = analyze_smell_files_in_folder_without_top_entities(path)
         trend_analysis_dict["full_repo"][commit]["user"] = users[index]
 
+    trend_analysis_dict = get_smell_density_full_repo(trend_analysis_dict, folder_path)
     trend_analysis_dict = get_smell_commit_changes(trend_analysis_dict, commits, users)
     trend_analysis_dict["full_repo"].pop(before_oldest_commit, None)
+    trend_analysis_dict["full_repo_smell_density"].pop(before_oldest_commit, None)
 
     return trend_analysis_dict
