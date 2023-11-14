@@ -30,13 +30,14 @@ class TrendAnalysisView(APIView):
             return Response({"error": "No path provided"}, status=status.HTTP_400_BAD_REQUEST)
         if not commits_data:
             return Response({"error": "No commitsData provided"}, status=status.HTTP_400_BAD_REQUEST)
-        if not previous_commit:
-            return Response({"error": "No previousCommit provided"}, status=status.HTTP_400_BAD_REQUEST)
 
         commits = list(commits_data.keys())
         users = list(commits_data.values())
-        before_oldest_commit = list(previous_commit.keys())[0]
-        before_oldest_commit_user = list(previous_commit.values())[0]
+        before_oldest_commit = ""
+        before_oldest_commit_user = ""
+        if previous_commit:
+            before_oldest_commit = list(previous_commit.keys())[0]
+            before_oldest_commit_user = list(previous_commit.values())[0]
 
         results = analyze_commit_folders_in_folder(
             report_path, commits, before_oldest_commit, users, before_oldest_commit_user

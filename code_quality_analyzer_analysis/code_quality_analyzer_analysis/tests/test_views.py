@@ -35,11 +35,25 @@ class TrendAnalysisViewTests(APITestCase):
         mock_analyze.assert_not_called()
 
     @patch("code_quality_analyzer_analysis.views.analyze_commit_folders_in_folder")
-    def test_post_with_incomplete_data(self, mock_analyze):
-        data = {"reportPath": self.path, "commitsData": []}
+    def test_post_with_no_commits_data(self, mock_analyze):
+        data = {"reportPath": self.path}
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         mock_analyze.assert_not_called()
+
+    @patch("code_quality_analyzer_analysis.views.analyze_commit_folders_in_folder")
+    def test_post_with_no_previous_commit(self, mock_analyze):
+        mock_analyze.return_value = {"result": "some_result"}
+        data = {
+            "reportPath": self.path,
+            "commitsData": {
+                "commit1": "user1",
+                "commit2": "user2",
+            }
+        }
+        response = self.client.post(self.url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        mock_analyze.assert_called_once_with(self.path, ["commit1", "commit2"], "", ["user1", "user2"], "")
 
     @patch("code_quality_analyzer_analysis.views.analyze_commit_folders_in_folder")
     def test_post_with_complete_data(self, mock_analyze):
@@ -56,4 +70,4 @@ class TrendAnalysisViewTests(APITestCase):
         }
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock_analyze.assert_called_once_with("some/path", ["commit1", "commit2"], "commit0", ["user1", "user2"], "user0")
+        mock_analyze.assert_called_once_with(self.path, ["commit1", "commit2"], "commit0", ["user1", "user2"], "user0")
