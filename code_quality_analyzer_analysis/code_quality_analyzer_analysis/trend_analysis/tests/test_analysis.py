@@ -1,9 +1,10 @@
+import copy
 import unittest
 from unittest.mock import patch
 
 import pandas as pd
 from code_quality_analyzer_analysis.trend_analysis.analysis import (
-    analyze_smell_files_in_folder_without_top_entities, analyze_commit_folders_in_folder, get_smell_commit_changes, get_total_lines_of_code
+    analyze_smell_files_in_folder_without_top_entities, analyze_commit_folders_in_folder, get_smell_commit_changes, get_total_lines_of_code, get_smell_density_full_repo
 )
 
 
@@ -263,3 +264,83 @@ class TestTrendAnalysis(unittest.TestCase):
         total_lines_of_code = get_total_lines_of_code(metrics_file_path, column_sum)
 
         self.assertEqual(total_lines_of_code, expected_lines_of_code)
+
+    @patch("code_quality_analyzer_analysis.trend_analysis.analysis.get_total_lines_of_code", return_value=10000)
+    def test_get_smell_density_full_repo(self, _):
+        full_repo_mock = {
+            "full_repo": {
+                "c0": copy.deepcopy(self.analyze_smell_files_empty_mock),
+                "c1": copy.deepcopy(self.analyze_smell_files_in_folder_without_top_entities_mock),
+                "c2": copy.deepcopy(self.analyze_smell_files_empty_mock),
+                "c3": copy.deepcopy(self.analyze_smell_files_in_folder_without_top_entities_mock)
+            }
+        }
+        expected = {
+            "full_repo": full_repo_mock["full_repo"],
+            "full_repo_smell_density": {
+                "c0": {
+                    self.architecture_smell: None,
+                    self.design_smell: None,
+                    self.implementation_smell: None,
+                    self.testability_smell: None,
+                    self.test_smell: None,
+                    "total_smells": 0.0,
+                    "user": "user1"
+                },
+                "c1": {
+                    self.architecture_smell: None,
+                    self.design_smell: {
+                        "smell_distribution": {
+                            "Smell1": 0.2,
+                            "Smell2": 0.1
+                        },
+                        "total_smells": 0.3
+                    },
+                    self.implementation_smell: None,
+                    self.testability_smell: {
+                        "smell_distribution": {
+                            "Smell3": 0.5,
+                            "Smell4": 0.8
+                        },
+                        "total_smells": 1.3
+                    },
+                    self.test_smell: None,
+                    "total_smells": 1.6,
+                    "user": "user1"
+                },
+                "c2": {
+                    self.architecture_smell: None,
+                    self.design_smell: None,
+                    self.implementation_smell: None,
+                    self.testability_smell: None,
+                    self.test_smell: None,
+                    "total_smells": 0.0,
+                    "user": "user1"
+                },
+                "c3": {
+                    self.architecture_smell: None,
+                    self.design_smell: {
+                        "smell_distribution": {
+                            "Smell1": 0.2,
+                            "Smell2": 0.1
+                        },
+                        "total_smells": 0.3
+                    },
+                    self.implementation_smell: None,
+                    self.testability_smell: {
+                        "smell_distribution": {
+                            "Smell3": 0.5,
+                            "Smell4": 0.8
+                        },
+                        "total_smells": 1.3
+                    },
+                    self.test_smell: None,
+                    "total_smells": 1.6,
+                    "user": "user1"
+                }
+            }
+        }
+
+        result = get_smell_density_full_repo(full_repo_mock, "test_folder")
+        print(result,expected)
+        self.assertDictEqual(result, expected)

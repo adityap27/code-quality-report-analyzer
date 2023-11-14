@@ -108,6 +108,17 @@ def get_smell_commit_changes(trend_analysis_dict: dict, commits: list, users: li
     return trend_analysis_dict
 
 
+def get_smell_density_full_repo(trend_analysis_dict, folder_path) -> dict:
+    """
+    Calculates the smell density for the given smell counts for full repository
+    :param trend_analysis_dict: Dictionary containing all commits smells
+    :param folder_path: Path containing the CSV files having smells data
+    :return: dictionary containing 1 extra field "full_repo_smell_density", containing smell density
+    """
+    trend_analysis_dict["full_repo_smell_density"] = {}
+    return trend_analysis_dict
+
+
 def analyze_commit_folders_in_folder(
         folder_path: str, commits: list, before_oldest_commit: str, users: list, before_oldest_commit_user: str
 ) -> dict:
