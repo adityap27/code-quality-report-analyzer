@@ -1,29 +1,27 @@
-import React, { useState } from 'react'
-import { Line } from 'react-chartjs-2'
-import PropTypes from 'prop-types'
+import React, { useState, useEffect } from 'react';
+import { Line } from 'react-chartjs-2';
+import PropTypes from 'prop-types';
 
-const Architechture = ({ data, commits }) => {
+const Architechture = ({ data, commits, numberOfCommits }) => {
   const [selectedSmell, setSelectedSmell] = useState('Architecture Smell')
-  const [selectedSubtype, setSelectedSubtype] = useState(
-    'Feature Concentration'
-  )
-  const [selectedDataSource, setSelectedDataSource] = useState('commit_changes') // State for selecting data source
+  const [selectedSubtype, setSelectedSubtype] = useState('Feature Concentration')
+  const [selectedDataSource, setSelectedDataSource] = useState('full_repo') // State for selecting data source
 
   const subtypes = Object.keys(
     data[selectedDataSource][commits[0]][selectedSmell].smell_distribution
   )
 
   const chartDataForSubtype = {
-    labels: commits,
+    labels: commits.slice(-numberOfCommits),
     datasets: subtypes.map((subtype) => ({
       label: subtype,
-      data: commits.map((commit) => {
-        if (selectedSmell && selectedSubtype === subtype) {
-          return data[selectedDataSource][commit][selectedSmell]
-            .smell_distribution[subtype]
-        }
-        return 0
-      }),
+      data: commits
+        .slice(-numberOfCommits)
+        .map((commit) =>
+          selectedSmell && selectedSubtype === subtype
+            ? data[selectedDataSource][commit][selectedSmell].smell_distribution[subtype]
+            : 0
+        ),
       fill: false,
       borderColor: getRandomColor(),
     })),
@@ -52,6 +50,10 @@ const Architechture = ({ data, commits }) => {
   const handleDataSourceChange = (event) => {
     setSelectedDataSource(event.target.value)
   }
+
+  useEffect(() => {
+    // This block will re-run whenever numberOfCommits changes
+  }, [numberOfCommits]);
 
   return (
     <div className="chart-container">
@@ -102,6 +104,7 @@ const Architechture = ({ data, commits }) => {
 Architechture.propTypes = {
   data: PropTypes.object.isRequired,
   commits: PropTypes.array.isRequired,
+  numberOfCommits: PropTypes.number.isRequired,
 }
 
-export default Architechture
+export default Architechture;
