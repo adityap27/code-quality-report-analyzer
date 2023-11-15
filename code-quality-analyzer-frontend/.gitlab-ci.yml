@@ -16,10 +16,22 @@
         - "./code-quality-analyzer-frontend/build"
         - "./code-quality-analyzer-frontend/package.json"
 
+3-code-quality-frontend-job:
+  stage: code-quality
+  extends: .frontend-common
+  needs: ["3-build-frontend-job"]
+  script:
+    - npm install eslint-plugin-react@7.33.2
+    - npx -y eslint@8.53.0 . --format=json --output-file=./react_eslint_report.json
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/code-quality-analyzer-frontend/react_eslint_report.js
+    expire_in: never
+
 3-publish-frontend-job:
   stage: publish
   extends: .frontend-common
-  needs: ["3-build-frontend-job"]
+  needs: ["3-code-quality-frontend-job"]
   image: docker:stable
   variables:
     DOCKER_HOST: tcp://docker:2375
