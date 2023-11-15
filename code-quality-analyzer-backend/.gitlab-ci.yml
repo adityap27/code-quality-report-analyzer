@@ -18,10 +18,21 @@
   script:
   - mvn test
 
+1-code-quality-backend-job:
+  stage: code-quality
+  extends: .backend-common
+  needs: ["1-test-backend-job"]
+  script:
+    - java -jar $CI_PROJECT_DIR/.gitlab/DesigniteJava.jar -i $CI_PROJECT_DIR/code-quality-analyzer-backend -o $CI_PROJECT_DIR/spring_boot_smells
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/spring_boot_smells
+    expire_in: never
+
 1-package-backend-job:
   stage: package
   extends: .backend-common
-  needs: ["1-test-backend-job"]
+  needs: ["1-code-quality-backend-job"]
   script:
   - mvn package
   artifacts:
