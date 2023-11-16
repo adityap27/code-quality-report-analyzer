@@ -11,6 +11,7 @@ function CommonChart(props) {
 
 
   const [selectedUser, setSelectedUser] = useState(users[0]);
+  const [selectedDensity, setSelectedDensity] = useState('full_repo_smell_density');
 
   // JSON data provided
   const jsonData = props.data
@@ -22,8 +23,6 @@ function CommonChart(props) {
   const handleUserChange = (event) => {
     setSelectedUser(event.target.value)
   }
-
-  
 
   useEffect(() => {
     const prepareData = () => {
@@ -68,7 +67,7 @@ function CommonChart(props) {
     }
 
     prepareData(jsonData)
-  }, [selectedData, props.numberOfCommits, selectedUser])
+  }, [selectedData, props.numberOfCommits, selectedUser, selectedDensity])
 
   return (
     <div>
@@ -80,6 +79,7 @@ function CommonChart(props) {
           <select onChange={handleDataChange}>
             <option value="full_repo">Full Repository</option>
             <option value="commit_changes">Commit Changes</option>
+            <option value="full_repo_smell_density">Smell Density</option>
           </select>
         </div>
         {/* Dropdown to select the user */}
