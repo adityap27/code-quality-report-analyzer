@@ -22,7 +22,9 @@
   needs: [ "3-build-frontend-job" ]
   script:
     - npm install eslint@8.53.0 eslint-plugin-react@7.33.2
-    - npx eslint .
+    - npx eslint@8.53.0 src --format=json --output-file=./react_eslint_report.json
+    - cat ./react_eslint_report.json
+    - npx eslint@8.53.0 src
   artifacts:
     paths:
       - $CI_PROJECT_DIR/code-quality-analyzer-frontend/react_eslint_report.js
