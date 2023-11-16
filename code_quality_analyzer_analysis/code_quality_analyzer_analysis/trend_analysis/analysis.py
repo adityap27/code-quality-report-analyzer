@@ -1,4 +1,24 @@
+import copy
+
+import pandas as pd
+
 from code_quality_analyzer_analysis.smell_analysis.analysis import (analyze_smell_files_in_folder)
+
+def get_total_lines_of_code(metrics_file_path: str, column_sum: str) -> int:
+    """
+    Takes the metrics csv file path as input and fetches the total Lines of Code for the commit eg: TypeMetrics.csv file
+    :param metrics_file_path: Path of csv file containing the metrics of the repository
+    :param column_sum: Name of the column in csv that contains the LOC. This column will be summed
+    :return: integer representing the total Lines of Code
+    """
+
+    # Read CSV file, to extract the LOC
+    df = pd.read_csv(metrics_file_path)
+
+    # Calculate the SUM of LOC, as the file has LOC for each class/type, but we need total LOC of project
+    total_lines_of_code = df[column_sum].sum()
+
+    return total_lines_of_code
 
 
 def analyze_smell_files_in_folder_without_top_entities(folder_path: str) -> dict:
@@ -90,6 +110,36 @@ def get_smell_commit_changes(trend_analysis_dict: dict, commits: list, users: li
     return trend_analysis_dict
 
 
+def get_smell_density_full_repo(trend_analysis_dict, folder_path) -> dict:
+    """
+    Calculates the smell density for the given smell counts for full repository
+    :param trend_analysis_dict: Dictionary containing all commits smells
+    :param folder_path: Path containing the CSV files having smells data
+    :return: dictionary containing 1 extra field "full_repo_smell_density", containing smell density
+    """
+    trend_analysis_dict["full_repo_smell_density"] = {}
+    trend_analysis_dict["full_repo_smell_density"] = copy.deepcopy(trend_analysis_dict["full_repo"])
+    full_repo_density_dict = trend_analysis_dict["full_repo_smell_density"]
+    # Calculate smell densities for each commit
+    for commit_id in full_repo_density_dict:
+        if commit_id == "":
+            continue
+        total_lines_of_code = get_total_lines_of_code(folder_path + "/" + commit_id + "/TypeMetrics.csv", "LOC")
+        # Iterate over the smell types
+        for type in full_repo_density_dict[commit_id]:
+            if isinstance(full_repo_density_dict[commit_id][type], dict):
+                # Iterate over the smell subtypes
+                for subtype in full_repo_density_dict[commit_id][type]["smell_distribution"]:
+                    full_repo_density_dict[commit_id][type]["smell_distribution"][subtype] = round(full_repo_density_dict[commit_id][type]["smell_distribution"][subtype] / (total_lines_of_code / 1000), 2)
+                # Calculate density for total smells of each type
+                full_repo_density_dict[commit_id][type]["total_smells"] = round(full_repo_density_dict[commit_id][type]["total_smells"] / (total_lines_of_code / 1000), 2)
+
+        # Calculate density for total smells
+        full_repo_density_dict[commit_id]["total_smells"] = round(full_repo_density_dict[commit_id]["total_smells"] / (total_lines_of_code / 1000), 2)
+
+    return trend_analysis_dict
+
+
 def analyze_commit_folders_in_folder(
         folder_path: str, commits: list, before_oldest_commit: str, users: list, before_oldest_commit_user: str
 ) -> dict:
@@ -112,7 +162,9 @@ def analyze_commit_folders_in_folder(
         trend_analysis_dict["full_repo"][commit] = analyze_smell_files_in_folder_without_top_entities(path)
         trend_analysis_dict["full_repo"][commit]["user"] = users[index]
 
+    trend_analysis_dict = get_smell_density_full_repo(trend_analysis_dict, folder_path)
     trend_analysis_dict = get_smell_commit_changes(trend_analysis_dict, commits, users)
     trend_analysis_dict["full_repo"].pop(before_oldest_commit, None)
+    trend_analysis_dict["full_repo_smell_density"].pop(before_oldest_commit, None)
 
     return trend_analysis_dict
