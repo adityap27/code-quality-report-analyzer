@@ -21,8 +21,8 @@
   extends: .frontend-common
   needs: ["3-build-frontend-job"]
   script:
-    - npm install eslint-plugin-react@7.33.2
-    - npx -y eslint@8.53.0 . --format=json --output-file=./react_eslint_report.json
+    - npm install
+    - npm run lint
   artifacts:
     paths:
       - $CI_PROJECT_DIR/code-quality-analyzer-frontend/react_eslint_report.js
