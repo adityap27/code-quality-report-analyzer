@@ -27,6 +27,18 @@
     - pip install -r requirements.txt
     - python manage.py test
 
+2-code-quality-analysis-service-job:
+  stage: code-quality
+  extends: .analysis-service-common
+  needs: [ "2-test-analysis-service-job" ]
+  script:
+    - pip install pylint==3.0.2
+    - pylint code_quality_analyzer_analysis --output-format=json:django_pylint_report.json,colorized
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/code_quality_analyzer_analysis/django_pylint_report.json
+    expire_in: never
+
 2-deploy-analysis-service-job:
   stage: deploy
   extends: .analysis-service-common
