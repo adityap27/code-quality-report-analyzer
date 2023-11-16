@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 const Design = ({ data, commits, numberOfCommits }) => {
   const [selectedSmell, setSelectedSmell] = useState('Design Smell')
   const [selectedSubtype, setSelectedSubtype] = useState('Unutilized Abstraction')
-  const [selectedDataSource, setSelectedDataSource] = useState('commit_changes') // State for selecting data source
+  const [selectedDataSource, setSelectedDataSource] = useState('full_repo') // State for selecting data source
 
   const subtypes = Object.keys(
     data[selectedDataSource][commits[0]][selectedSmell].smell_distribution
