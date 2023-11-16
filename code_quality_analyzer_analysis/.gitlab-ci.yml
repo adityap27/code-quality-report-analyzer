@@ -31,6 +31,7 @@
   stage: code-quality
   extends: .analysis-service-common
   needs: [ "2-test-analysis-service-job" ]
+  image: python:3.12-alpine
   script:
     - pip install pylint==3.0.2
     - pylint code_quality_analyzer_analysis --output-format=json:django_pylint_report.json,colorized
