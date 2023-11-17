@@ -32,7 +32,7 @@
 3-publish-frontend-job:
   stage: publish
   extends: .frontend-common
-  needs: [ "3-code-quality-frontend-job" ]
+  needs: [ "3-code-quality-frontend-job", "3-build-frontend-job" ]
   image: docker:stable
   variables:
     DOCKER_HOST: tcp://docker:2375
