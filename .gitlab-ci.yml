@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - code-quality
   - package
   - publish
   - deploy
