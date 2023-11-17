@@ -44,7 +44,7 @@
 2-deploy-analysis-service-job:
   stage: deploy
   extends: .analysis-service-common
-  needs: [ "2-test-analysis-service-job" ]
+  needs: [ "2-code-quality-analysis-service-job" ]
   image: alpine:latest
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
