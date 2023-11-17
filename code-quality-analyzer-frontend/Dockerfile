@@ -8,6 +8,8 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install --legacy-peer-deps
 
+RUN ls -a
+
 # Copy the build folder
 COPY build ./build/
 
