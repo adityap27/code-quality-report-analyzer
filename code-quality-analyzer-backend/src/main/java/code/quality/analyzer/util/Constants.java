@@ -6,6 +6,8 @@ public class Constants {
 	public static String REPORT_PATH = "/../Reports";
 	public static String REPO_PATH = "cloned-repos";
 	public static String REPO_SUFFIX = "/.git";
+	public static String BRANCH_PREFIX = "refs/heads/";
+	public static String REMOTE_ORIGIN = "origin/";
 
 	//Test file constants
 	public static String TEST_REMOTE_BRANCH = "mavenization";

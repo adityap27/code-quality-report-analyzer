@@ -1,16 +1,16 @@
 package code.quality.analyzer.util;
 
 import java.util.LinkedHashMap;
+
 import java.util.List;
 import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-
+import org.eclipse.jgit.api.CreateBranchCommand;
 import Designite.Designite;
 import code.quality.analyzer.exception.InvalidCommitsException;
 
@@ -49,7 +49,13 @@ public class CommitsAnalysisUtil {
 		logger.info("BEGIN checkoutAndValidate()");
 		Repository repository = new FileRepository(repoPath + Constants.REPO_SUFFIX);
 		Git git = new Git(repository);
-		git.checkout().setCreateBranch(false).setName(branchname).call();
+		if(repository.findRef(Constants.BRANCH_PREFIX + branchname) == null) {
+			git.checkout().setCreateBranch(true).setName(branchname)
+			.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM)
+			.setStartPoint(Constants.REMOTE_ORIGIN + branchname).call();
+		} else {
+			git.checkout().setCreateBranch(false).setName(branchname).call();
+		}
 		return git;
 	}
 	
@@ -74,7 +80,7 @@ public class CommitsAnalysisUtil {
 		String[] args = new String[] 
 			{"-i", repoPath, 
 			"-o", reportPath, 
-			"-ac", branch, 
+			"-ac", Constants.BRANCH_PREFIX + branch, 
 			"-fr", fromCommit,
 			"-to", commitIds.get(0)};
 		
