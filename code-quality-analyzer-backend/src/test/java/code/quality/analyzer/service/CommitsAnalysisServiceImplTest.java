@@ -69,6 +69,14 @@ class CommitsAnalysisServiceImplTest {
         assertEquals(repoPath + Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_2, path);
         assertEquals(true, Files.exists(Paths.get(path)));
     }
+    
+    @Test
+    void testGenerateOneCommitReportForRemoteBranch() throws Exception {
+    	String repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
+        String path = commitsAnalysisService.generateOneCommitReport(repoPath, Constants.TEST_REMOTE_BRANCH, Constants.TEST_REMOTE_COMMIT_ID_1);
+        assertEquals(repoPath + Constants.REPORT_PATH + "/" + Constants.TEST_REMOTE_COMMIT_ID_1, path);
+        assertEquals(true, Files.exists(Paths.get(path)));
+    }
 
     @Test
     void testGenerateOneCommitReportException() throws Exception {
@@ -98,13 +106,22 @@ class CommitsAnalysisServiceImplTest {
 
     @Test
     void testGenerateTrendAnalysisReport() throws Exception {
-    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, 2);
+    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_TOTAL_COMMITS_2);
     	assertNotNull(trendAnalysisRequest);
     	assertEquals(2, trendAnalysisRequest.getCommitsData().size());
     	assertEquals(Constants.TEST_USER_2, trendAnalysisRequest.getPreviousCommit().get(Constants.TEST_COMMIT_ID_3));
     	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
     }
 
+    @Test
+    void testGenerateTrendAnalysisReportForRemoteBranch() throws Exception {
+    	String repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
+    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_REMOTE_BRANCH, Constants.TEST_TOTAL_COMMITS_2);
+    	assertNotNull(trendAnalysisRequest);
+    	assertEquals(2, trendAnalysisRequest.getCommitsData().size());
+    	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
+    }
+    
     @Test
     void testGenerateTrendAnalysisReportForAllCommits() throws Exception {
     	repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL_ALLCOMMITS);

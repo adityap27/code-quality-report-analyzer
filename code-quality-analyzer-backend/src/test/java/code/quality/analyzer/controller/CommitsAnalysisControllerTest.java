@@ -63,7 +63,24 @@ public class CommitsAnalysisControllerTest {
 	
 	@Test
 	void testGetTrendAnalysis() throws Exception {
-		commitAnalysisRequest.setNoOfCommits(2);
+		commitAnalysisRequest.setNoOfCommits(Constants.TEST_TOTAL_COMMITS_2);
+		when(commitsAnalysisService.generateTrendAnalysisReport(anyString(), anyString(), anyInt())).thenCallRealMethod();
+		when(commitsAnalysisService.callAnalysisServiceTrend(any(TrendAnalysisRequest.class))).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
+		callServiceAndTest(Constants.TREND_URL);
+	}
+	
+	@Test
+	void testGetOneCommitAnalysisForRemoteBranch() throws Exception {
+		commitAnalysisRequest.setBranch(Constants.TEST_REMOTE_BRANCH);
+		when(commitsAnalysisService.generateOneCommitReport(anyString(), anyString(), any())).thenCallRealMethod();
+		when(commitsAnalysisService.callAnalysisServiceOneCommit(anyString())).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
+		callServiceAndTest(Constants.ONE_COMMIT_URL);
+	}
+	
+	@Test
+	void testGetTrendAnalysisForRemoteBranch() throws Exception {
+		commitAnalysisRequest.setBranch(Constants.TEST_REMOTE_BRANCH);
+		commitAnalysisRequest.setNoOfCommits(Constants.TEST_TOTAL_COMMITS_2);
 		when(commitsAnalysisService.generateTrendAnalysisReport(anyString(), anyString(), anyInt())).thenCallRealMethod();
 		when(commitsAnalysisService.callAnalysisServiceTrend(any(TrendAnalysisRequest.class))).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
 		callServiceAndTest(Constants.TREND_URL);

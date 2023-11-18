@@ -8,6 +8,8 @@ public class Constants {
 	public static String REPO_SUFFIX = "/.git";
 
 	//Test file constants
+	public static String TEST_REMOTE_BRANCH = "mavenization";
+	public static String TEST_REMOTE_COMMIT_ID_1 = "48c3f6de5121a5bb156aa510279edc1ead814ca0";
 	public static String TEST_BRANCH = "master";
 	public static String TEST_REPO_URL = "https://github.com/fangyidong/json-simple.git";
 	public static String TEST_COMMIT_ID_1 = "2f4b7b5bed38d7518bf9c6a902ea909226910ae3";
@@ -19,6 +21,7 @@ public class Constants {
 	public static String TEST_USER_2 = "darthspectrum";
 	public static String TEST_REPO_URL_ALLCOMMITS = "https://github.com/hergin/JsonParsing.git";
 	public static int TEST_TOTAL_COMMITS = 4;
+	public static int TEST_TOTAL_COMMITS_2 = 2;
 	public static int TEST_ZERO = 0;
 	public static String TEST_LOCALHOST = "localhost";
 	public static int TEST_PORT = 8000;
