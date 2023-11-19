@@ -2,8 +2,8 @@ import './App.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Homepage from './components/homepage/Homepage'
 import DashboardHome from './components/dashboardHome/DashboardHome'
-import { OneCommitAnalysisProvider } from './components/context/OneCommitAnalysisContext'
-import { TrendAnalysisProvider } from './components/context/TrendAnalysisContext'
+import { OneCommitAnalysisProvider } from './OneCommitAnalysisContext'
+import { TrendAnalysisProvider } from './TrendAnalysisContext'
 
 function App() {
   document.title = 'Code Quality Analyzer'

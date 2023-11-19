@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { OneCommitAnalysisContext } from '../../context/OneCommitAnalysisContext'
+import { OneCommitAnalysisContext } from '../../../OneCommitAnalysisContext'
 import './one-commit-dashboard.css'
 import 'chart.js/auto'
 import {

@@ -102,7 +102,7 @@ import Implementation from '../../trendAnalysis/Implementation'
 import Test from '../../trendAnalysis/Test'
 import Testability from '../../trendAnalysis/Testability'
 import CommonChart from '../../trendAnalysis/CommonChart'
-import { TrendAnalysisContext } from '../../context/TrendAnalysisContext'
+import { TrendAnalysisContext } from '../../../TrendAnalysisContext'
 import axios from 'axios'
 
 const TrendAnalysis = (props) => {
