@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Select from 'react-select'
@@ -29,13 +29,19 @@ const Main = () => {
 
 
   const handleRadioChange = (e) => {
-    setSelectedOption(e.target.value);
-    if (selectedOption === "one-commit") {
+    const selected = e.target.value;
+
+
+    setSelectedOption(selected);
+
+    if (selected === "one-commit") {
+      setFlag1(true);
+    } else if (selected === "trend-analysis" || selected === "hotspot-analysis") {
       setFlag1(false);
+    } else {
+      setFlag1(true);
     }
-    else {
-      setFlag1(true)
-    }
+
   };
 
   useEffect(() => {
@@ -54,8 +60,7 @@ const Main = () => {
         branch: selectedBranch.value,
         commitId: selcommitSHA,
       }
-
-      // to make the one-commit analysis API request
+      //to make the one-commit api request
       axios
         .post(process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis', requestData, {
           headers: {
@@ -64,23 +69,11 @@ const Main = () => {
         })
         .then((response) => {
           setIsLoading(false)
-          console.log('Response Data:', response.data);
           if (response.status === 200) {
             setAnalysisData(response.data)
-            navigate('/dashboard/oneCommit',
-              {
-                state: {
-                  aData: response.data,
-                  Link: repoLink,
-                  Sbranch: selectedBranch,
-                  Scommit: selectedCommit,
-                  AllCommits: commits
-                }
-              }
-            );
+            navigate('/dashboard/oneCommit', { state: response.data });
           }
         })
-
         .catch((error) => {
           setIsLoading(false)
           setErrorMessage(
@@ -108,8 +101,37 @@ const Main = () => {
         .then((response) => {
           setIsLoading(false);
           if (response.status === 200) {
-            // setAnalysisData(response.data);
-            navigate('/dashboard/trend', { state: response.data, branch: selectedBranch.value });
+            setAnalysisData(response.data);
+            navigate('/dashboard/trend', { state: { analysisData: response.data } });
+          }
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          setErrorMessage('Failed to load analysis. Try again later.');
+        });
+    }
+
+    else if (selectedOption === 'hotspot-analysis') {
+      setIsLoading(true);
+      const selcommitSHA = selectedCommit.value; // Optional chaining to avoid errors if selectedCommit is null/undefined
+      const requestData = {
+        gitRepoLink: repoLink,
+        branch: selectedBranch.value,
+        noOfCommits: Math.min(maxCommits || 10, 10), // Use the smaller of maxCommits or 10
+      };
+
+      // to make the trend analysis API request
+      axios
+        .post(process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis', requestData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+          setIsLoading(false);
+          if (response.status === 200) {
+            setAnalysisData(response.data);
+            navigate('/dashboard/hotspot', { state: response.data });
           }
         })
         .catch((error) => {
@@ -288,8 +310,8 @@ const Main = () => {
     }
   })
 
-
   const API_URL = `https://api.github.com`
+
   const handleRepoUrlChange = (event) => {
     const link = event.target.value
     setRepoLink(link)
@@ -455,6 +477,16 @@ const Main = () => {
                           />
                           Trend Analysis
                         </label>
+                        <label className="radio-label3" style={{ width: '157px' }}>
+                          <input
+                            type="radio"
+                            value="hotspot-analysis"
+                            checked={selectedOption === 'hotspot-analysis'}
+                            onChange={handleRadioChange}
+                            style={{ width: "25px", height: "100%", marginRight: "10px" }}
+                          />
+                          Hotspot Analysis
+                        </label>
                       </div>
                     </div>
                     {flag1 ?
@@ -516,5 +548,4 @@ const Main = () => {
     </>
   )
 }
-
-export default Main;
+export default Main; 
