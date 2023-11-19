@@ -24,29 +24,29 @@ function ImplementationEntity(props) {
   })
 
   function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
+    const letters = '0123456789ABCDEF'
+    let color = '#'
     for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+      color += letters[Math.floor(Math.random() * 16)]
     }
-    return color;
-   }
+    return color
+  }
 
   useEffect(() => {
     const topEntities =
       props.implementationEntityData?.['Implementation Smell']?.['top_entities']
 
-    console.log(topEntities);
+    const labels = topEntities
+      ? Object.keys(topEntities).map((key) => {
+          const parts = key.split('||')
+          const lastPart = parts[parts.length - 1]
+          return lastPart
+        })
+      : null
 
-    const labels = topEntities ? Object.keys(topEntities).map((key) => {
-      const parts = key.split('||')
-      const lastPart = parts[parts.length - 1]
-      return lastPart
-    }) : null;
+    const values = topEntities ? Object.values(topEntities) : null
 
-    const values = topEntities ? Object.values(topEntities) : null;
-
-    const backgroundColor = labels.map(() => getRandomColor());
+    const backgroundColor = labels.map(() => getRandomColor())
 
     setChartData({
       labels,
@@ -54,7 +54,7 @@ function ImplementationEntity(props) {
         {
           label: 'Implementation Entity',
           data: values,
-          backgroundColor
+          backgroundColor,
         },
       ],
     })

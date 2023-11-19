@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react'
+import { Line } from 'react-chartjs-2'
+import PropTypes from 'prop-types'
 
 const Test = ({ data, commits, numberOfCommits }) => {
   const [selectedSmell, setSelectedSmell] = useState('Test Smell')
@@ -11,8 +11,6 @@ const Test = ({ data, commits, numberOfCommits }) => {
     data[selectedDataSource][commits[0]][selectedSmell].smell_distribution
   )
 
-  console.log("Subtypes: ", subtypes);
-
   const chartDataForSubtype = {
     labels: commits.slice(-numberOfCommits),
     datasets: subtypes.map((subtype) => ({
@@ -21,7 +19,8 @@ const Test = ({ data, commits, numberOfCommits }) => {
         .slice(-numberOfCommits)
         .map((commit) =>
           selectedSmell && selectedSubtype === subtype
-            ? data[selectedDataSource][commit][selectedSmell].smell_distribution[subtype]
+            ? data[selectedDataSource][commit][selectedSmell]
+                .smell_distribution[subtype]
             : 0
         ),
       fill: false,
@@ -29,7 +28,6 @@ const Test = ({ data, commits, numberOfCommits }) => {
     })),
   }
 
-  console.log("Chart data for subtype: ", chartDataForSubtype);
   const options = {
     scales: {
       x: {
@@ -44,11 +42,11 @@ const Test = ({ data, commits, numberOfCommits }) => {
         position: 'right',
         labels: {
           font: {
-            size: 14
-          }
-        }
-      }
-    }
+            size: 14,
+          },
+        },
+      },
+    },
   }
 
   function getRandomColor() {
@@ -66,7 +64,7 @@ const Test = ({ data, commits, numberOfCommits }) => {
 
   useEffect(() => {
     // This block will re-run whenever numberOfCommits changes
-  }, [numberOfCommits]);
+  }, [numberOfCommits])
 
   return (
     <div className="chart-container">
@@ -120,4 +118,4 @@ Test.propTypes = {
   numberOfCommits: PropTypes.number.isRequired,
 }
 
-export default Test;
+export default Test

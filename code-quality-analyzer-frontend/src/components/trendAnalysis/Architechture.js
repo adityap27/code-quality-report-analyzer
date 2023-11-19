@@ -3,7 +3,6 @@ import { Line } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 
 const Architechture = ({ data, commits, numberOfCommits }) => {
-  console.log(data, commits, numberOfCommits);
   const [selectedSmell, setSelectedSmell] = useState('Architecture Smell')
   const [selectedSubtype, setSelectedSubtype] = useState('Feature Concentration')
   const [selectedDataSource, setSelectedDataSource] = useState('full_repo') // State for selecting data source
