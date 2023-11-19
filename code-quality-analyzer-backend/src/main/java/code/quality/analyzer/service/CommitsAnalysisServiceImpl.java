@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import code.quality.analyzer.exception.InvalidCommitsException;
+import code.quality.analyzer.model.HotspotAnalysisRequest;
 import code.quality.analyzer.model.OneCommitAnalysisRequest;
 import code.quality.analyzer.model.TrendAnalysisRequest;
 import code.quality.analyzer.util.CommitsAnalysisUtil;
@@ -113,11 +114,22 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 
 	@Override
 	public String generateHotspotReport(String repoPath, String branch) throws Exception {
-		return null;
+		logger.info("BEGIN generateHotspotReport()");
+		CommitsAnalysisUtil.checkoutAndValidate(repoPath, branch);
+		List<String> commitIds = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, branch, Constants.ONE).keySet());
+		String reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
+		return reportPath;
 	}
 
 	@Override
 	public String callAnalysisServiceHotspot(String reportPath) {
-		return null;
+		logger.info("BEGIN callAnalysisServiceHotspot()");
+		RestTemplate restTemplate = new RestTemplate();
+		HotspotAnalysisRequest req = new HotspotAnalysisRequest();
+		req.setReportPath(reportPath);
+		HttpEntity<HotspotAnalysisRequest> request = new HttpEntity<>(req);
+		ResponseEntity<String> response = restTemplate
+				.exchange(baseUrl + hotspotUrl, HttpMethod.POST, request, String.class);
+		return response.getBody();
 	}
 }
