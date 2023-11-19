@@ -4,6 +4,7 @@ import './sidebar.css'
 import { Link } from 'react-router-dom'
 
 function Sidebar() {
+
   return (
     <div className="sidebar">
       <div className="logo">
@@ -12,7 +13,7 @@ function Sidebar() {
         </Link>
       </div>
       <div className="sidebar-menu-items">
-        <Link to={'/dashboard/one-commit'} className="oneCommit common-item">
+        <Link to={'/dashboard/oneCommit'} className="oneCommit common-item">
           One Commit
         </Link>
         <Link to={'/dashboard/trend'} className="trendAnalysis common-item">

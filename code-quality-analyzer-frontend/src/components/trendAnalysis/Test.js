@@ -11,6 +11,8 @@ const Test = ({ data, commits, numberOfCommits }) => {
     data[selectedDataSource][commits[0]][selectedSmell].smell_distribution
   )
 
+  console.log("Subtypes: ", subtypes);
+
   const chartDataForSubtype = {
     labels: commits.slice(-numberOfCommits),
     datasets: subtypes.map((subtype) => ({
@@ -27,6 +29,7 @@ const Test = ({ data, commits, numberOfCommits }) => {
     })),
   }
 
+  console.log("Chart data for subtype: ", chartDataForSubtype);
   const options = {
     scales: {
       x: {
@@ -36,6 +39,16 @@ const Test = ({ data, commits, numberOfCommits }) => {
         beginAtZero: true,
       },
     },
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          font: {
+            size: 14
+          }
+        }
+      }
+    }
   }
 
   function getRandomColor() {

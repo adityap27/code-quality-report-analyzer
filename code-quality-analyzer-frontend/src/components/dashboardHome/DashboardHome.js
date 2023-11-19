@@ -9,13 +9,14 @@ import { useParams } from 'react-router'
 function DashboardHome(props) {
   const { chartType } = useParams()
   let chart
-  if (chartType === 'one-commit') {
+  if (chartType === 'oneCommit') {
     chart = <OneCommitDashboard />
   } else if (chartType === 'trend') {
     chart = <TrendAnalysis />
   } else if (chartType === 'hotspot') {
     chart = <HotspotAnalysis />
-  } else {
+  } 
+  else {
     chart = <OneCommitDashboard />
   }
   return (

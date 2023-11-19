@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 
 const Architechture = ({ data, commits, numberOfCommits }) => {
+  console.log(data, commits, numberOfCommits);
   const [selectedSmell, setSelectedSmell] = useState('Architecture Smell')
   const [selectedSubtype, setSelectedSubtype] = useState('Feature Concentration')
   const [selectedDataSource, setSelectedDataSource] = useState('full_repo') // State for selecting data source
@@ -36,6 +37,16 @@ const Architechture = ({ data, commits, numberOfCommits }) => {
         beginAtZero: true,
       },
     },
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          font: {
+            size: 14
+          }
+        }
+      }
+    }
   }
 
   function getRandomColor() {

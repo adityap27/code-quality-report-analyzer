@@ -23,32 +23,36 @@ function DesignEntity(props) {
     ],
   })
 
-  useEffect(() => {
-    const topEntities = props.designEntityData['Design Smell']['top_entities']
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+   }
 
-    const labels = Object.keys(topEntities).map((key) => {
+
+  useEffect(() => {
+    const topEntities = props.designEntityData?.['Design Smell']?.['top_entities']
+
+    const labels = topEntities ? Object.keys(topEntities).map((key) => {
       const parts = key.split('||')
       const lastPart = parts[parts.length - 1]
       return lastPart
-    })
+    }) : null
 
-    const values = Object.values(topEntities)
+    const values = topEntities ? Object.values(topEntities) : null;
+
+    const backgroundColor = labels.map(() => getRandomColor());
 
     setChartData({
       labels: labels,
       datasets: [
         {
-          label: 'Entity Name',
+          label: 'Design Entity',
           data: values,
-          backgroundColor: [
-            'rgb(192, 128, 0)',
-            'rgb(192, 0, 128)',
-            'rgb(0, 192, 128)',
-            'rgb(64, 128, 0)',
-            'rgb(64, 0, 128)',
-            'rgb(0, 64, 128)',
-            'rgb(128, 64, 0)',
-          ],
+          backgroundColor
         },
       ],
     })

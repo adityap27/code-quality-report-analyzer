@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function DesignSmell(props) {
+function DesignSmell({designSmellData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -23,13 +23,25 @@ function DesignSmell(props) {
     ],
   })
 
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+   }
+
   useEffect(() => {
+    if (designSmellData && designSmellData['Design Smell']) {
     const labels = Object.keys(
-      props.designSmellData['Design Smell']['smell_distribution']
+    designSmellData['Design Smell']['smell_distribution']
     )
     const values = Object.values(
-      props.designSmellData['Design Smell']['smell_distribution']
+      designSmellData?.['Design Smell']['smell_distribution']
     )
+
+    const backgroundColor = labels.map(() => getRandomColor());
 
     setChartData({
       labels,
@@ -37,26 +49,12 @@ function DesignSmell(props) {
         {
           label: 'Smells',
           data: values,
-          backgroundColor: [
-            'rgb(234, 76, 137)',
-            'rgb(112, 191, 83)',
-            'rgb(48, 120, 227)',
-            'rgb(255, 165, 2)',
-            'rgb(167, 38, 171)',
-            'rgb(19, 173, 102)',
-            'rgb(246, 121, 55)',
-            'rgb(88, 179, 247)',
-            'rgb(255, 215, 0)',
-            'rgb(65, 130, 64)',
-            'rgb(197, 65, 132)',
-            'rgb(43, 80, 120)',
-            'rgb(165, 98, 42)',
-            'rgb(135, 206, 250)',
-          ],
+          backgroundColor,
         },
       ],
     })
-  }, [props.designSmellData])
+  }
+  }, [designSmellData])
 
   const doughnutOptions = {
     plugins: {
