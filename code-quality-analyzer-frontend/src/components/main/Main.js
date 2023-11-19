@@ -50,11 +50,12 @@ const Main = () => {
       setIsLoading(true)
       const selcommitSHA = selectedCommit.value
       const requestData = {
-        RepoLink: repoLink,
+        gitRepoLink: repoLink,
         branch: selectedBranch.value,
         commitId: selcommitSHA,
       }
-      //to make the one-commit api request
+
+      // to make the one-commit analysis API request
       axios
         .post(process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis', requestData, {
           headers: {
@@ -63,18 +64,23 @@ const Main = () => {
         })
         .then((response) => {
           setIsLoading(false)
+          console.log('Response Data:', response.data);
           if (response.status === 200) {
-            // setAnalysisData(response.data)
-            navigate('/dashboard/oneCommit', {
-              state: {
-                AnalysisData: response.data,
-                Link: repoLink,
-                Sbranch: selectedBranch.value,
-                Scommit: selectedCommit.value
+            setAnalysisData(response.data)
+            navigate('/dashboard/oneCommit',
+              {
+                state: {
+                  aData: response.data,
+                  Link: repoLink,
+                  Sbranch: selectedBranch,
+                  Scommit: selectedCommit,
+                  AllCommits: commits
+                }
               }
-            });
+            );
           }
         })
+
         .catch((error) => {
           setIsLoading(false)
           setErrorMessage(
@@ -510,6 +516,5 @@ const Main = () => {
     </>
   )
 }
-
 
 export default Main;

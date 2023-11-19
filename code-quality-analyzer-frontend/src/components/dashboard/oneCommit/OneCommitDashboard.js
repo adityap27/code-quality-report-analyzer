@@ -29,58 +29,61 @@ import axios from 'axios'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 function OneCommitDashboard() {
-  const[analysisData,setAnalysisData] = useState()
+  const { analysisData, setAnalysisData } = useContext(OneCommitAnalysisContext);
   const [selectedBranch, setSelectedBranch] = useState(null)
   const [branch, setBranch] = useState();
   const [commits, setCommits] = useState();
-  const { fetchBranches,fetchCommits } = api()
+  const { fetchBranches, fetchCommits } = api()
   const [selectedCommit, setSelectedCommit] = useState(null)
   const location = useLocation();
-  const {state}=location;
-  const {AnalysisData,Link,Sbranch,Scommit}=state
-  
-  setAnalysisData(AnalysisData)
-  // console.log(state.selectedbranch);
+  const { state } = location;
+  const { aData, Link, Sbranch, Scommit, AllCommits } = state
+
+
   useEffect(() => {
-    fetchBranch();
-    fetchCommit();
+    setAnalysisData(aData)
+    setSelectedBranch(Sbranch)
+    setSelectedCommit(Scommit)
+    setCommits(AllCommits)
+    fetchB();
+    fetchC();
   }, []);
-  
-  const fetchBranch = async () => {
-    const b = await fetchBranches(Link);
-    setBranch(b);
-    console.log(b); // Log the updated value here
-  };
 
-  const fetchCommit = async () => {
-    console.log(selectedBranch);
-    const c = await fetchCommits(Link,Sbranch);
-    setCommits(c);
-    console.log(c); // Log the updated value here
-  };
-
-  const handleExecuteQuery=()=>{
-    const selcommitSHA = selectedCommit.value
-      const requestData = {
-        RepoLink: Link,
-        branch: selectedBranch.value,
-        commitId: selcommitSHA,
-      }
-      //to make the one-commit api request
-      axios
-        .post(process.env.REACT_APP_BACKEND_URL+'/onecommit/getanalysis', requestData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        .then((response) => {
-          
-          if (response.status === 200) {
-            setAnalysisData(response.data)
-            
-        }})
-        
+  const fetchB = async () => {
+    var B = await fetchBranches(Link);
+    setBranch(B)
   }
+  
+  const fetchC = async () => {
+    console.log(Link, selectedBranch);
+    if (selectedBranch) {
+      var C = await fetchCommits(Link, selectedBranch);
+      setSelectedCommit(C[0])
+      console.log(C)
+      setCommits(C)
+    }
+  }
+
+  const handleExecuteQuery = () => {
+    const selcommitSHA = selectedCommit.value;
+    const requestData = {
+      gitRepoLink: Link,
+      branch: selectedBranch.value,
+      commitId: selcommitSHA,
+    };
+    axios
+      .post(process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis', requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setAnalysisData(response.data);
+          console.log('Analysis Data after API call:', response.data);
+        }
+      });
+  };
 
   return (
     <>
@@ -88,33 +91,34 @@ function OneCommitDashboard() {
         <div className="oneCommit-heading">
           <h1>OneCommit Analysis</h1>
         </div>
-        <div className="branch commits-dropdown dropdown-container">
-        <div className="branch-container">
-          <h4>Branches:</h4>
-        <select name="" id=""
-                      value={Sbranch}
-                      onChange={(option)=>{setSelectedBranch(option)}}
-                      options={branch}
-                      isSearchable={true}
-                      placeholder=" Branch..."
-                    ></select>
-                    </div>
-                          <div className="commits-container">
-                          <h4>Number of Commits:</h4>
-                    <select name="" id=""
-                            value={Scommit}
-                            onChange={(option) => {setSelectedCommit(option) ; handleExecuteQuery();}}
-                            options={commits}
-                            isSearchable={true}
-                            getOptionLabel={(option) => option.label}
-                            getOptionValue={(option) => option.value}
-                            placeholder="Commit..."
-                          ></select>
+        <div className="dropdown-dropdowns">
+          <div className="branch-dropdowns">
+            <h4>Branches:</h4>
+            <Select
+              value={selectedBranch}
+              onChange={(option) => { setSelectedBranch(option); fetchC(); }}
+              options={branch}
+              isSearchable={true}
+              placeholder=" Branch..."
+            />
+          </div>
+          <div className="commits-dropdowns">
+            <h4>Commits:</h4>
+            <Select
+              value={selectedCommit}
+              onChange={(option) => { setSelectedCommit(option); handleExecuteQuery(); }}
+              options={commits}
+              isSearchable={true}
+              getOptionLabel={(option) => option.label}
+              getOptionValue={(option) => option.value}
+              placeholder="Commit..."
+            />
 
-                    </div>
-            </div>
+          </div>
+        </div>
         <div className="charts">
           <div className="architechture common-chart">
+
             <ArchitectureSmell architectureSmellData={analysisData} />
             <ArchitechtureEntity architectureEntityData={analysisData} />
           </div>
@@ -135,9 +139,11 @@ function OneCommitDashboard() {
             <ImplementationEntity implementationEntityData={analysisData} />
           </div>
         </div>
+
       </div>
     </>
-  )
-}
+
+  );
+};
 
 export default OneCommitDashboard
