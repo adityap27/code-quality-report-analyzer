@@ -54,20 +54,33 @@ const Main = () => {
         branch: selectedBranch.value,
         commitId: selcommitSHA,
       }
-      //to make the one-commit api request
+
+      // to make the one-commit analysis API request
       axios
-        .post(process.env.REACT_APP_BACKEND_URL+'/onecommit/getanalysis', requestData, {
+        .post(process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis', requestData, {
           headers: {
             'Content-Type': 'application/json',
           },
         })
         .then((response) => {
           setIsLoading(false)
+          console.log('Response Data:', response.data);
           if (response.status === 200) {
             setAnalysisData(response.data)
-            navigate('/dashboard/oneCommit', { state: response.data });
+            navigate('/dashboard/oneCommit',
+              {
+                state: {
+                  aData: response.data,
+                  Link: repoLink,
+                  Sbranch: selectedBranch,
+                  Scommit: selectedCommit,
+                  AllCommits: commits
+                }
+              }
+            );
           }
         })
+
         .catch((error) => {
           setIsLoading(false)
           setErrorMessage(
@@ -87,7 +100,7 @@ const Main = () => {
 
       // to make the trend analysis API request
       axios
-        .post(process.env.REACT_APP_BACKEND_URL+'/trend/getanalysis', requestData, {
+        .post(process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis', requestData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -95,8 +108,8 @@ const Main = () => {
         .then((response) => {
           setIsLoading(false);
           if (response.status === 200) {
-            setAnalysisData(response.data);
-            navigate('display', { state: { analysisData: response.data } });
+            // setAnalysisData(response.data);
+            navigate('/dashboard/trend', { state: response.data, branch: selectedBranch.value });
           }
         })
         .catch((error) => {
@@ -275,8 +288,8 @@ const Main = () => {
     }
   })
 
-  const API_URL = `https://api.github.com`
 
+  const API_URL = `https://api.github.com`
   const handleRepoUrlChange = (event) => {
     const link = event.target.value
     setRepoLink(link)
@@ -503,6 +516,5 @@ const Main = () => {
     </>
   )
 }
-
 
 export default Main;
