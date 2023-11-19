@@ -34,4 +34,9 @@ public class CommitsAnalysisController {
 		String jsonOutput = commitsAnalysisService.callAnalysisServiceTrend(trendAnalysisRequest);
 		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
 	}
+	
+	@PostMapping("/hotspot/getanalysis")
+	ResponseEntity<String> getHotspotAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
+		return null;
+	}
 }

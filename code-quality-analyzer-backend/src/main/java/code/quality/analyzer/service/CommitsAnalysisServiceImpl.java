@@ -35,6 +35,9 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	@Value("${analysis.service.trend.url}")
 	private String trendUrl;
 	
+	@Value("${analysis.service.hotspot.url}")
+	private String hotspotUrl;
+	
 	@Override
 	public String cloneRepository(String gitRepoLink) {
 		logger.info("BEGIN cloneRepository()");
@@ -46,7 +49,6 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	@Override
 	public String generateOneCommitReport(String repoPath, String branch, String commitId) throws Exception {
 		logger.info("BEGIN generateOneCommitReport()");
-		String reportPath = Constants.EMPTY;
 		List<String> commitIds = null;
 		CommitsAnalysisUtil.checkoutAndValidate(repoPath, branch);
 		//If commit id is null or empty, last commit id will be fetched for analysis
@@ -56,12 +58,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 			commitIds = new ArrayList<String>();
 			commitIds.add(commitId);
 		}
-		try {
-			reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
-		} catch (Exception e) {
-			logger.error("Exception Occured while genearting one commit report" + e, e);
-			throw e;
-		}
+		String reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
 		return reportPath;
 	}
 
@@ -112,5 +109,15 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		ResponseEntity<String> response = restTemplate
 				.exchange(baseUrl + trendUrl, HttpMethod.POST, request, String.class);
 		return response.getBody();
+	}
+
+	@Override
+	public String generateHotspotReport(String repoPath, String branch) throws Exception {
+		return null;
+	}
+
+	@Override
+	public String callAnalysisServiceHotspot(String reportPath) {
+		return null;
 	}
 }
