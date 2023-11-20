@@ -6,6 +6,8 @@ from code_quality_analyzer_analysis.smell_analysis.analysis import analyze_smell
 
 from code_quality_analyzer_analysis.trend_analysis.analysis import analyze_commit_folders_in_folder
 
+from code_quality_analyzer_analysis.hotspot_analysis.analysis import get_hotspot_analysis
+
 
 class SmellAnalysisView(APIView):
 
@@ -46,4 +48,12 @@ class TrendAnalysisView(APIView):
 
 
 class HotspotAnalysisView(APIView):
-    pass
+
+    def post(self, request):
+        path = request.data.get('reportPath', None)
+
+        if not path:
+            return Response({"error": "No path provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        results = get_hotspot_analysis(path)
+        return Response(results, status=status.HTTP_200_OK)
