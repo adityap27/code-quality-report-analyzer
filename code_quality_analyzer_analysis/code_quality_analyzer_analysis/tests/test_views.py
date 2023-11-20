@@ -71,3 +71,22 @@ class TrendAnalysisViewTests(APITestCase):
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         mock_analyze.assert_called_once_with(self.path, ["commit1", "commit2"], "commit0", ["user1", "user2"], "user0")
+
+
+class HotspotAnalysisViewTests(APITestCase):
+    def setUp(self) -> None:
+        self.url = reverse("hotspot_analysis")
+
+    @patch("code_quality_analyzer_analysis.views.get_hotspot_analysis")
+    def test_post_with_no_path(self, mock_analyze):
+        response = self.client.post(self.url, {}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        mock_analyze.assert_not_called()
+
+    @patch("code_quality_analyzer_analysis.views.get_hotspot_analysis")
+    def test_post_with_valid_path(self, mock_analyze):
+        mock_analyze.return_value = {"result": "some_result"}
+        data = {"reportPath": "some/valid/path"}
+        response = self.client.post(self.url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        mock_analyze.assert_called_once_with("some/valid/path")

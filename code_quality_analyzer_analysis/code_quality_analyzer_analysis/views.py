@@ -43,3 +43,7 @@ class TrendAnalysisView(APIView):
             report_path, commits, before_oldest_commit, users, before_oldest_commit_user
         )
         return Response(results, status=status.HTTP_200_OK)
+
+
+class HotspotAnalysisView(APIView):
+    pass
