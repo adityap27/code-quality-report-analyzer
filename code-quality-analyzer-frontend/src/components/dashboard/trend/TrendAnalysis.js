@@ -17,16 +17,22 @@ const TrendAnalysis = (props) => {
 
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
+    const currentBranchString = localStorage.getItem('branch')
+    const currentBranchObject = currentBranchString
+      ? JSON.parse(currentBranchString)
+      : null
+    const currentBranchValue = currentBranchObject
+      ? currentBranchObject.value
+      : ''
+    const currentMaxCommits = localStorage.getItem('maxCommits')
+
     if (!trendAnalysisData || currentRepoLink !== repoLink) {
       setIsLoading(true)
 
-      const branch = localStorage.getItem('branch')
-      const maxCommits = localStorage.getItem('maxCommits')
-
       const requestData = {
         gitRepoLink: currentRepoLink,
-        branch: branch,
-        noOfCommits: maxCommits,
+        branch: currentBranchValue,
+        noOfCommits: currentMaxCommits,
       }
 
       axios
@@ -48,7 +54,6 @@ const TrendAnalysis = (props) => {
         .catch((error) => {
           setIsLoading(false)
           console.error('Failed to fetch trend analysis data:', error)
-          // Handle error as needed
         })
 
       setRepoLink(currentRepoLink)

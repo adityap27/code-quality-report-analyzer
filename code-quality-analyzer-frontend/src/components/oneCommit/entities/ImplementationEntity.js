@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function ImplementationEntity(props) {
+function ImplementationEntity({implementationEntityData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -33,32 +33,35 @@ function ImplementationEntity(props) {
   }
 
   useEffect(() => {
-    const topEntities =
-      props.implementationEntityData?.['Implementation Smell']?.['top_entities']
-
-    const labels = topEntities
-      ? Object.keys(topEntities).map((key) => {
-          const parts = key.split('||')
-          const lastPart = parts[parts.length - 1]
-          return lastPart
-        })
-      : null
-
-    const values = topEntities ? Object.values(topEntities) : null
-
-    const backgroundColor = labels.map(() => getRandomColor())
-
-    setChartData({
-      labels,
-      datasets: [
-        {
-          label: 'Implementation Entity',
-          data: values,
-          backgroundColor,
-        },
-      ],
-    })
-  }, [props.implementationEntityData])
+    const topEntities = implementationEntityData?.['Implementation Smell']?.['top_entities'];
+  
+    // Check if topEntities is defined and not null
+    if (topEntities) {
+      const labels = Object.keys(topEntities).map((key) => {
+        const parts = key.split('||');
+        const lastPart = parts[parts.length - 1];
+        return lastPart;
+      });
+  
+      const values = Object.values(topEntities);
+      
+      // Ensure labels is an array before using map
+      if (Array.isArray(labels)) {
+        const backgroundColor = labels.map(() => getRandomColor());
+  
+        setChartData({
+          labels: labels,
+          datasets: [
+            {
+              label: 'Design Entity',
+              data: values,
+              backgroundColor,
+            },
+          ],
+        });
+      }
+    }
+  }, [implementationEntityData]);
 
   const doughnutOptions = {
     scales: {

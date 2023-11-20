@@ -8,7 +8,7 @@ function Sidebar() {
   return (
     <div className="sidebar">
       <div className="logo">
-        <Link to={'/dashboard'}>
+        <Link to={'/'}>
           <img src={Logo} alt="" />
         </Link>
       </div>

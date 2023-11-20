@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Select from 'react-select'
@@ -11,9 +11,11 @@ import banner from '../../assets/images/banner.gif'
 import './main.css'
 import Navbar from '../navbar/Navbar'
 import { OneCommitAnalysisContext } from '../../OneCommitAnalysisContext'
+import { TrendAnalysisContext } from '../../TrendAnalysisContext'
 
 const Main = () => {
   const { setAnalysisData } = useContext(OneCommitAnalysisContext)
+  const { setTrendAnalysisData } = useContext(TrendAnalysisContext)
   const [repoLink, setRepoLink] = useState('')
   const [branches, setBranches] = useState([])
   const [selectedBranch, setSelectedBranch] = useState(null)
@@ -29,13 +31,19 @@ const Main = () => {
 
 
   const handleRadioChange = (e) => {
-    setSelectedOption(e.target.value);
-    if (selectedOption === "one-commit") {
+    const selected = e.target.value;
+
+
+    setSelectedOption(selected);
+
+    if (selected === "one-commit") {
+      setFlag1(true);
+    } else if (selected === "trend-analysis" || selected === "hotspot-analysis") {
       setFlag1(false);
+    } else {
+      setFlag1(true);
     }
-    else {
-      setFlag1(true)
-    }
+
   };
 
   useEffect(() => {
@@ -56,7 +64,7 @@ const Main = () => {
       }
       //to make the one-commit api request
       axios
-        .post(process.env.REACT_APP_BACKEND_URL+'/onecommit/getanalysis', requestData, {
+        .post(process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis', requestData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -65,7 +73,12 @@ const Main = () => {
           setIsLoading(false)
           if (response.status === 200) {
             setAnalysisData(response.data)
-            navigate('/dashboard/oneCommit', { state: response.data });
+            localStorage.setItem('repoLink', repoLink)
+            localStorage.setItem('branch', JSON.stringify(selectedBranch))
+            localStorage.setItem('commitId', selcommitSHA)
+            localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
+            localStorage.setItem('allCommits', JSON.stringify(commits))
+            navigate('/dashboard/oneCommit');
           }
         })
         .catch((error) => {
@@ -87,7 +100,41 @@ const Main = () => {
 
       // to make the trend analysis API request
       axios
-        .post(process.env.REACT_APP_BACKEND_URL+'/trend/getanalysis', requestData, {
+        .post(process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis', requestData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+          setIsLoading(false);
+          if (response.status === 200) {
+            setTrendAnalysisData(response.data);
+            localStorage.setItem('repoLink', repoLink)
+            localStorage.setItem('branch', JSON.stringify(selectedBranch))
+            localStorage.setItem('commitId', selcommitSHA)
+            localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
+            localStorage.setItem('allCommits', JSON.stringify(commits))
+            navigate('/dashboard/trend');
+          }
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          setErrorMessage('Failed to load analysis. Try again later.');
+        });
+    }
+
+    else if (selectedOption === 'hotspot-analysis') {
+      setIsLoading(true);
+      const selcommitSHA = selectedCommit.value; // Optional chaining to avoid errors if selectedCommit is null/undefined
+      const requestData = {
+        gitRepoLink: repoLink,
+        branch: selectedBranch.value,
+        noOfCommits: Math.min(maxCommits || 10, 10), // Use the smaller of maxCommits or 10
+      };
+
+      // to make the trend analysis API request
+      axios
+        .post(process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis', requestData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -96,7 +143,7 @@ const Main = () => {
           setIsLoading(false);
           if (response.status === 200) {
             setAnalysisData(response.data);
-            navigate('display', { state: { analysisData: response.data } });
+            navigate('/dashboard/hotspot');
           }
         })
         .catch((error) => {
@@ -442,6 +489,16 @@ const Main = () => {
                           />
                           Trend Analysis
                         </label>
+                        <label className="radio-label3" style={{ width: '157px' }}>
+                          <input
+                            type="radio"
+                            value="hotspot-analysis"
+                            checked={selectedOption === 'hotspot-analysis'}
+                            onChange={handleRadioChange}
+                            style={{ width: "25px", height: "100%", marginRight: "10px" }}
+                          />
+                          Hotspot Analysis
+                        </label>
                       </div>
                     </div>
                     {flag1 ?
@@ -503,6 +560,4 @@ const Main = () => {
     </>
   )
 }
-
-
-export default Main;
+export default Main; 
