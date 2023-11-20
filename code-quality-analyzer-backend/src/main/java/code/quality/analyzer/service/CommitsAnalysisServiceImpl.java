@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import code.quality.analyzer.exception.InvalidCommitsException;
+import code.quality.analyzer.model.HotspotAnalysisRequest;
 import code.quality.analyzer.model.OneCommitAnalysisRequest;
 import code.quality.analyzer.model.TrendAnalysisRequest;
 import code.quality.analyzer.util.CommitsAnalysisUtil;
@@ -35,6 +36,9 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	@Value("${analysis.service.trend.url}")
 	private String trendUrl;
 	
+	@Value("${analysis.service.hotspot.url}")
+	private String hotspotUrl;
+	
 	@Override
 	public String cloneRepository(String gitRepoLink) {
 		logger.info("BEGIN cloneRepository()");
@@ -46,7 +50,6 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	@Override
 	public String generateOneCommitReport(String repoPath, String branch, String commitId) throws Exception {
 		logger.info("BEGIN generateOneCommitReport()");
-		String reportPath = Constants.EMPTY;
 		List<String> commitIds = null;
 		CommitsAnalysisUtil.checkoutAndValidate(repoPath, branch);
 		//If commit id is null or empty, last commit id will be fetched for analysis
@@ -56,12 +59,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 			commitIds = new ArrayList<String>();
 			commitIds.add(commitId);
 		}
-		try {
-			reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
-		} catch (Exception e) {
-			logger.error("Exception Occured while genearting one commit report" + e, e);
-			throw e;
-		}
+		String reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
 		return reportPath;
 	}
 
@@ -111,6 +109,27 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		HttpEntity<TrendAnalysisRequest> request = new HttpEntity<>(trendAnalysisRequest);
 		ResponseEntity<String> response = restTemplate
 				.exchange(baseUrl + trendUrl, HttpMethod.POST, request, String.class);
+		return response.getBody();
+	}
+
+	@Override
+	public String generateHotspotReport(String repoPath, String branch) throws Exception {
+		logger.info("BEGIN generateHotspotReport()");
+		CommitsAnalysisUtil.checkoutAndValidate(repoPath, branch);
+		List<String> commitIds = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, branch, Constants.ONE).keySet());
+		String reportPath = CommitsAnalysisUtil.generateReports(commitIds, repoPath, branch);
+		return reportPath;
+	}
+
+	@Override
+	public String callAnalysisServiceHotspot(String reportPath) {
+		logger.info("BEGIN callAnalysisServiceHotspot()");
+		RestTemplate restTemplate = new RestTemplate();
+		HotspotAnalysisRequest req = new HotspotAnalysisRequest();
+		req.setReportPath(reportPath);
+		HttpEntity<HotspotAnalysisRequest> request = new HttpEntity<>(req);
+		ResponseEntity<String> response = restTemplate
+				.exchange(baseUrl + hotspotUrl, HttpMethod.POST, request, String.class);
 		return response.getBody();
 	}
 }

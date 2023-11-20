@@ -69,6 +69,13 @@ public class CommitsAnalysisControllerTest {
 		callServiceAndTest(Constants.TREND_URL);
 	}
 	
+	@Test
+	void testGetHotspotAnalysis() throws Exception {
+		when(commitsAnalysisService.generateHotspotReport(anyString(), anyString())).thenCallRealMethod();
+		when(commitsAnalysisService.callAnalysisServiceHotspot(anyString())).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
+		callServiceAndTest(Constants.HOTSPOT_URL);
+	}
+	
 	public void callServiceAndTest(String url) throws Exception {
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(url)
 				.contentType(MediaType.APPLICATION_JSON)
