@@ -50,3 +50,21 @@ def get_top_entities(df: pd.DataFrame, smell_type: str, smell_subtypes: list, co
     top_entities = sorted_list[:top]
 
     return top_entities
+
+
+def get_hotspot_analysis(path: str) -> dict:
+    """
+    Returns a hotspot analysis based on design and implementation smells by using CSV files.
+    top 10 classes with most design smells and top 10 methods with most implementation smells will be returned in descending order.
+
+    :param path: The path containing CSV files of design and implementation smells.
+    :return: A dictionary containing the results of the hotspot analysis, including top classes and methods.
+             The dictionary structure is as follows:
+             {
+                "top_classes_list": List of dictionaries representing top classes,
+                "top_methods_list": List of dictionaries representing top methods
+             }
+    """
+    result = {}
+
+    return result
