@@ -1,5 +1,7 @@
 import pandas as pd
 
+from code_quality_analyzer_analysis.smell_analysis.analysis import (retrieve_smell_files, load_and_prepare_data)
+
 def get_top_entities(df: pd.DataFrame, smell_type: str, smell_subtypes: list, concat_column: str = 'Concatenated_Column', top: int = 10) -> list:
     """
     Analyzes a DataFrame containing information about specific smell and returns a list of top entities with smell distribution
@@ -65,6 +67,46 @@ def get_hotspot_analysis(path: str) -> dict:
                 "top_methods_list": List of dictionaries representing top methods
              }
     """
-    result = {}
+    # Get the paths of csv files to process Design and Implementation smells later on.
+    path_dict = retrieve_smell_files(path)
+
+    # Load the Design Smells CSV and replace Feature Envy with Abstraction, for easy comparision with sub-types during smell distribution.
+    design_df = load_and_prepare_data(path_dict["Design"], ["Project Name", "Package Name", "Type Name"])
+
+    design_df['Design Smell'] = design_df['Design Smell'].replace("Feature Envy", "Abstraction")
+
+    # Load the Implementation Smells CSV
+    impl_df = load_and_prepare_data(path_dict["Implementation"], ["Project Name", "Package Name", "Type Name", "Method Name"])
+
+    # Defining subtypes of implementation smells. This will be used for smell_distribution couting for each sub-type.
+    impl_smell_subtypes = [
+        "Long Method",
+        "Complex Method",
+        "Long Parameter List",
+        "Long Identifier",
+        "Long Statement",
+        "Complex Conditional",
+        "Virtual Method Call from Constructor",
+        "Empty Catch Clause",
+        "Magic Number",
+        "Duplicate Code",
+        "Missing Default"]
+
+    # Defining subtypes of design smells. This will be used for smell_distribution couting for each sub-type.
+    design_smell_subtypes = [
+        "Abstraction",
+        "Encapsulation",
+        "Modularization",
+        "Hierarchy"]
+
+    # Fetch the top classes and methods along with their smell_distribution as per subtypes.
+    class_list = get_top_entities(design_df, "Design Smell", design_smell_subtypes)
+    method_list = get_top_entities(impl_df, "Implementation Smell", impl_smell_subtypes)
+
+    # Merge both lists into a dictionary.
+    result = {
+        "top_classes_list": class_list,
+        "top_methods_list": method_list
+    }
 
     return result
