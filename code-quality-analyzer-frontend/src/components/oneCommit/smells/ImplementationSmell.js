@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function ImplementationSmell(props) {
+function ImplementationSmell({implementationSmellData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -23,17 +23,31 @@ function ImplementationSmell(props) {
     ],
   })
 
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+   }
+
+
   useEffect(() => {
+    if (implementationSmellData && implementationSmellData['Implementation Smell']) {
     const labels = Object.keys(
-      props.implementationSmellData['Implementation Smell'][
+      implementationSmellData['Implementation Smell']?.[
         'smell_distribution'
       ]
     )
+
     const values = Object.values(
-      props.implementationSmellData['Implementation Smell'][
+      implementationSmellData['Implementation Smell']?.[
         'smell_distribution'
       ]
     )
+
+    const backgroundColor = labels.map(() => getRandomColor());
 
     setChartData({
       labels,
@@ -41,20 +55,13 @@ function ImplementationSmell(props) {
         {
           label: 'Smells',
           data: values,
-          backgroundColor: [
-            'rgb(64, 0, 0)',
-            'rgb(0, 64, 0)',
-            'rgb(0, 0, 64)',
-            'rgb(64, 64, 0)',
-            'rgb(64, 0, 64)',
-            'rgb(0, 64, 64)',
-            'rgb(128, 128, 128)',
-          ],
+          backgroundColor,
           hoverOffset: 4,
         },
       ],
     })
-  }, [props.implementationSmellData])
+  }
+  }, [implementationSmellData])
 
   const doughnutOptions = {
     plugins: {

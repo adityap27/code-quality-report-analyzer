@@ -25,20 +25,20 @@ function TestabilityEntity(props) {
 
   useEffect(() => {
     const topEntities =
-      props.testabilityEntityData['Testability Smell']['top_entities']
-    const values = Object.values(topEntities)
+      props.testabilityEntityData?.['Testability Smell']?.['top_entities']
+    const values = topEntities ? Object.values(topEntities) : null;
 
-    const labels = Object.keys(topEntities).map((key) => {
+    const labels = topEntities ? Object.keys(topEntities).map((key) => {
       const parts = key.split('||')
       const lastPart = parts[parts.length - 1]
       return lastPart
-    })
+    }) : null;
 
     setChartData({
       labels,
       datasets: [
         {
-          label: 'Entity Name',
+          label: "Testability Entity",
           data: values,
           backgroundColor: [
             'rgb(255, 128, 0)',

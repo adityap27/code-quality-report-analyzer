@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function DesignEntity(props) {
+function DesignEntity({designEntityData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -23,36 +23,46 @@ function DesignEntity(props) {
     ],
   })
 
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+   }
+
   useEffect(() => {
-    const topEntities = props.designEntityData['Design Smell']['top_entities']
-
-    const labels = Object.keys(topEntities).map((key) => {
-      const parts = key.split('||')
-      const lastPart = parts[parts.length - 1]
-      return lastPart
-    })
-
-    const values = Object.values(topEntities)
-
-    setChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: 'Entity Name',
-          data: values,
-          backgroundColor: [
-            'rgb(192, 128, 0)',
-            'rgb(192, 0, 128)',
-            'rgb(0, 192, 128)',
-            'rgb(64, 128, 0)',
-            'rgb(64, 0, 128)',
-            'rgb(0, 64, 128)',
-            'rgb(128, 64, 0)',
+    const topEntities = designEntityData?.['Design Smell']?.['top_entities'];
+  
+    // Check if topEntities is defined and not null
+    if (topEntities) {
+      const labels = Object.keys(topEntities).map((key) => {
+        const parts = key.split('||');
+        const lastPart = parts[parts.length - 1];
+        return lastPart;
+      });
+  
+      const values = Object.values(topEntities);
+      
+      // Ensure labels is an array before using map
+      if (Array.isArray(labels)) {
+        const backgroundColor = labels.map(() => getRandomColor());
+  
+        setChartData({
+          labels: labels,
+          datasets: [
+            {
+              label: 'Design Entity',
+              data: values,
+              backgroundColor,
+            },
           ],
-        },
-      ],
-    })
-  }, [props.designEntityData])
+        });
+      }
+    }
+  }, [designEntityData]);
+  
 
   const doughnutOptions = {
     scales: {
