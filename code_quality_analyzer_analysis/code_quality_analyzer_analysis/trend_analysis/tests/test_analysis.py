@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pandas as pd
 from code_quality_analyzer_analysis.trend_analysis.analysis import (
-    analyze_smell_files_in_folder_without_top_entities, analyze_commit_folders_in_folder, get_smell_commit_changes, get_total_lines_of_code, get_smell_density_full_repo
+    analyze_commit_folders_in_folder, get_smell_commit_changes, get_total_lines_of_code, get_smell_density_full_repo
 )
 
 
@@ -44,28 +44,12 @@ class TestTrendAnalysis(unittest.TestCase):
         "user": "user1"
     }
 
-    analyze_smell_files_in_folder_without_top_entities_mock = {
-        architecture_smell: None,
-        design_smell: {
-            "smell_distribution": {"Smell1": 2, "Smell2": 1},
-            "total_smells": 3,
-        },
-        implementation_smell: None,
-        testability_smell: {
-            "smell_distribution": {"Smell3": 5, "Smell4": 8},
-            "total_smells": 13,
-        },
-        test_smell: None,
-        "total_smells": 16,
-        "user": "user1"
-    }
-
     full_repo_mock = {
         "full_repo": {
             "c0": analyze_smell_files_empty_mock,
-            "c1": analyze_smell_files_in_folder_without_top_entities_mock,
+            "c1": analyze_smell_files_mock,
             "c2": analyze_smell_files_empty_mock,
-            "c3": analyze_smell_files_in_folder_without_top_entities_mock,
+            "c3": analyze_smell_files_mock,
         }
     }
 
@@ -87,6 +71,7 @@ class TestTrendAnalysis(unittest.TestCase):
                             "Smell1": 0.2,
                             "Smell2": 0.1
                         },
+                        "top_entities": {"EntityA": 2, "EntityB": 1},
                         "total_smells": 0.3
                     },
                     implementation_smell: None,
@@ -94,7 +79,7 @@ class TestTrendAnalysis(unittest.TestCase):
                         "smell_distribution": {
                             "Smell3": 0.5,
                             "Smell4": 0.8
-                        },
+                        },"top_entities": {"EntityC": 7, "EntityD": 10},
                         "total_smells": 1.3
                     },
                     test_smell: None,
@@ -116,7 +101,7 @@ class TestTrendAnalysis(unittest.TestCase):
                         "smell_distribution": {
                             "Smell1": 0.2,
                             "Smell2": 0.1
-                        },
+                        },"top_entities": {"EntityA": 2, "EntityB": 1},
                         "total_smells": 0.3
                     },
                     implementation_smell: None,
@@ -124,7 +109,7 @@ class TestTrendAnalysis(unittest.TestCase):
                         "smell_distribution": {
                             "Smell3": 0.5,
                             "Smell4": 0.8
-                        },
+                        },"top_entities": {"EntityC": 7, "EntityD": 10},
                         "total_smells": 1.3
                     },
                     test_smell: None,
@@ -257,24 +242,12 @@ class TestTrendAnalysis(unittest.TestCase):
         "LOC": []
     })
 
-    @patch("code_quality_analyzer_analysis.trend_analysis.analysis.analyze_smell_files_in_folder",
-           return_value=analyze_smell_files_mock)
-    def test_analyze_smell_files_in_folder_without_top_entities_some(self, _):
-        result = analyze_smell_files_in_folder_without_top_entities(self.sample_folder)
-        expected = self.analyze_smell_files_in_folder_without_top_entities_mock
-        self.assertEqual(result, expected)
 
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.analyze_smell_files_in_folder",
-           return_value=analyze_smell_files_empty_mock)
-    def test_analyze_smell_files_in_folder_without_top_entities_empty(self, _):
-        result = analyze_smell_files_in_folder_without_top_entities(self.sample_folder)
-        self.assertEqual(result, self.analyze_smell_files_empty_mock)
-
-    @patch("code_quality_analyzer_analysis.trend_analysis.analysis.analyze_smell_files_in_folder_without_top_entities",
            side_effect=[analyze_smell_files_empty_mock,
-                        analyze_smell_files_in_folder_without_top_entities_mock,
+                        analyze_smell_files_mock,
                         analyze_smell_files_empty_mock,
-                        analyze_smell_files_in_folder_without_top_entities_mock,
+                        analyze_smell_files_mock,
                         ]
            )
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.get_smell_density_full_repo",
@@ -288,9 +261,9 @@ class TestTrendAnalysis(unittest.TestCase):
         )
         expected = {
             "full_repo": {
-                "c1": self.analyze_smell_files_in_folder_without_top_entities_mock,
+                "c1": self.analyze_smell_files_mock,
                 "c2": self.analyze_smell_files_empty_mock,
-                "c3": self.analyze_smell_files_in_folder_without_top_entities_mock
+                "c3": self.analyze_smell_files_mock
             },
             "full_repo_smell_density": {
                 "c1": self.full_repo_smell_density_mock["full_repo_smell_density"]["c1"],
@@ -311,9 +284,9 @@ class TestTrendAnalysis(unittest.TestCase):
         full_repo_mock = {
             "full_repo": {
                 "c0": self.analyze_smell_files_empty_mock,
-                "c1": self.analyze_smell_files_in_folder_without_top_entities_mock,
+                "c1": self.analyze_smell_files_mock,
                 "c2": self.analyze_smell_files_empty_mock,
-                "c3": self.analyze_smell_files_in_folder_without_top_entities_mock,
+                "c3": self.analyze_smell_files_mock,
             }
         }
         result = get_smell_commit_changes(full_repo_mock, commits, users)
@@ -321,7 +294,7 @@ class TestTrendAnalysis(unittest.TestCase):
             "full_repo": full_repo_mock["full_repo"],
             "commit_changes": self.commit_changes_mock["commit_changes"]
         }
-
+        print(result)
         self.assertEqual(result, expected)
 
     @patch("pandas.read_csv", return_value=pandas_dataframe_mock)
@@ -351,9 +324,9 @@ class TestTrendAnalysis(unittest.TestCase):
         full_repo_mock = {
             "full_repo": {
                 "c0": copy.deepcopy(self.analyze_smell_files_empty_mock),
-                "c1": copy.deepcopy(self.analyze_smell_files_in_folder_without_top_entities_mock),
+                "c1": copy.deepcopy(self.analyze_smell_files_mock),
                 "c2": copy.deepcopy(self.analyze_smell_files_empty_mock),
-                "c3": copy.deepcopy(self.analyze_smell_files_in_folder_without_top_entities_mock)
+                "c3": copy.deepcopy(self.analyze_smell_files_mock)
             }
         }
         expected = {
