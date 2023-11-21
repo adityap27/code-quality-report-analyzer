@@ -21,22 +21,6 @@ def get_total_lines_of_code(metrics_file_path: str, column_sum: str) -> int:
     return total_lines_of_code
 
 
-def analyze_smell_files_in_folder_without_top_entities(folder_path: str) -> dict:
-    """
-    Analyzes all smell files in a folder, removes un-necessary fields for trend analysis like top_entities.
-    :param folder_path: Path to the folder containing the smell files
-    :return: Dictionary containing analysis of all the files, without top_entities
-    """
-    # Retrieve the smells of a folder
-    smells_data = analyze_smell_files_in_folder(folder_path)
-
-    for key in smells_data.keys():
-        if isinstance(smells_data[key], dict):
-            del(smells_data[key]["top_entities"])
-
-    return smells_data
-
-
 def get_smell_commit_changes(trend_analysis_dict: dict, commits: list, users: list) -> dict:
     """
     Calculates the difference between adjacent commits smells
@@ -159,7 +143,7 @@ def analyze_commit_folders_in_folder(
     for index, commit in enumerate(commits):
         path = folder_path + "/" + commit
 
-        trend_analysis_dict["full_repo"][commit] = analyze_smell_files_in_folder_without_top_entities(path)
+        trend_analysis_dict["full_repo"][commit] = analyze_smell_files_in_folder(path)
         trend_analysis_dict["full_repo"][commit]["user"] = users[index]
 
     trend_analysis_dict = get_smell_density_full_repo(trend_analysis_dict, folder_path)
