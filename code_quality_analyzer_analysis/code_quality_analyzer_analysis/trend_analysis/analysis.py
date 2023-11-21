@@ -114,13 +114,12 @@ def get_smell_density_full_repo(trend_analysis_dict, folder_path) -> dict:
             if isinstance(full_repo_density_dict[commit_id][type], dict):
                 # Iterate over the smell subtypes
                 for subtype in full_repo_density_dict[commit_id][type]["smell_distribution"]:
-                    full_repo_density_dict[commit_id][type]["smell_distribution"][subtype] = round(full_repo_density_dict[commit_id][type]["smell_distribution"][subtype] / (total_lines_of_code / 1000), 2)
+                    full_repo_density_dict[commit_id][type]["smell_distribution"][subtype] = calculate_smell_density(full_repo_density_dict[commit_id][type]["smell_distribution"][subtype], total_lines_of_code)
                 # Calculate density for total smells of each type
-                full_repo_density_dict[commit_id][type]["total_smells"] = round(full_repo_density_dict[commit_id][type]["total_smells"] / (total_lines_of_code / 1000), 2)
+                full_repo_density_dict[commit_id][type]["total_smells"] = calculate_smell_density(full_repo_density_dict[commit_id][type]["total_smells"], total_lines_of_code)
 
         # Calculate density for total smells
-        full_repo_density_dict[commit_id]["total_smells"] = round(full_repo_density_dict[commit_id]["total_smells"] / (total_lines_of_code / 1000), 2)
-
+        full_repo_density_dict[commit_id]["total_smells"] = calculate_smell_density(full_repo_density_dict[commit_id]["total_smells"], total_lines_of_code)
     return trend_analysis_dict
 
 
@@ -133,7 +132,10 @@ def calculate_smell_density(total_smells, total_lines_of_code) -> float:
     :param total_lines_of_code: The total lines of code in the repository
     :return: float, The calculated smell density rounded to 2 decimal places
     """
-    pass
+    if total_lines_of_code == 0:
+        return 0.0
+    else:
+        return round(int(total_smells) / (total_lines_of_code / 1000), 2)
 
 
 def analyze_commit_folders_in_folder(
