@@ -124,6 +124,18 @@ def get_smell_density_full_repo(trend_analysis_dict, folder_path) -> dict:
     return trend_analysis_dict
 
 
+def calculate_smell_density(total_smells, total_lines_of_code) -> float:
+    """
+    Calculates smell density based on total number of smells per 1000 lines of code.
+    Density is rounded till 2 decimal points.
+
+    :param total_smells: The total number of smells in the repository
+    :param total_lines_of_code: The total lines of code in the repository
+    :return: float, The calculated smell density rounded to 2 decimal places
+    """
+    pass
+
+
 def analyze_commit_folders_in_folder(
         folder_path: str, commits: list, before_oldest_commit: str, users: list, before_oldest_commit_user: str
 ) -> dict:
