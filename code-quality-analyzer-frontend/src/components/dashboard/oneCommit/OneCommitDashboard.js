@@ -26,12 +26,10 @@ import { useEffect, useState } from 'react'
 import Select from 'react-select'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
-import { TrendAnalysisContext } from '../../../TrendAnalysisContext'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 function OneCommitDashboard() {
   const { analysisData, setAnalysisData } = useContext(OneCommitAnalysisContext)
-  const { trendAnalysisData } = useContext(TrendAnalysisContext)
   const [isLoading, setIsLoading] = useState(false)
   const [repoLink, setRepoLink] = useState(localStorage.getItem('repoLink'))
   const [selectedBranch, setSelectedBranch] = useState(null)
@@ -59,8 +57,6 @@ function OneCommitDashboard() {
       }
     }
   }, [])
-  console.log('Trend Local Data', localData)
-  console.log('One Commit Main Data', analysisData)
 
   useEffect(() => {
     setSelectedBranch(Sbranch)
