@@ -26,10 +26,12 @@ import { useEffect, useState } from 'react'
 import Select from 'react-select'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
+import { TrendAnalysisContext } from '../../../TrendAnalysisContext'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 function OneCommitDashboard() {
   const { analysisData, setAnalysisData } = useContext(OneCommitAnalysisContext)
+  const { trendAnalysisData } = useContext(TrendAnalysisContext)
   const [isLoading, setIsLoading] = useState(false)
   const [repoLink, setRepoLink] = useState(localStorage.getItem('repoLink'))
   const [selectedBranch, setSelectedBranch] = useState(null)
@@ -42,50 +44,23 @@ function OneCommitDashboard() {
   const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
   const Scommit = localStorage.getItem('commitId')
   const AllCommits = JSON.parse(localStorage.getItem('allCommits') || '[]')
+  const [localData, setLocalData] = useState([])
 
   useEffect(() => {
-    const currentRepoLink = localStorage.getItem('repoLink')
-    if (!analysisData || currentRepoLink !== repoLink) {
-      setIsLoading(true)
-
-      const currentBranchString = localStorage.getItem('branch')
-      const currentBranchObject = currentBranchString
-        ? JSON.parse(currentBranchString)
-        : null
-      const currentBranchValue = currentBranchObject
-        ? currentBranchObject.value
-        : ''
-      const commitId = localStorage.getItem('commitId')
-
-      const requestData = {
-        gitRepoLink: currentRepoLink,
-        branch: currentBranchValue,
-        commitId: commitId,
+    const localfetchedData = JSON.parse(
+      localStorage.getItem('trendAnalysisData')
+    )
+    if (localfetchedData && localfetchedData.full_repo) {
+      const keys = Object.keys(localfetchedData.full_repo)
+      const latestKey = keys[keys.length - 1]
+      const localData = localfetchedData.full_repo[latestKey]
+      if (localData) {
+        setLocalData(localData)
       }
-
-      axios
-        .post(
-          process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis',
-          requestData,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then((response) => {
-          setIsLoading(false)
-          if (response.status === 200) {
-            setAnalysisData(response.data)
-          }
-        })
-        .catch((error) => {
-          setIsLoading(false)
-        })
-
-      setRepoLink(currentRepoLink)
     }
-  }, [repoLink])
+  }, [])
+  console.log('Trend Local Data', localData)
+  console.log('One Commit Main Data', analysisData)
 
   useEffect(() => {
     setSelectedBranch(Sbranch)
@@ -179,7 +154,7 @@ function OneCommitDashboard() {
         </div>
 
         {!isLoading ? (
-          analysisData && (
+          analysisData ? (
             <div className="charts">
               <div className="architechture common-chart">
                 <ArchitectureSmell architectureSmellData={analysisData} />
@@ -202,6 +177,31 @@ function OneCommitDashboard() {
                 <ImplementationEntity implementationEntityData={analysisData} />
               </div>
             </div>
+          ) : (
+            localData && (
+              <div className="charts">
+                <div className="architechture common-chart">
+                  <ArchitectureSmell architectureSmellData={localData} />
+                  <ArchitechtureEntity architectureEntityData={localData} />
+                </div>
+                <div className="design common-chart">
+                  <DesignSmell designSmellData={localData} />
+                  <DesignEntity designEntityData={localData} />
+                </div>
+                <div className="test common-chart">
+                  <TestSmell testsmSmellData={localData} />
+                  <TestEntity testEntityData={localData} />
+                </div>
+                <div className="testability common-chart">
+                  <TestabilitySmell testabilitySmellData={localData} />
+                  <TestabilityEntity testabilityEntityData={localData} />
+                </div>
+                <div className="implementation common-chart">
+                  <ImplementationSmell implementationSmellData={localData} />
+                  <ImplementationEntity implementationEntityData={localData} />
+                </div>
+              </div>
+            )
           )
         ) : (
           <div className="loading">
