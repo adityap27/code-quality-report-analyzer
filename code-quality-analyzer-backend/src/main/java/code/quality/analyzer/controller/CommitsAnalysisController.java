@@ -34,4 +34,12 @@ public class CommitsAnalysisController {
 		String jsonOutput = commitsAnalysisService.callAnalysisServiceTrend(trendAnalysisRequest);
 		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
 	}
+	
+	@PostMapping("/hotspot/getanalysis")
+	ResponseEntity<String> getHotspotAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
+		String repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
+		String reportPath = commitsAnalysisService.generateHotspotReport(repoPath, commitAnalysisRequest.getBranch());
+		String jsonOutput = commitsAnalysisService.callAnalysisServiceHotspot(reportPath);
+		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
+	}
 }

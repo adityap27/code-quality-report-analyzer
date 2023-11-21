@@ -44,4 +44,20 @@ public interface CommitsAnalysisService {
 	 * @return String output json data
 	 */
 	String callAnalysisServiceTrend(TrendAnalysisRequest trendAnalysisRequest);
+	
+	/**
+	 * Generate report for hotspot analysis
+	 * @param repoPath repository path
+	 * @param branch branch name
+	 * @return String report path
+	 * @throws Exception
+	 */
+	String generateHotspotReport(String repoPath, String branch) throws Exception;
+	
+	/**
+	 * Call python analysis service for hotspot analysis
+	 * @param reportPath report path
+	 * @return String Output json with analysis data
+	 */
+	String callAnalysisServiceHotspot(String reportPath);
 }
