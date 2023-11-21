@@ -27,8 +27,10 @@ public class Constants {
 	public static int TEST_ZERO = 0;
 	public static String TEST_LOCALHOST = "localhost";
 	public static int TEST_PORT = 8000;
+	public static int TEST_HTTP_STATUS = 200;
 	public static String ONE_COMMIT_URL = "/onecommit/getanalysis";
 	public static String TREND_URL = "/trend/getanalysis";
+	public static String HOTSPOT_URL = "/hotspot/getanalysis";
 	public static String ANALYSIS_SERVICE_TEST_RESPONSE = "{\"Architecture Smells\":{\r\n"
 			+ "      \"total_smells\": 151,\r\n"
 			+ "      \"smell_distribution\":{\r\n"

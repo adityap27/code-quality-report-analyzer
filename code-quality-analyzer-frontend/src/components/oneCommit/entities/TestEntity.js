@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function TestEntity(props) {
+function TestEntity({testEntityData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -23,34 +23,40 @@ function TestEntity(props) {
     ],
   })
 
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF'
+    let color = '#'
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)]
+    }
+    return color
+  }
+
   useEffect(() => {
-    const topEntities = props.testEntityData['Test Smell']['top_entities']
+    if (testEntityData && testEntityData['Test Smell']) {
+    const topEntities = testEntityData['Test Smell']?.['top_entities']
 
     const labels = Object.keys(topEntities).map((key) => {
       const parts = key.split('||')
       const lastPart = parts[parts.length - 1]
       return lastPart
-    })
+    });
 
-    const values = Object.values(topEntities)
+    const backgroundColor = labels.map(() => getRandomColor());
+
+    const values = Object.values(topEntities);
     setChartData({
       labels,
       datasets: [
         {
-          label: 'Entity Name',
+          label: 'Test Entity',
           data: values,
-          backgroundColor: [
-            'rgb(128, 255, 255)',
-            'rgb(255, 128, 255)',
-            'rgb(255, 255, 128)',
-            'rgb(192, 64, 0)',
-            'rgb(64, 192, 0)',
-            'rgb(64, 0, 192)',
-          ],
+          backgroundColor
         },
       ],
     })
-  }, [props.testEntityData])
+  }
+  }, [testEntityData])
 
   const doughnutOptions = {
     scales: {

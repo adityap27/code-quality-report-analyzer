@@ -186,7 +186,7 @@ strong {
   color: white;
   cursor: pointer;
   margin-top: 30PX;
-  margin-left: 30px;
+ 
 }
 .radio-label2 {
   display: flex;
@@ -195,10 +195,21 @@ strong {
   color: white;
   cursor: pointer;
   margin-top: 30PX;
-  margin-left: 63px;
+  margin-left: 20px;
+}
+
+.radio-label3 {
+  display: flex;
+  align-items: center;
+  font-size:1rem;
+  color: white;
+  cursor: pointer;
+  margin-top: 30PX;
+  margin-left: 20px;
 }
 .dropbox{
   display: flex;
+  margin-left: 0px;
 }
 .execute-button-container {
   text-align: center;
@@ -317,7 +328,7 @@ a {
     font-family: inherit;
     height: 100%;
     outline: none;
-    padding: 0 1.5rem;
+    padding-right: 60px;    
     transition: all .35s ease-in-out;
     width: 200px;
     font-size: .75rem;
@@ -330,9 +341,6 @@ a {
     margin-top: 30px;
    
   }
-
-
-
   .select-options {
     position: absolute;
     inset: 100% 0 auto;

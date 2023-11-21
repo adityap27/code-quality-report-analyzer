@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function ArchitectureSmell(props) {
+function ArchitectureSmell({ architectureSmellData }) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -24,31 +24,34 @@ function ArchitectureSmell(props) {
   })
 
   useEffect(() => {
-    const labels = Object.keys(
-      props.architectureSmellData['Architecture Smell']['smell_distribution']
-    )
-    const values = Object.values(
-      props.architectureSmellData['Architecture Smell']['smell_distribution']
-    )
-
-    setChartData({
-      labels,
-      datasets: [
-        {
-          label: 'Smells',
-          data: values,
-          backgroundColor: [
-            'rgb(255, 0, 0)',
-            'rgb(0, 0, 255)',
-            'rgb(50, 205, 50)',
-            'rgb(255, 255, 0)',
-            'rgb(0, 128, 128)',
-            'rgb(128, 0, 128)',
-          ],
-        },
-      ],
-    })
-  }, [props.architectureSmellData])
+    if(architectureSmellData && architectureSmellData['Architecture Smell']) {
+      const labels = Object.keys(
+        architectureSmellData['Architecture Smell']?.['smell_distribution']
+      )
+      const values = Object.values(
+        architectureSmellData['Architecture Smell']?.['smell_distribution']
+      )
+  
+      setChartData({
+        labels,
+        datasets: [
+          {
+            label: 'Smells',
+            data: values,
+            backgroundColor: [
+              'rgb(255, 0, 0)',
+              'rgb(0, 0, 255)',
+              'rgb(50, 205, 50)',
+              'rgb(255, 255, 0)',
+              'rgb(0, 128, 128)',
+              'rgb(128, 0, 128)',
+            ],
+          },
+        ],
+      })
+    }
+    
+  }, [architectureSmellData])
 
   const doughnutOptions = {
     plugins: {

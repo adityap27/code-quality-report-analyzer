@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './trend-analysis.css'
 import Architechture from '../../trendAnalysis/Architechture'
 import Design from '../../trendAnalysis/Design'
@@ -6,12 +6,64 @@ import Implementation from '../../trendAnalysis/Implementation'
 import Test from '../../trendAnalysis/Test'
 import Testability from '../../trendAnalysis/Testability'
 import CommonChart from '../../trendAnalysis/CommonChart'
-import { useLocation } from 'react-router-dom'
+import { TrendAnalysisContext } from '../../../TrendAnalysisContext'
+import axios from 'axios'
 
 const TrendAnalysis = (props) => {
-  const location = useLocation()
-  const data = location.state
-  const commits = Object.keys(data.commit_changes)
+  const { trendAnalysisData, setTrendAnalysisData } =
+    useContext(TrendAnalysisContext)
+  const [isLoading, setIsLoading] = useState(false)
+  const [repoLink, setRepoLink] = useState(localStorage.getItem('repoLink'))
+
+  useEffect(() => {
+    const currentRepoLink = localStorage.getItem('repoLink')
+    const currentBranchString = localStorage.getItem('branch')
+    const currentBranchObject = currentBranchString
+      ? JSON.parse(currentBranchString)
+      : null
+    const currentBranchValue = currentBranchObject
+      ? currentBranchObject.value
+      : ''
+    const currentMaxCommits = localStorage.getItem('maxCommits')
+
+    if (!trendAnalysisData || currentRepoLink !== repoLink) {
+      setIsLoading(true)
+
+      const requestData = {
+        gitRepoLink: currentRepoLink,
+        branch: currentBranchValue,
+        noOfCommits: currentMaxCommits,
+      }
+
+      axios
+        .post(
+          process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis',
+          requestData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          setIsLoading(false)
+          if (response.status === 200) {
+            setTrendAnalysisData(response.data)
+          }
+        })
+        .catch((error) => {
+          setIsLoading(false)
+          console.error('Failed to fetch trend analysis data:', error)
+        })
+
+      setRepoLink(currentRepoLink)
+    }
+  }, [trendAnalysisData, setTrendAnalysisData, repoLink])
+
+  const commits = trendAnalysisData?.commit_changes
+    ? Object.keys(trendAnalysisData.commit_changes)
+    : []
+
   const [selectedBranch, setSelectedBranch] = useState('')
   const [numberOfCommits, setNumberOfCommits] = useState(20)
   const [selectedUser, setSelectedUser] = useState('')
@@ -29,58 +81,75 @@ const TrendAnalysis = (props) => {
   }
 
   return (
-    <div className="trend-analysis-container">
-      <div className="trend-heading">
-        <h1>Code Smell Trend Analysis</h1>
-      </div>
-      <div className="branch commits-dropdown dropdown-container">
-        <div className="branch-container">
-          <h4>Branches:</h4>
-          <select name="" id="" onChange={handleBranchChange}>
-            <option value="default">Select Branch</option>
-            {props.branches?.map((branch) => (
-              <option key={branch.id} value={branch.name}>
-                {branch.name}
-              </option>
-            ))}
-          </select>
+    <>
+      {!isLoading ? (
+        trendAnalysisData && (
+          <div className="trend-analysis-container">
+            <div className="trend-heading">
+              <h1>Code Smell Trend Analysis</h1>
+            </div>
+            <div className="branch commits-dropdown dropdown-container">
+              <div className="branch-container">
+                <h4>Branches:</h4>
+                <select name="" id="" onChange={handleBranchChange}>
+                  <option value="default">Select Branch</option>
+                  {props?.branches?.map((branch) => (
+                    <option key={branch.id} value={branch.name}>
+                      {branch.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="commits-container">
+                <h4>Number of Commits:</h4>
+                <select name="" id="" onChange={handleCommitsChange}>
+                  {[...Array(10)].map((_, index) => (
+                    <option key={index} value={index + 1}>
+                      {index + 1}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="trend-smell-charts">
+              <CommonChart
+                data={trendAnalysisData}
+                numberOfCommits={numberOfCommits}
+              />
+              <Architechture
+                data={trendAnalysisData}
+                commits={commits}
+                numberOfCommits={numberOfCommits}
+              />
+              <Design
+                data={trendAnalysisData}
+                commits={commits}
+                numberOfCommits={numberOfCommits}
+              />
+              <Implementation
+                data={trendAnalysisData}
+                commits={commits}
+                numberOfCommits={numberOfCommits}
+              />
+              <Test
+                data={trendAnalysisData}
+                commits={commits}
+                numberOfCommits={numberOfCommits}
+              />
+              <Testability
+                data={trendAnalysisData}
+                commits={commits}
+                numberOfCommits={numberOfCommits}
+              />
+            </div>
+          </div>
+        )
+      ) : (
+        <div className="loading">
+          <h2>Loading...</h2>
         </div>
-        <div className="commits-container">
-          <h4>Number of Commits:</h4>
-          <select name="" id="" onChange={handleCommitsChange}>
-            {[...Array(10)].map((_, index) => (
-              <option key={index} value={index + 1}>
-                {index + 1}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="trend-smell-charts">
-        <CommonChart data={data} numberOfCommits={numberOfCommits} />
-        <Architechture
-          data={data}
-          commits={commits}
-          numberOfCommits={numberOfCommits}
-        />
-        <Design
-          data={data}
-          commits={commits}
-          numberOfCommits={numberOfCommits}
-        />
-        <Implementation
-          data={data}
-          commits={commits}
-          numberOfCommits={numberOfCommits}
-        />
-        <Test data={data} commits={commits} numberOfCommits={numberOfCommits} />
-        <Testability
-          data={data}
-          commits={commits}
-          numberOfCommits={numberOfCommits}
-        />
-      </div>
-    </div>
+      )}
+    </>
   )
 }
 

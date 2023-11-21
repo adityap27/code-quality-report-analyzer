@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function ImplementationEntity(props) {
+function ImplementationEntity({implementationEntityData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -23,39 +23,45 @@ function ImplementationEntity(props) {
     ],
   })
 
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF'
+    let color = '#'
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)]
+    }
+    return color
+  }
+
   useEffect(() => {
-    const topEntities =
-      props.implementationEntityData['Implementation Smell']['top_entities']
-
-    const labels = Object.keys(topEntities).map((key) => {
-      const parts = key.split('||')
-      const lastPart = parts[parts.length - 1]
-      return lastPart
-    })
-
-    const values = Object.values(topEntities)
-
-    setChartData({
-      labels,
-      datasets: [
-        {
-          label: 'Entity Name',
-          data: values,
-          backgroundColor: [
-            'rgb(128, 128, 0)',
-            'rgb(128, 0, 128)',
-            'rgb(0, 128, 128)',
-            'rgb(192, 0, 0)',
-            'rgb(0, 192, 0)',
-            'rgb(0, 0, 192)',
-            'rgb(192, 192, 0)',
-            'rgb(192, 0, 192)',
-            'rgb(0, 192, 192)',
+    const topEntities = implementationEntityData?.['Implementation Smell']?.['top_entities'];
+  
+    // Check if topEntities is defined and not null
+    if (topEntities) {
+      const labels = Object.keys(topEntities).map((key) => {
+        const parts = key.split('||');
+        const lastPart = parts[parts.length - 1];
+        return lastPart;
+      });
+  
+      const values = Object.values(topEntities);
+      
+      // Ensure labels is an array before using map
+      if (Array.isArray(labels)) {
+        const backgroundColor = labels.map(() => getRandomColor());
+  
+        setChartData({
+          labels: labels,
+          datasets: [
+            {
+              label: 'Design Entity',
+              data: values,
+              backgroundColor,
+            },
           ],
-        },
-      ],
-    })
-  }, [props.implementationEntityData])
+        });
+      }
+    }
+  }, [implementationEntityData]);
 
   const doughnutOptions = {
     scales: {

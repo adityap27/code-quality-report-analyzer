@@ -54,6 +54,9 @@ class CommitsAnalysisServiceImplTest {
 
 	@Value("${analysis.service.trend.url}")
 	private String trendUrl;
+	
+	@Value("${analysis.service.hotspot.url}")
+	private String hotspotUrl;
 
     @BeforeEach
     void setUp() {
@@ -61,6 +64,7 @@ class CommitsAnalysisServiceImplTest {
         ReflectionTestUtils.setField(commitsAnalysisService, "baseUrl", baseUrl);
         ReflectionTestUtils.setField(commitsAnalysisService, "oneCommiUrl", oneCommiUrl);
         ReflectionTestUtils.setField(commitsAnalysisService, "trendUrl", trendUrl);
+        ReflectionTestUtils.setField(commitsAnalysisService, "hotspotUrl", hotspotUrl);
         repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
     }
 
@@ -90,12 +94,12 @@ class CommitsAnalysisServiceImplTest {
 
     @Test
     void testCallAnalysisServiceOneCommit() throws Exception {
-        wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(Constants.TEST_PORT));
         wireMockServer.start();
         WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
         stubFor(post(urlEqualTo(oneCommiUrl))
                 .willReturn(aResponse()
-                        .withStatus(200)
+                        .withStatus(Constants.TEST_HTTP_STATUS)
                         .withHeader("Content-Type", "application/json")
                         .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
 
@@ -140,16 +144,40 @@ class CommitsAnalysisServiceImplTest {
 
     @Test
     void testCallAnalysisServiceTrend() throws Exception {
-        wireMockServer = new WireMockServer(new WireMockConfiguration().port(8000));
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(Constants.TEST_PORT));
         wireMockServer.start();
         WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
         stubFor(post(urlEqualTo(trendUrl))
                 .willReturn(aResponse()
-                        .withStatus(200)
+                        .withStatus(Constants.TEST_HTTP_STATUS)
                         .withHeader("Content-Type", "application/json")
                         .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
 
         String response = commitsAnalysisService.callAnalysisServiceTrend(new TrendAnalysisRequest());
+        assertNotNull(response);
+        assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+        wireMockServer.stop();
+    }
+    
+    @Test
+    void testGenerateHotspotReport() throws Exception {
+        String path = commitsAnalysisService.generateHotspotReport(repoPath, Constants.TEST_BRANCH);
+        assertEquals(repoPath + Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_1, path);
+        assertEquals(true, Files.exists(Paths.get(path)));
+    }
+    
+    @Test
+    void testCallAnalysisServiceHotspot() throws Exception {
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(Constants.TEST_PORT));
+        wireMockServer.start();
+        WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
+        stubFor(post(urlEqualTo(hotspotUrl))
+                .willReturn(aResponse()
+                        .withStatus(Constants.TEST_HTTP_STATUS)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
+
+        String response = commitsAnalysisService.callAnalysisServiceHotspot(Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_1);
         assertNotNull(response);
         assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
         wireMockServer.stop();

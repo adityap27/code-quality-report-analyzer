@@ -36,6 +36,16 @@ const Architechture = ({ data, commits, numberOfCommits }) => {
         beginAtZero: true,
       },
     },
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          font: {
+            size: 14
+          }
+        }
+      }
+    }
   }
 
   function getRandomColor() {

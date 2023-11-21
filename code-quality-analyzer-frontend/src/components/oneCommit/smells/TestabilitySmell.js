@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function TestabilitySmell(props) {
+function TestabilitySmell({testabilitySmellData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -23,13 +23,25 @@ function TestabilitySmell(props) {
     ],
   })
 
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+   }
+
   useEffect(() => {
+    if (testabilitySmellData && testabilitySmellData['Testability Smell']) {
     const labels = Object.keys(
-      props.testabilitySmellData['Testability Smell']['smell_distribution']
+      testabilitySmellData['Testability Smell']?.['smell_distribution']
     )
     const values = Object.values(
-      props.testabilitySmellData['Testability Smell']['smell_distribution']
+      testabilitySmellData['Testability Smell']?.['smell_distribution']
     )
+
+    const backgroundColor = labels.map(() => getRandomColor());
 
     setChartData({
       labels,
@@ -37,18 +49,13 @@ function TestabilitySmell(props) {
         {
           label: 'Smells',
           data: values,
-          backgroundColor: [
-            'rgb(122, 255, 64)',
-            'rgb(45, 189, 230)',
-            'rgb(255, 87, 152)',
-            'rgb(78, 200, 35)',
-            'rgb(203, 92, 210)',
-          ],
+          backgroundColor,
           hoverOffset: 4,
         },
       ],
     })
-  }, [props.testabilitySmellData])
+  }
+  }, [testabilitySmellData])
 
   const doughnutOptions = {
     plugins: {

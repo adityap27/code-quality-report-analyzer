@@ -41,7 +41,7 @@ class CommitsAnalysisUtilTest {
 	}
 
 	@Test
-	void testGetCommitIdsForOneCommit() throws Exception {
+	void testGetCommitIdsForOneCommitAndHotspot() throws Exception {
 		commitIds.add(Constants.TEST_COMMIT_ID_1);
 		List<String> ids = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, Constants.ONE).keySet());
 		assertEquals(false, ids.isEmpty());
@@ -63,7 +63,7 @@ class CommitsAnalysisUtilTest {
 	}
 
 	@Test
-	void testGetCommitIdsOneCommitException() throws Exception {
+	void testGetCommitIdsOneCommitExceptionAndHotspot() throws Exception {
 		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, "abc", Constants.ONE));
 		assertThrows(IOException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, " ", Constants.ONE));
 		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, null, Constants.ONE));
@@ -72,7 +72,7 @@ class CommitsAnalysisUtilTest {
 	}
 
 	@Test
-	void testGenerateReportsForOneCommit() throws Exception {
+	void testGenerateReportsForOneCommitAndHotspot() throws Exception {
 		commitIds.add(Constants.TEST_COMMIT_ID_1);
 		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
 		assertEquals(repoPath + Constants.REPORT_PATH + "/" + commitIds.get(0), path);
