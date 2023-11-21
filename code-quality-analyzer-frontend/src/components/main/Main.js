@@ -145,6 +145,7 @@ const Main = () => {
             setAnalysisData(response.data);
             navigate('/dashboard/hotspot');
           }
+          console.log(response.data);
         })
         .catch((error) => {
           setIsLoading(false);
