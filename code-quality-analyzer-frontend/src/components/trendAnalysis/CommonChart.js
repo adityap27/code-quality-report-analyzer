@@ -102,6 +102,16 @@ function CommonChart(props) {
                 x: { stacked: true },
                 y: { stacked: true },
               },
+              plugins: {
+                legend: {
+                  position: 'right',
+                  labels: {
+                    font: {
+                      size: 14
+                    }
+                  }
+                }
+              }
             }}
           />
         )}

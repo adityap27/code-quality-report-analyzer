@@ -11,9 +11,11 @@ import banner from '../../assets/images/banner.gif'
 import './main.css'
 import Navbar from '../navbar/Navbar'
 import { OneCommitAnalysisContext } from '../../OneCommitAnalysisContext'
+import { TrendAnalysisContext } from '../../TrendAnalysisContext'
 
 const Main = () => {
   const { setAnalysisData } = useContext(OneCommitAnalysisContext)
+  const { setTrendAnalysisData } = useContext(TrendAnalysisContext)
   const [repoLink, setRepoLink] = useState('')
   const [branches, setBranches] = useState([])
   const [selectedBranch, setSelectedBranch] = useState(null)
@@ -71,7 +73,12 @@ const Main = () => {
           setIsLoading(false)
           if (response.status === 200) {
             setAnalysisData(response.data)
-            navigate('/dashboard/oneCommit', { state: response.data });
+            localStorage.setItem('repoLink', repoLink)
+            localStorage.setItem('branch', JSON.stringify(selectedBranch))
+            localStorage.setItem('commitId', selcommitSHA)
+            localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
+            localStorage.setItem('allCommits', JSON.stringify(commits))
+            navigate('/dashboard/oneCommit');
           }
         })
         .catch((error) => {
@@ -101,8 +108,13 @@ const Main = () => {
         .then((response) => {
           setIsLoading(false);
           if (response.status === 200) {
-            setAnalysisData(response.data);
-            navigate('/dashboard/trend', { state: { analysisData: response.data } });
+            setTrendAnalysisData(response.data);
+            localStorage.setItem('repoLink', repoLink)
+            localStorage.setItem('branch', JSON.stringify(selectedBranch))
+            localStorage.setItem('commitId', selcommitSHA)
+            localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
+            localStorage.setItem('allCommits', JSON.stringify(commits))
+            navigate('/dashboard/trend');
           }
         })
         .catch((error) => {
@@ -131,7 +143,7 @@ const Main = () => {
           setIsLoading(false);
           if (response.status === 200) {
             setAnalysisData(response.data);
-            navigate('/dashboard/hotspot', { state: response.data });
+            navigate('/dashboard/hotspot');
           }
         })
         .catch((error) => {

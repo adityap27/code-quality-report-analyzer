@@ -12,7 +12,7 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function ArchitechtureEntity(props) {
+function ArchitechtureEntity({ architectureEntityData }) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -23,31 +23,38 @@ function ArchitechtureEntity(props) {
     ],
   })
 
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+   }
+   
   useEffect(() => {
+    if (architectureEntityData && architectureEntityData['Architecture Smell']) {
     const labels = Object.keys(
-      props.architectureEntityData['Architecture Smell']['top_entities']
+      architectureEntityData['Architecture Smell']?.['top_entities']
     )
     const values = Object.values(
-      props.architectureEntityData['Architecture Smell']['top_entities']
+      architectureEntityData['Architecture Smell']?.['top_entities']
     )
+
+    const backgroundColor = labels.map(() => getRandomColor());
 
     setChartData({
       labels: labels,
       datasets: [
         {
-          label: 'Entity Name',
+          label: 'Architecture Entities',
           data: values,
-          backgroundColor: [
-            'rgb(122, 255, 64)',
-            'rgb(45, 189, 230)',
-            'rgb(255, 87, 152)',
-            'rgb(78, 200, 35)',
-            'rgb(203, 92, 210)',
-          ],
+          backgroundColor
         },
       ],
     })
-  }, [props.architectureEntityData])
+  }
+  }, [architectureEntityData])
 
   const doughnutOptions = {
     scales: {
