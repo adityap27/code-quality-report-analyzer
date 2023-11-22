@@ -12,10 +12,12 @@ import './main.css'
 import Navbar from '../navbar/Navbar'
 import { OneCommitAnalysisContext } from '../../OneCommitAnalysisContext'
 import { TrendAnalysisContext } from '../../TrendAnalysisContext'
+import { HotspotAnalysisContext } from '../../HotspotAnalysisContext'
 
 const Main = () => {
   const { setAnalysisData } = useContext(OneCommitAnalysisContext)
   const { setTrendAnalysisData } = useContext(TrendAnalysisContext)
+  const { setHotspotAnalysisData } = useContext(HotspotAnalysisContext)
   const [repoLink, setRepoLink] = useState('')
   const [branches, setBranches] = useState([])
   const [selectedBranch, setSelectedBranch] = useState(null)
@@ -26,37 +28,41 @@ const Main = () => {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const [selectedOption, setSelectedOption] = useState(null)
-  const [maxCommits, setMaxCommits] = useState('');
-  const [flag1, setFlag1] = useState();
-
+  const [maxCommits, setMaxCommits] = useState('')
+  const [flag1, setFlag1] = useState()
 
   const handleRadioChange = (e) => {
-    const selected = e.target.value;
+    const selected = e.target.value
 
+    setSelectedOption(selected)
 
-    setSelectedOption(selected);
-
-    if (selected === "one-commit") {
-      setFlag1(true);
-    } else if (selected === "trend-analysis" || selected === "hotspot-analysis") {
-      setFlag1(false);
+    if (selected === 'one-commit') {
+      setFlag1(true)
+    } else if (
+      selected === 'trend-analysis' ||
+      selected === 'hotspot-analysis'
+    ) {
+      setFlag1(false)
     } else {
-      setFlag1(true);
+      setFlag1(true)
     }
-
-  };
+  }
 
   useEffect(() => {
-
     if (selectedBranch) {
-      fetchCommits(selectedBranch);
+      fetchCommits(selectedBranch)
     }
-  }, [selectedBranch]);
+  }, [selectedBranch])
 
   const executeAnalysis = () => {
+    const selcommitSHA = selectedCommit.value
+    localStorage.setItem('repoLink', repoLink)
+    localStorage.setItem('branch', JSON.stringify(selectedBranch))
+    localStorage.setItem('commitId', selcommitSHA)
+    localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
+    localStorage.setItem('allCommits', JSON.stringify(commits))
     if (selectedOption === 'one-commit') {
       setIsLoading(true)
-      const selcommitSHA = selectedCommit.value
       const requestData = {
         gitRepoLink: repoLink,
         branch: selectedBranch.value,
@@ -64,94 +70,88 @@ const Main = () => {
       }
       //to make the one-commit api request
       axios
-        .post(process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis', requestData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+        .post(
+          process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis',
+          requestData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
         .then((response) => {
           setIsLoading(false)
           if (response.status === 200) {
             setAnalysisData(response.data)
-            localStorage.setItem('repoLink', repoLink)
-            localStorage.setItem('branch', JSON.stringify(selectedBranch))
-            localStorage.setItem('commitId', selcommitSHA)
-            localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
-            localStorage.setItem('allCommits', JSON.stringify(commits))
-            navigate('/dashboard/oneCommit');
+            navigate('/dashboard/oneCommit')
           }
         })
         .catch((error) => {
           setIsLoading(false)
-          setErrorMessage(
-            'Failed to load analysis. Try again later.'
-          )
+          setErrorMessage('Failed to load analysis. Try again later.')
         })
-    }
-
-    else if (selectedOption === 'trend-analysis') {
-      setIsLoading(true);
-      const selcommitSHA = selectedCommit.value; // Optional chaining to avoid errors if selectedCommit is null/undefined
+    } else if (selectedOption === 'trend-analysis') {
+      setIsLoading(true)
       const requestData = {
         gitRepoLink: repoLink,
         branch: selectedBranch.value,
         noOfCommits: Math.min(maxCommits || 10, 10), // Use the smaller of maxCommits or 10
-      };
+      }
 
       // to make the trend analysis API request
       axios
-        .post(process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis', requestData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+        .post(
+          process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis',
+          requestData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
         .then((response) => {
-          setIsLoading(false);
+          setIsLoading(false)
           if (response.status === 200) {
-            setTrendAnalysisData(response.data);
-            localStorage.setItem('repoLink', repoLink)
-            localStorage.setItem('branch', JSON.stringify(selectedBranch))
-            localStorage.setItem('commitId', selcommitSHA)
-            localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
-            localStorage.setItem('allCommits', JSON.stringify(commits))
-            navigate('/dashboard/trend');
+            setTrendAnalysisData(response.data)
+            navigate('/dashboard/trend')
           }
         })
         .catch((error) => {
-          setIsLoading(false);
-          setErrorMessage('Failed to load analysis. Try again later.');
-        });
-    }
-
-    else if (selectedOption === 'hotspot-analysis') {
-      setIsLoading(true);
-      const selcommitSHA = selectedCommit.value; // Optional chaining to avoid errors if selectedCommit is null/undefined
+          setIsLoading(false)
+          setErrorMessage('Failed to load analysis. Try again later.')
+        })
+    } else if (selectedOption === 'hotspot-analysis') {
+      setIsLoading(true)
       const requestData = {
         gitRepoLink: repoLink,
         branch: selectedBranch.value,
         noOfCommits: Math.min(maxCommits || 10, 10), // Use the smaller of maxCommits or 10
-      };
+      }
 
       // to make the trend analysis API request
       axios
-        .post(process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis', requestData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        .then((response) => {
-          setIsLoading(false);
-          if (response.status === 200) {
-            setAnalysisData(response.data);
-            navigate('/dashboard/hotspot');
+        .post(
+          process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis',
+          requestData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
           }
-          console.log(response.data);
+        )
+        .then((response) => {
+          setIsLoading(false)
+          if (response.status === 200) {
+            setHotspotAnalysisData(response.data)
+            navigate('/dashboard/hotspot')
+          }
+          console.log(response.data)
         })
         .catch((error) => {
-          setIsLoading(false);
-          setErrorMessage('Failed to load analysis. Try again later.');
-        });
-    };
+          setIsLoading(false)
+          setErrorMessage('Failed to load analysis. Try again later.')
+        })
+    }
   }
 
   const styles = {
@@ -332,7 +332,7 @@ const Main = () => {
 
   const validateRepoUrl = () => {
     // Remove .git if it's present at the end of the repoLink
-    const normalizedRepoLink = repoLink.replace(/\.git$/, '');
+    const normalizedRepoLink = repoLink.replace(/\.git$/, '')
 
     if (
       !normalizedRepoLink.match(
@@ -341,18 +341,22 @@ const Main = () => {
     ) {
       setErrorMessage(
         'Please enter a valid GitHub repository link (e.g., https://github.com/username/repo or https://github.com/username/repo.git)'
-      );
-      return false;
+      )
+      return false
     }
-    setErrorMessage('');
+    setErrorMessage('')
 
-    return true;
-  };
+    return true
+  }
 
   const fetchBranches = () => {
     if (validateRepoUrl()) {
-      const ownerAndRepo = repoLink.replace(/\.git$/, '').split('/').slice(-2).join('/');
-      const branchUrl = `${API_URL}/repos/${ownerAndRepo}/branches`;
+      const ownerAndRepo = repoLink
+        .replace(/\.git$/, '')
+        .split('/')
+        .slice(-2)
+        .join('/')
+      const branchUrl = `${API_URL}/repos/${ownerAndRepo}/branches`
 
       axios
         .get(branchUrl)
@@ -360,38 +364,45 @@ const Main = () => {
           const branchOptions = response.data.map((branch) => ({
             value: branch.name,
             label: branch.name,
-          }));
-          setBranches(branchOptions);
-          setFlag(true);
+          }))
+          setBranches(branchOptions)
+          setFlag(true)
 
           const defaultBranch =
             branchOptions.find((branch) => branch.value === 'main') ||
-            branchOptions.find((branch) => branch.value === 'master');
+            branchOptions.find((branch) => branch.value === 'master')
           if (defaultBranch) {
-            setSelectedBranch(defaultBranch);
-            fetchCommits(defaultBranch);
+            setSelectedBranch(defaultBranch)
+            fetchCommits(defaultBranch)
           }
         })
         .catch((error) => {
-          console.error(error);
-          setBranches([]);
+          console.error(error)
+          setBranches([])
           if (error.response) {
-
-            setErrorMessage(`Failed to fetch branches. Status: ${error.response.status}`);
+            setErrorMessage(
+              `Failed to fetch branches. Status: ${error.response.status}`
+            )
           } else if (error.request) {
-
-            setErrorMessage('Failed to fetch branches. No response received from the server.');
+            setErrorMessage(
+              'Failed to fetch branches. No response received from the server.'
+            )
           } else {
-
-            setErrorMessage('Failed to fetch branches. Please check your repository link.');
+            setErrorMessage(
+              'Failed to fetch branches. Please check your repository link.'
+            )
           }
-        });
+        })
     }
-  };
+  }
 
   const fetchCommits = (branch) => {
-    const ownerAndRepo = repoLink.replace(/\.git$/, '').split('/').slice(-2).join('/');
-    const commitsUrl = `${API_URL}/repos/${ownerAndRepo}/commits?sha=${branch.value}`;
+    const ownerAndRepo = repoLink
+      .replace(/\.git$/, '')
+      .split('/')
+      .slice(-2)
+      .join('/')
+    const commitsUrl = `${API_URL}/repos/${ownerAndRepo}/commits?sha=${branch.value}`
 
     axios
       .get(commitsUrl)
@@ -399,26 +410,31 @@ const Main = () => {
         const commitOptions = response.data.slice(0, 10).map((commit) => ({
           value: commit.sha,
           label: `#${commit.sha.substring(0, 7)} - ${commit.commit.message}`,
-        }));
-        setCommits(commitOptions);
+        }))
+        setCommits(commitOptions)
         if (commitOptions.length > 0) {
-          setSelectedCommit(commitOptions[0]);
-          setMaxCommits(response.data.length);
+          setSelectedCommit(commitOptions[0])
+          setMaxCommits(response.data.length)
         }
       })
       .catch((error) => {
-        console.error(error);
-        setCommits([]);
+        console.error(error)
+        setCommits([])
         if (error.response) {
-          setErrorMessage(`Failed to fetch commits for ${branch.label}. Status: ${error.response.status}`);
+          setErrorMessage(
+            `Failed to fetch commits for ${branch.label}. Status: ${error.response.status}`
+          )
         } else if (error.request) {
-          setErrorMessage(`Failed to fetch commits for ${branch.label}. No response received from the server.`);
+          setErrorMessage(
+            `Failed to fetch commits for ${branch.label}. No response received from the server.`
+          )
         } else {
-          setErrorMessage(`Failed to fetch commits for ${branch.label}. Please check your repository link.`);
+          setErrorMessage(
+            `Failed to fetch commits for ${branch.label}. Please check your repository link.`
+          )
         }
-      });
-  };
-
+      })
+  }
 
   return (
     <>
@@ -438,7 +454,8 @@ const Main = () => {
                   <span className="text-gradient"> CODE</span> Now !!
                 </h1>
                 <div className="search-bar">
-                  <input className="repo-link"
+                  <input
+                    className="repo-link"
                     type="text"
                     placeholder="Insert Your GitHub Repository Link"
                     value={repoLink}
@@ -457,7 +474,6 @@ const Main = () => {
 
                 {flag ? (
                   <>
-
                     <Select
                       className="branch_select"
                       value={selectedBranch}
@@ -470,39 +486,60 @@ const Main = () => {
 
                     <div className="main-container__buttons">
                       <div className="radio-buttons">
-                        <label className="radio-label1" style={{ width: '131px' }}>
+                        <label
+                          className="radio-label1"
+                          style={{ width: '131px' }}
+                        >
                           <input
                             type="radio"
                             value="one-commit"
                             checked={selectedOption === 'one-commit'}
                             onChange={handleRadioChange}
-                            style={{ width: "25px", height: "100%", marginRight: "10px" }}
+                            style={{
+                              width: '25px',
+                              height: '100%',
+                              marginRight: '10px',
+                            }}
                           />
                           One-Commit
                         </label>
-                        <label className="radio-label2" style={{ width: '140px' }}>
+                        <label
+                          className="radio-label2"
+                          style={{ width: '140px' }}
+                        >
                           <input
                             type="radio"
                             value="trend-analysis"
                             checked={selectedOption === 'trend-analysis'}
                             onChange={handleRadioChange}
-                            style={{ width: "25px", height: "100%", marginRight: "10px" }}
+                            style={{
+                              width: '25px',
+                              height: '100%',
+                              marginRight: '10px',
+                            }}
                           />
                           Trend Analysis
                         </label>
-                        <label className="radio-label3" style={{ width: '157px' }}>
+                        <label
+                          className="radio-label3"
+                          style={{ width: '157px' }}
+                        >
                           <input
                             type="radio"
                             value="hotspot-analysis"
                             checked={selectedOption === 'hotspot-analysis'}
                             onChange={handleRadioChange}
-                            style={{ width: "25px", height: "100%", marginRight: "10px" }}
+                            style={{
+                              width: '25px',
+                              height: '100%',
+                              marginRight: '10px',
+                            }}
                           />
                           Hotspot Analysis
                         </label>
                       </div>
                     </div>
-                    {flag1 ?
+                    {flag1 ? (
                       <>
                         <div className="dropbox">
                           <Select
@@ -515,18 +552,8 @@ const Main = () => {
                             getOptionValue={(option) => option.value}
                             placeholder="Commit..."
                           />
-
                         </div>
 
-                        <div className="execute-button-container">
-                          <button
-                            className="main-container__button"
-                            onClick={executeAnalysis}
-                          >
-                            Execute
-                          </button>
-                        </div>
-                      </> : <>
                         <div className="execute-button-container">
                           <button
                             className="main-container__button"
@@ -536,7 +563,18 @@ const Main = () => {
                           </button>
                         </div>
                       </>
-                    }
+                    ) : (
+                      <>
+                        <div className="execute-button-container">
+                          <button
+                            className="main-container__button"
+                            onClick={executeAnalysis}
+                          >
+                            Execute
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </>
                 ) : null}
               </div>
@@ -561,4 +599,4 @@ const Main = () => {
     </>
   )
 }
-export default Main; 
+export default Main
