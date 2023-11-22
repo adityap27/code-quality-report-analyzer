@@ -7,6 +7,7 @@ from unittest.mock import patch
 class SmellAnalysisViewTests(APITestCase):
     def setUp(self) -> None:
         self.url = reverse("smell_analysis")
+        self.path = "some/valid/path"
 
     @patch("code_quality_analyzer_analysis.views.analyze_smell_files_in_folder")
     def test_post_with_no_path(self, mock_analyze):
@@ -17,10 +18,10 @@ class SmellAnalysisViewTests(APITestCase):
     @patch("code_quality_analyzer_analysis.views.analyze_smell_files_in_folder")
     def test_post_with_valid_path(self, mock_analyze):
         mock_analyze.return_value = {"result": "some_result"}
-        data = {"reportPath": "some/valid/path"}
+        data = {"reportPath": self.path}
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock_analyze.assert_called_once_with("some/valid/path")
+        mock_analyze.assert_called_once_with(self.path)
 
 
 class TrendAnalysisViewTests(APITestCase):
@@ -76,6 +77,7 @@ class TrendAnalysisViewTests(APITestCase):
 class HotspotAnalysisViewTests(APITestCase):
     def setUp(self) -> None:
         self.url = reverse("hotspot_analysis")
+        self.path = "some/valid/path"
 
     @patch("code_quality_analyzer_analysis.views.get_hotspot_analysis")
     def test_post_with_no_path(self, mock_analyze):
@@ -86,7 +88,7 @@ class HotspotAnalysisViewTests(APITestCase):
     @patch("code_quality_analyzer_analysis.views.get_hotspot_analysis")
     def test_post_with_valid_path(self, mock_analyze):
         mock_analyze.return_value = {"result": "some_result"}
-        data = {"reportPath": "some/valid/path"}
+        data = {"reportPath": self.path}
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock_analyze.assert_called_once_with("some/valid/path")
+        mock_analyze.assert_called_once_with(self.path)

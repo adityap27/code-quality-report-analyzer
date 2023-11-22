@@ -35,15 +35,15 @@ def get_top_entities(df: pd.DataFrame, smell_type: str, smell_subtypes: list, co
         # Calculate the total number of smells
         total_smells = sum(smell_distribution.values())
 
-        dict = {}
+        entities = {}
         # Create the final dictionary for the current Concatenated_Column value
-        dict[column_value] = {
+        entities[column_value] = {
             'smell_distribution': smell_distribution,
             'total_smells': total_smells
         }
 
         # Add the entity details to the list of top_entities.
-        result_list.append(dict)
+        result_list.append(entities)
 
     # Sort the list based on total_smells in descending order
     sorted_list = sorted(result_list, key=lambda x: x[next(iter(x))]["total_smells"], reverse=True)

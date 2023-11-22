@@ -15,89 +15,105 @@ class TestHotspotAnalysis(unittest.TestCase):
         "Encapsulation",
         "Modularization",
         "Hierarchy"]
+    maven_wrapper_downloader = "Retail-Product-Management-System||(default package)||MavenWrapperDownloader"
+    unutilized_abstraction = "Unutilized Abstraction"
+    unnecessary_abstraction = "Unnecessary Abstraction"
+    m2_package = "Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m2"
+    m3_package = "Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m3"
+    long_method = "Long Method"
+    magic_number = "Magic Number"
+    long_statement = "Long Statement"
+    empty_catch_clause = "Empty Catch Clause"
+    long_parameter_list = "Long Parameter List"
+    complex_method = "Complex Method"
+    missing_default = "Missing Default"
+    duplicate_code = "Duplicate Code"
+    long_identifier = "Long Identifier"
+    virtual_method_call = "Virtual Method Call from Constructor"
+    complex_conditional = "Complex Conditional"
 
     design_df = pd.DataFrame({
-        "Concatenated_Column": ["Retail-Product-Management-System||(default package)||MavenWrapperDownloader",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader",
+        "Concatenated_Column": [maven_wrapper_downloader,
+                                maven_wrapper_downloader,
+                                maven_wrapper_downloader,
+                                maven_wrapper_downloader,
+                                maven_wrapper_downloader,
+                                maven_wrapper_downloader,
+                                maven_wrapper_downloader,
                                 "Retail-Product-Management-System||com.product.microservices.apigatewayauth||ApiGatewayAuthApplication",
                                 "Retail-Product-Management-System||com.product.microservices.apigatewayauth.filters||JwtRequestFilter",
                                 "Retail-Product-Management-System||com.product.microservices.apigatewayauth.model||User"],
         "Design Smell": ["Abstraction",
-                        "Unutilized Abstraction",
-                        "Unutilized Abstraction",
-                        "Unnecessary Abstraction",
-                        "Unutilized Abstraction",
-                        "Unnecessary Abstraction",
-                        "Unutilized Abstraction",
-                        "Unutilized Abstraction",
-                        "Unutilized Abstraction",
-                        "Unnecessary Abstraction"]
+                        unutilized_abstraction,
+                        unutilized_abstraction,
+                        unnecessary_abstraction,
+                        unutilized_abstraction,
+                        unnecessary_abstraction,
+                        unutilized_abstraction,
+                        unutilized_abstraction,
+                        unutilized_abstraction,
+                        unnecessary_abstraction]
     })
 
     impl_df = pd.DataFrame({
         "Concatenated_Column": ["Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m1",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m2",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m2",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m2",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m2",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m3",
-                                "Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m3",
+                                m2_package,
+                                m2_package,
+                                m2_package,
+                                m2_package,
+                                m3_package,
+                                m3_package,
                                 "Retail-Product-Management-System||com.product.microservices.apigatewayauth||ApiGatewayAuthApplication||m1",
                                 "Retail-Product-Management-System||com.product.microservices.apigatewayauth.filters||JwtRequestFilter||m1",
                                 "Retail-Product-Management-System||com.product.microservices.apigatewayauth.model||User||m1"],
-        "Implementation Smell": ["Long Method",
-                         "Magic Number",
-                         "Long Method",
-                         "Long Statement",
-                         "Magic Number",
-                         "Long Statement",
-                         "Long Method",
-                         "Magic Number",
-                         "Magic Number",
-                         "Long Method"]
+        "Implementation Smell": [long_method,
+                         magic_number,
+                         long_method,
+                         long_statement,
+                         magic_number,
+                         long_statement,
+                         long_method,
+                         magic_number,
+                         magic_number,
+                         long_method]
     })
 
     impl_smell_subtypes = [
-        "Long Method",
-        "Complex Method",
+        long_method,
+        complex_method,
         "Long Parameter List",
-        "Long Identifier",
-        "Long Statement",
-        "Complex Conditional",
-        "Virtual Method Call from Constructor",
+        long_identifier,
+        long_statement,
+        complex_conditional,
+        virtual_method_call,
         "Empty Catch Clause",
-        "Magic Number",
-        "Duplicate Code",
-        "Missing Default"]
+        magic_number,
+        duplicate_code,
+        missing_default]
 
     top_classes_list = [
-        {'Retail-Product-Management-System||(default package)||MavenWrapperDownloader':
-                {'smell_distribution': {'Abstraction': 7, 'Encapsulation': 0, 'Modularization': 0, 'Hierarchy': 0}, 'total_smells': 7}},
-        {'Retail-Product-Management-System||com.product.microservices.apigatewayauth||ApiGatewayAuthApplication':
-             {'smell_distribution': {'Abstraction': 1, 'Encapsulation': 0, 'Modularization': 0, 'Hierarchy': 0}, 'total_smells': 1}},
-        {'Retail-Product-Management-System||com.product.microservices.apigatewayauth.filters||JwtRequestFilter':
-             {'smell_distribution': {'Abstraction': 1, 'Encapsulation': 0, 'Modularization': 0, 'Hierarchy': 0}, 'total_smells': 1}},
-        {'Retail-Product-Management-System||com.product.microservices.apigatewayauth.model||User':
-             {'smell_distribution': {'Abstraction': 1, 'Encapsulation': 0, 'Modularization': 0, 'Hierarchy': 0}, 'total_smells': 1}}
+        {"Retail-Product-Management-System||(default package)||MavenWrapperDownloader":
+                {"smell_distribution": {"Abstraction": 7, "Encapsulation": 0, "Modularization": 0, "Hierarchy": 0}, "total_smells": 7}},
+        {"Retail-Product-Management-System||com.product.microservices.apigatewayauth||ApiGatewayAuthApplication":
+             {"smell_distribution": {"Abstraction": 1, "Encapsulation": 0, "Modularization": 0, "Hierarchy": 0}, "total_smells": 1}},
+        {"Retail-Product-Management-System||com.product.microservices.apigatewayauth.filters||JwtRequestFilter":
+             {"smell_distribution": {"Abstraction": 1, "Encapsulation": 0, "Modularization": 0, "Hierarchy": 0}, "total_smells": 1}},
+        {"Retail-Product-Management-System||com.product.microservices.apigatewayauth.model||User":
+             {"smell_distribution": {"Abstraction": 1, "Encapsulation": 0, "Modularization": 0, "Hierarchy": 0}, "total_smells": 1}}
         ]
     top_method_list = [
-        {'Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m2':
-             {'smell_distribution': {'Long Method': 1, 'Complex Method': 0, 'Long Parameter List': 0, 'Long Identifier': 0, 'Long Statement': 1, 'Complex Conditional': 0, 'Virtual Method Call from Constructor': 0, 'Empty Catch Clause': 0, 'Magic Number': 2, 'Duplicate Code': 0, 'Missing Default': 0}, 'total_smells': 4}},
-        {'Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m3':
-             {'smell_distribution': {'Long Method': 1, 'Complex Method': 0, 'Long Parameter List': 0, 'Long Identifier': 0, 'Long Statement': 1, 'Complex Conditional': 0, 'Virtual Method Call from Constructor': 0, 'Empty Catch Clause': 0, 'Magic Number': 0, 'Duplicate Code': 0, 'Missing Default': 0}, 'total_smells': 2}},
-        {'Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m1':
-             {'smell_distribution': {'Long Method': 1, 'Complex Method': 0, 'Long Parameter List': 0, 'Long Identifier': 0, 'Long Statement': 0, 'Complex Conditional': 0, 'Virtual Method Call from Constructor': 0, 'Empty Catch Clause': 0, 'Magic Number': 0, 'Duplicate Code': 0, 'Missing Default': 0}, 'total_smells': 1}},
-        {'Retail-Product-Management-System||com.product.microservices.apigatewayauth||ApiGatewayAuthApplication||m1':
-             {'smell_distribution': {'Long Method': 0, 'Complex Method': 0, 'Long Parameter List': 0, 'Long Identifier': 0, 'Long Statement': 0, 'Complex Conditional': 0, 'Virtual Method Call from Constructor': 0, 'Empty Catch Clause': 0, 'Magic Number': 1, 'Duplicate Code': 0, 'Missing Default': 0}, 'total_smells': 1}},
-        {'Retail-Product-Management-System||com.product.microservices.apigatewayauth.filters||JwtRequestFilter||m1':
-             {'smell_distribution': {'Long Method': 0, 'Complex Method': 0, 'Long Parameter List': 0, 'Long Identifier': 0, 'Long Statement': 0, 'Complex Conditional': 0, 'Virtual Method Call from Constructor': 0, 'Empty Catch Clause': 0, 'Magic Number': 1, 'Duplicate Code': 0, 'Missing Default': 0}, 'total_smells': 1}},
-        {'Retail-Product-Management-System||com.product.microservices.apigatewayauth.model||User||m1':
-             {'smell_distribution': {'Long Method': 1, 'Complex Method': 0, 'Long Parameter List': 0, 'Long Identifier': 0, 'Long Statement': 0, 'Complex Conditional': 0, 'Virtual Method Call from Constructor': 0, 'Empty Catch Clause': 0, 'Magic Number': 0, 'Duplicate Code': 0, 'Missing Default': 0}, 'total_smells': 1}}]
+        {"Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m2":
+             {"smell_distribution": {long_method: 1, complex_method: 0, long_parameter_list: 0, long_identifier: 0, long_statement: 1, complex_conditional: 0, virtual_method_call: 0, empty_catch_clause: 0, magic_number: 2, duplicate_code: 0, missing_default: 0}, "total_smells": 4}},
+        {m3_package:
+             {"smell_distribution": {long_method: 1, complex_method: 0, long_parameter_list: 0, long_identifier: 0, long_statement: 1, complex_conditional: 0, virtual_method_call: 0, empty_catch_clause: 0, magic_number: 0, duplicate_code: 0, missing_default: 0}, "total_smells": 2}},
+        {"Retail-Product-Management-System||(default package)||MavenWrapperDownloader||m1":
+             {"smell_distribution": {long_method: 1, complex_method: 0, long_parameter_list: 0, long_identifier: 0, long_statement: 0, complex_conditional: 0, virtual_method_call: 0, empty_catch_clause: 0, magic_number: 0, duplicate_code: 0, missing_default: 0}, "total_smells": 1}},
+        {"Retail-Product-Management-System||com.product.microservices.apigatewayauth||ApiGatewayAuthApplication||m1":
+             {"smell_distribution": {long_method: 0, complex_method: 0, long_parameter_list: 0, long_identifier: 0, long_statement: 0, complex_conditional: 0, virtual_method_call: 0, empty_catch_clause: 0, magic_number: 1, duplicate_code: 0, missing_default: 0}, "total_smells": 1}},
+        {"Retail-Product-Management-System||com.product.microservices.apigatewayauth.filters||JwtRequestFilter||m1":
+             {"smell_distribution": {long_method: 0, complex_method: 0, long_parameter_list: 0, long_identifier: 0, long_statement: 0, complex_conditional: 0, virtual_method_call: 0, empty_catch_clause: 0, magic_number: 1, duplicate_code: 0, missing_default: 0}, "total_smells": 1}},
+        {"Retail-Product-Management-System||com.product.microservices.apigatewayauth.model||User||m1":
+             {"smell_distribution": {long_method: 1, complex_method: 0, long_parameter_list: 0, long_identifier: 0, long_statement: 0, complex_conditional: 0, virtual_method_call: 0, empty_catch_clause: 0, magic_number: 0, duplicate_code: 0, missing_default: 0}, "total_smells": 1}}]
 
     retrieve_smell_files_mock = {
         "Architecture": None,
