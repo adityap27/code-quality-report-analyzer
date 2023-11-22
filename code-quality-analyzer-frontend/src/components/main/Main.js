@@ -1,3 +1,4 @@
+import React from 'react';
 import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -59,6 +60,7 @@ const Main = () => {
     localStorage.setItem('repoLink', repoLink)
     localStorage.setItem('branch', JSON.stringify(selectedBranch))
     localStorage.setItem('commitId', selcommitSHA)
+    localStorage.setItem('commit' , JSON.stringify(selectedCommit))
     localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
     localStorage.setItem('allCommits', JSON.stringify(commits))
     if (selectedOption === 'one-commit') {
@@ -440,13 +442,16 @@ const Main = () => {
     <>
       <Navbar />
       <div className="main-con">
-        {isLoading ? (
+      {isLoading ? (
           <div className="loader">
             Please Wait While We Load Analysis For You.....
           </div>
+
         ) : (
+          
           <>
-            <canvas className="orb-canvas"></canvas>
+          
+          <canvas className="orb-canvas"></canvas>
             <div className="main-container">
               <div className="main-container__inner">
                 <h1 className="main-container__title">
@@ -593,10 +598,13 @@ const Main = () => {
                 />
               </div>
             </div>
+             
           </>
         )}
+        
       </div>
+     
     </>
   )
 }
-export default Main
+export default Main; 

@@ -9,7 +9,44 @@
       hsl(var(--hue), 15%, 19%),
       hsl(var(--hue), 15%, 14%));
 }
+.loader {
+  /*position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Ensure loader is on top */
+  max-width: 100%;
+    height: auto!important;
+    font-size: 1.2rem;
+    top: 50%;
+    left: 50%;
+    color: #000;
+    overflow-wrap: break-word;
+    border-radius: 8px;
+    padding: 4rem;
+    position: absolute;
+    
+}
+  /* Your loader styles */
 
+
+.loader img{
+  border: 0;
+  overflow-clip-margin: content-box;
+  overflow: clip;
+  align-items: center;
+}
+
+.blur-background {
+  /* Apply a blur effect to the background */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(1px); /* Adjust the blur amount as needed */
+  z-index: 799; /* Adjust the z-index to ensure it's behind the loader */
+}
 .repo-link {
   width: 100%;
   height: 100%;
@@ -54,12 +91,12 @@ input:focus {
   box-sizing: border-box;
 }
 
-html {
+ .main-con html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+ .main-con body {
   max-width: 1920px;
   min-height: 100vh;
   display: grid;
@@ -88,6 +125,7 @@ strong {
 .main-container {
   position: absolute;
   width: 1200px;
+  height: 500px;
   padding: 5rem 3rem;
   display: flex;
   justify-content: space-between;
@@ -98,7 +136,7 @@ strong {
   border-radius: 2rem;
   border: 1px solid rgba(82, 83, 87, 0.125);
   margin-bottom: 100px;
-  top: 120px;
+  top: 100px;
 }
 
 .main-con {
@@ -107,7 +145,15 @@ strong {
   align-items: center;
   font-family: Arial, Helvetica, sans-serif;
 }
+.content-wrapper {
+  /* Position and style your content wrapper */
+  position: relative;
+}
 
+/* Apply blur to content when isLoading is true */
+.blur-content .main-container {
+  backdrop-filter: blur(1px); /* Adjust the blur amount as needed */
+}
 .main-container__inner {
   max-width: 36rem;
 }
@@ -213,7 +259,7 @@ strong {
 }
 .execute-button-container {
   text-align: center;
-  margin-top: 80px;
+  margin-top: 25px;
   margin-left: 0px;
 }
 .main-container__button-emoji {

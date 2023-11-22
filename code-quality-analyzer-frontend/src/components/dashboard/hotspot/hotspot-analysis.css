@@ -1,0 +1,17 @@
+
+.dropdown-dropdowns {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; 
+  }
+  
+  .branch-dropdowns{
+    display: flex; 
+    align-items: center; 
+    margin-right: 20px;
+    max-width: 400px;
+  }
+  .branch-dropdowns h4
+{
+  margin-right: 10px; 
+}

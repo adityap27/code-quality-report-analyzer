@@ -5,7 +5,7 @@ import DashboardHome from './components/dashboardHome/DashboardHome'
 import { OneCommitAnalysisProvider } from './OneCommitAnalysisContext'
 import { HotspotAnalysisProvider } from './HotspotAnalysisContext'
 import { TrendAnalysisProvider } from './TrendAnalysisContext'
-
+import React from 'react'
 function App() {
   document.title = 'Code Quality Analyzer'
   return (
