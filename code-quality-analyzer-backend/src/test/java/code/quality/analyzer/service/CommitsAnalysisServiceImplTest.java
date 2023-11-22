@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import static code.quality.analyzer.util.Constants.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -25,12 +25,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import code.quality.analyzer.exception.InvalidCommitsException;
 import code.quality.analyzer.model.TrendAnalysisRequest;
-import code.quality.analyzer.util.Constants;
 
 /**
  * Test CommitsAnalysisServiceImplTest class methods
@@ -39,8 +39,9 @@ import code.quality.analyzer.util.Constants;
 @ExtendWith(MockitoExtension.class)
 @TestPropertySource("classpath:application.properties")
 class CommitsAnalysisServiceImplTest {
-    private static CommitsAnalysisService commitsAnalysisService;
+    private static CommitsAnalysisService analysisService;
     private static String repoPath;
+    ResponseDefinitionBuilder builder;
 
     @Autowired
     private static WireMockServer wireMockServer;
@@ -49,7 +50,7 @@ class CommitsAnalysisServiceImplTest {
 	private String baseUrl;
 
 	@Value("${analysis.service.one.commit.url}")
-	private String oneCommiUrl;
+	private String oneCommitUrl;
 
 	@Value("${analysis.service.trend.url}")
 	private String trendUrl;
@@ -59,126 +60,115 @@ class CommitsAnalysisServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        commitsAnalysisService = new CommitsAnalysisServiceImpl();
-        ReflectionTestUtils.setField(commitsAnalysisService, "baseUrl", baseUrl);
-        ReflectionTestUtils.setField(commitsAnalysisService, "oneCommiUrl", oneCommiUrl);
-        ReflectionTestUtils.setField(commitsAnalysisService, "trendUrl", trendUrl);
-        ReflectionTestUtils.setField(commitsAnalysisService, "hotspotUrl", hotspotUrl);
-        repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
+        analysisService = new CommitsAnalysisServiceImpl();
+        ReflectionTestUtils.setField(analysisService, "baseUrl", baseUrl);
+        ReflectionTestUtils.setField(analysisService, "oneCommitUrl", oneCommitUrl);
+        ReflectionTestUtils.setField(analysisService, "trendUrl", trendUrl);
+        ReflectionTestUtils.setField(analysisService, "hotspotUrl", hotspotUrl);
+        repoPath = analysisService.cloneRepository(REPO_URL);
+        builder = aResponse().withStatus(HTTP_STATUS).withHeader("Content-Type", "application/json").withBody(ANALYSIS_RESPONSE);
     }
 
     @Test
     void testGenerateOneCommitReport() throws Exception {
-        String path = commitsAnalysisService.generateOneCommitReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID_2);
-        assertEquals(repoPath + Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_2, path);
+        String path = analysisService.generateOneCommitReport(repoPath, BRANCH, COMMIT2);
+        assertEquals(repoPath + REPORT_PATH + "/" + COMMIT2, path);
         assertEquals(true, Files.exists(Paths.get(path)));
     }
     
     @Test
     void testGenerateOneCommitReportForRemoteBranch() throws Exception {
-    	String repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
-        String path = commitsAnalysisService.generateOneCommitReport(repoPath, Constants.TEST_REMOTE_BRANCH, Constants.TEST_REMOTE_COMMIT_ID_1);
-        assertEquals(repoPath + Constants.REPORT_PATH + "/" + Constants.TEST_REMOTE_COMMIT_ID_1, path);
+    	String repoPath = analysisService.cloneRepository(REPO_URL);
+        String path = analysisService.generateOneCommitReport(repoPath, REMOTE_BRANCH, REMOTE_COMMIT);
+        assertEquals(repoPath + REPORT_PATH + "/" + REMOTE_COMMIT, path);
         assertEquals(true, Files.exists(Paths.get(path)));
     }
 
     @Test
     void testGenerateOneCommitReportException() throws Exception {
-    	assertThrows(RefNotFoundException.class, () -> commitsAnalysisService.generateOneCommitReport(repoPath, "xyz", Constants.TEST_COMMIT_ID_1));
-        assertThrows(InvalidRefNameException.class, () -> commitsAnalysisService.generateOneCommitReport(repoPath, " ", Constants.TEST_COMMIT_ID_2));
-        assertThrows(InvalidRefNameException.class, () -> commitsAnalysisService.generateOneCommitReport(repoPath, null, Constants.TEST_COMMIT_ID_1));
-        assertThrows(RefNotFoundException.class, () -> commitsAnalysisService.generateOneCommitReport("", Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID_2));
-        assertThrows(RefNotFoundException.class, () -> commitsAnalysisService.generateOneCommitReport(null, Constants.TEST_BRANCH, Constants.TEST_COMMIT_ID_2));
+    	assertThrows(RefNotFoundException.class, () -> analysisService.generateOneCommitReport(repoPath, "xyz", COMMIT1));
+        assertThrows(InvalidRefNameException.class, () -> analysisService.generateOneCommitReport(repoPath, " ", COMMIT2));
+        assertThrows(InvalidRefNameException.class, () -> analysisService.generateOneCommitReport(repoPath, null, COMMIT1));
+        assertThrows(RefNotFoundException.class, () -> analysisService.generateOneCommitReport("", BRANCH, COMMIT2));
+        assertThrows(RefNotFoundException.class, () -> analysisService.generateOneCommitReport(null, BRANCH, COMMIT2));
     }
 
     @Test
     void testCallAnalysisServiceOneCommit() throws Exception {
-        wireMockServer = new WireMockServer(new WireMockConfiguration().port(Constants.TEST_PORT));
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(PORT));
         wireMockServer.start();
-        WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
-        stubFor(post(urlEqualTo(oneCommiUrl))
-                .willReturn(aResponse()
-                        .withStatus(Constants.TEST_HTTP_STATUS)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
+        WireMock.configureFor(LOCALHOST, PORT);
+        stubFor(post(urlEqualTo(oneCommitUrl)).willReturn(builder));
 
-        String response = commitsAnalysisService.callAnalysisServiceOneCommit(Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_1);
+        String response = analysisService.callAnalysisServiceOneCommit(REPORT_PATH + "/" + COMMIT1);
         assertNotNull(response);
-        assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+        assertEquals(ANALYSIS_RESPONSE, response);
         wireMockServer.stop();
     }
 
     @Test
     void testGenerateTrendAnalysisReport() throws Exception {
-    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_TOTAL_COMMITS_2);
-    	assertNotNull(trendAnalysisRequest);
-    	assertEquals(2, trendAnalysisRequest.getCommitsData().size());
-    	assertEquals(Constants.TEST_USER_2, trendAnalysisRequest.getPreviousCommit().get(Constants.TEST_COMMIT_ID_3));
-    	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
+    	TrendAnalysisRequest request = analysisService.generateTrendAnalysisReport(repoPath, BRANCH, TOTAL_COMMITS_2);
+    	assertNotNull(request);
+    	assertEquals(TOTAL_COMMITS_2, request.getCommitsData().size());
+    	assertEquals(USER2, request.getPreviousCommit().get(COMMIT3));
+    	assertEquals(repoPath + REPORT_PATH, request.getReportPath());
     }
 
     @Test
     void testGenerateTrendAnalysisReportForRemoteBranch() throws Exception {
-    	String repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
-    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_REMOTE_BRANCH, Constants.TEST_TOTAL_COMMITS_2);
-    	assertNotNull(trendAnalysisRequest);
-    	assertEquals(2, trendAnalysisRequest.getCommitsData().size());
-    	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
+    	String repoPath = analysisService.cloneRepository(REPO_URL);
+    	TrendAnalysisRequest request = analysisService.generateTrendAnalysisReport(repoPath, REMOTE_BRANCH, TOTAL_COMMITS_2);
+    	assertNotNull(request);
+    	assertEquals(TOTAL_COMMITS_2, request.getCommitsData().size());
+    	assertEquals(repoPath + REPORT_PATH, request.getReportPath());
     }
     
     @Test
     void testGenerateTrendAnalysisReportForAllCommits() throws Exception {
-    	repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL_ALLCOMMITS);
-    	TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_TOTAL_COMMITS);
-    	assertNotNull(trendAnalysisRequest);
-    	assertEquals(Constants.TEST_TOTAL_COMMITS, trendAnalysisRequest.getCommitsData().size());
-    	assertNull(trendAnalysisRequest.getPreviousCommit());
-    	assertEquals(repoPath + Constants.REPORT_PATH, trendAnalysisRequest.getReportPath());
+    	repoPath = analysisService.cloneRepository(REPO_URL_ALLCOMMITS);
+    	TrendAnalysisRequest request = analysisService.generateTrendAnalysisReport(repoPath, BRANCH, TOTAL_COMMITS_1);
+    	assertNotNull(request);
+    	assertEquals(TOTAL_COMMITS_1, request.getCommitsData().size());
+    	assertNull(request.getPreviousCommit());
+    	assertEquals(repoPath + REPORT_PATH, request.getReportPath());
     }
 
     @Test
     void testGenerateTrendAnalysisReportForZeroCommits() throws Exception {
-    	assertThrows(InvalidCommitsException.class, () -> commitsAnalysisService.generateTrendAnalysisReport(repoPath, Constants.TEST_BRANCH, Constants.TEST_ZERO));
+    	assertThrows(InvalidCommitsException.class, () -> analysisService.generateTrendAnalysisReport(repoPath, BRANCH, ZERO));
     }
 
     @Test
     void testCallAnalysisServiceTrend() throws Exception {
-        wireMockServer = new WireMockServer(new WireMockConfiguration().port(Constants.TEST_PORT));
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(PORT));
         wireMockServer.start();
-        WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
-        stubFor(post(urlEqualTo(trendUrl))
-                .willReturn(aResponse()
-                        .withStatus(Constants.TEST_HTTP_STATUS)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
+        WireMock.configureFor(LOCALHOST, PORT);
+        stubFor(post(urlEqualTo(trendUrl)).willReturn(builder));
 
-        String response = commitsAnalysisService.callAnalysisServiceTrend(new TrendAnalysisRequest());
+        String response = analysisService.callAnalysisServiceTrend(new TrendAnalysisRequest());
         assertNotNull(response);
-        assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+        assertEquals(ANALYSIS_RESPONSE, response);
         wireMockServer.stop();
     }
     
     @Test
     void testGenerateHotspotReport() throws Exception {
-        String path = commitsAnalysisService.generateHotspotReport(repoPath, Constants.TEST_BRANCH);
-        assertEquals(repoPath + Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_1, path);
+        String path = analysisService.generateHotspotReport(repoPath, BRANCH);
+        assertEquals(repoPath + REPORT_PATH + "/" + COMMIT1, path);
         assertEquals(true, Files.exists(Paths.get(path)));
     }
     
     @Test
     void testCallAnalysisServiceHotspot() throws Exception {
-        wireMockServer = new WireMockServer(new WireMockConfiguration().port(Constants.TEST_PORT));
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(PORT));
         wireMockServer.start();
-        WireMock.configureFor(Constants.TEST_LOCALHOST, Constants.TEST_PORT);
-        stubFor(post(urlEqualTo(hotspotUrl))
-                .willReturn(aResponse()
-                        .withStatus(Constants.TEST_HTTP_STATUS)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(Constants.ANALYSIS_SERVICE_TEST_RESPONSE)));
+        WireMock.configureFor(LOCALHOST, PORT);
+        stubFor(post(urlEqualTo(hotspotUrl)).willReturn(builder));
 
-        String response = commitsAnalysisService.callAnalysisServiceHotspot(Constants.REPORT_PATH + "/" + Constants.TEST_COMMIT_ID_1);
+        String response = analysisService.callAnalysisServiceHotspot(REPORT_PATH + "/" + COMMIT1);
         assertNotNull(response);
-        assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+        assertEquals(ANALYSIS_RESPONSE, response);
         wireMockServer.stop();
     }
 }

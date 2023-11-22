@@ -31,7 +31,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 	private String baseUrl;
 	
 	@Value("${analysis.service.one.commit.url}")
-	private String oneCommiUrl;
+	private String oneCommitUrl;
 	
 	@Value("${analysis.service.trend.url}")
 	private String trendUrl;
@@ -72,7 +72,7 @@ public class CommitsAnalysisServiceImpl implements CommitsAnalysisService {
 		req.setReportPath(repoPath);
 		HttpEntity<OneCommitAnalysisRequest> request = new HttpEntity<>(req);
 		ResponseEntity<String> response = restTemplate
-				.exchange(baseUrl + oneCommiUrl, HttpMethod.POST, request, String.class);
+				.exchange(baseUrl + oneCommitUrl, HttpMethod.POST, request, String.class);
 
 		return response.getBody();
 	}

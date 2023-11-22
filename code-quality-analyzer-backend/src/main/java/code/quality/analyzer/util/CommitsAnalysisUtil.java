@@ -49,8 +49,8 @@ public class CommitsAnalysisUtil {
 		logger.info("BEGIN checkoutAndValidate()");
 		Repository repository = new FileRepository(repoPath + Constants.REPO_SUFFIX);
 		Git git = new Git(repository);
-		if(branchname!= null && !branchname.isBlank() 
-				&& repository.findRef(Constants.BRANCH_PREFIX + branchname) == null) {
+		boolean branchNotNullNotEmpty = branchname!= null && !branchname.isBlank();
+		if(branchNotNullNotEmpty && repository.findRef(Constants.BRANCH_PREFIX + branchname) == null) {
 			git.checkout().setCreateBranch(true).setName(branchname)
 			.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM)
 			.setStartPoint(Constants.REMOTE_ORIGIN + branchname).call();

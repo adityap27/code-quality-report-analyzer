@@ -19,27 +19,35 @@ public class CommitsAnalysisController {
 	@Autowired
 	CommitsAnalysisService commitsAnalysisService;
 	
+	String branch, repoPath;
+	
 	@PostMapping("/onecommit/getanalysis")
 	ResponseEntity<String> getOneCommitAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
-		String repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
-		String reportPath = commitsAnalysisService.generateOneCommitReport(repoPath, commitAnalysisRequest.getBranch(), commitAnalysisRequest.getCommitId());
+		setData(commitAnalysisRequest);
+		String reportPath = commitsAnalysisService.generateOneCommitReport(repoPath, branch, commitAnalysisRequest.getCommitId());
 		String jsonOutput = commitsAnalysisService.callAnalysisServiceOneCommit(reportPath);
 		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
 	}
 	
 	@PostMapping("/trend/getanalysis")
 	ResponseEntity<String> getTrendAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
-		String repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
-		TrendAnalysisRequest trendAnalysisRequest = commitsAnalysisService.generateTrendAnalysisReport(repoPath, commitAnalysisRequest.getBranch(), commitAnalysisRequest.getNoOfCommits());
-		String jsonOutput = commitsAnalysisService.callAnalysisServiceTrend(trendAnalysisRequest);
+		setData(commitAnalysisRequest);
+		int noOfCommits = commitAnalysisRequest.getNoOfCommits();
+		TrendAnalysisRequest request = commitsAnalysisService.generateTrendAnalysisReport(repoPath, branch, noOfCommits);
+		String jsonOutput = commitsAnalysisService.callAnalysisServiceTrend(request);
 		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
 	}
 	
 	@PostMapping("/hotspot/getanalysis")
 	ResponseEntity<String> getHotspotAnalysis(@RequestBody CommitAnalysisRequest commitAnalysisRequest) throws Exception {
-		String repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
-		String reportPath = commitsAnalysisService.generateHotspotReport(repoPath, commitAnalysisRequest.getBranch());
+		setData(commitAnalysisRequest);
+		String reportPath = commitsAnalysisService.generateHotspotReport(repoPath, branch);
 		String jsonOutput = commitsAnalysisService.callAnalysisServiceHotspot(reportPath);
 		return new ResponseEntity<String>(jsonOutput, HttpStatus.OK);
+	}
+	
+	private void setData(CommitAnalysisRequest commitAnalysisRequest) {
+		repoPath = commitsAnalysisService.cloneRepository(commitAnalysisRequest.getGitRepoLink());
+		branch = commitAnalysisRequest.getBranch();
 	}
 }

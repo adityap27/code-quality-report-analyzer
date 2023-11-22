@@ -3,6 +3,7 @@
  */
 package code.quality.analyzer.util;
 
+import static code.quality.analyzer.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -36,65 +37,66 @@ class CommitsAnalysisUtilTest {
 	void setUp() {
 		commitIds = new ArrayList<String>();
 		commitsAnalysisService = new CommitsAnalysisServiceImpl();
-		repoPath = commitsAnalysisService.cloneRepository(Constants.TEST_REPO_URL);
+		repoPath = commitsAnalysisService.cloneRepository(REPO_URL);
 	}
 
 	@Test
 	void testGetCommitIdsForOneCommitAndHotspot() throws Exception {
-		commitIds.add(Constants.TEST_COMMIT_ID_1);
-		List<String> ids = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, Constants.ONE).keySet());
+		commitIds.add(COMMIT1);
+		List<String> ids = new ArrayList<String>(CommitsAnalysisUtil.getCommitIds(repoPath, BRANCH, ONE).keySet());
 		assertEquals(false, ids.isEmpty());
-		assertEquals(Constants.ONE, ids.size());
+		assertEquals(ONE, ids.size());
 		assertEquals(commitIds.get(0), ids.get(0));
 	}
 	
 	@ParameterizedTest
 	@CsvSource({"2,2", "1,1", "5,5", "0,0"})
 	void testGetCommitIdsForTrend(int noOfCommits, int expectedSize) throws Exception {
-		Map<String, String> commitsData = CommitsAnalysisUtil.getCommitIds(repoPath, Constants.TEST_BRANCH, noOfCommits);
+		Map<String, String> commitsData = CommitsAnalysisUtil.getCommitIds(repoPath, BRANCH, noOfCommits);
 		if(noOfCommits == 0) {
 			assertEquals(true, commitsData.isEmpty());
 		} else {
 			assertEquals(false, commitsData.isEmpty());
-			assertEquals(Constants.TEST_USER_1, commitsData.get(Constants.TEST_COMMIT_ID_1));
+			assertEquals(USER1, commitsData.get(COMMIT1));
 		}
 		assertEquals(expectedSize, commitsData.size());
 	}
 
 	@Test
 	void testGetCommitIdsOneCommitExceptionAndHotspot() throws Exception {
-		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, "abc", Constants.ONE));
-		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, " ", Constants.ONE));
-		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, null, Constants.ONE));
-		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds("", Constants.TEST_BRANCH, Constants.ONE));
-		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(null, Constants.TEST_BRANCH, Constants.ONE));
+		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, "abc", ONE));
+		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, " ", ONE));
+		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, null, ONE));
+		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds("", BRANCH, ONE));
+		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(null, BRANCH, ONE));
 	}
 
 	@Test
 	void testGenerateReportsForOneCommitAndHotspot() throws Exception {
-		commitIds.add(Constants.TEST_COMMIT_ID_1);
-		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
-		assertEquals(repoPath + Constants.REPORT_PATH + "/" + commitIds.get(0), path);
+		commitIds.add(COMMIT1);
+		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, BRANCH);
+		assertEquals(repoPath + REPORT_PATH + "/" + commitIds.get(0), path);
 		assertEquals(true, Files.exists(Paths.get(path)));
 	}
 	
 	@Test
 	void testGenerateReportsForException() {
-		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(null, repoPath, Constants.TEST_BRANCH));
-		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(new ArrayList<String>(), repoPath, Constants.TEST_BRANCH));
+		List<String> emptyList = new ArrayList<String>();
+		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(null, repoPath, BRANCH));
+		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(emptyList, repoPath, BRANCH));
 	}
 	
 	@Test
 	void testGenerateReportsForTrend() throws Exception {
-		commitIds.add(Constants.TEST_COMMIT_ID_1);
-		commitIds.add(Constants.TEST_COMMIT_ID_2);
-		commitIds.add(Constants.TEST_COMMIT_ID_3);
-		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, Constants.TEST_BRANCH);
-		assertEquals(repoPath + Constants.REPORT_PATH, path);
+		commitIds.add(COMMIT1);
+		commitIds.add(COMMIT2);
+		commitIds.add(COMMIT3);
+		String path = CommitsAnalysisUtil.generateReports(commitIds, repoPath, BRANCH);
+		assertEquals(repoPath + REPORT_PATH, path);
 		assertEquals(true, Files.exists(Paths.get(path)));
 		assertEquals(true, Files.isDirectory(Paths.get(path)));
-		assertEquals(true, Files.exists(Paths.get(path).resolve(Constants.TEST_COMMIT_ID_1)));
-		assertEquals(true, Files.exists(Paths.get(path).resolve(Constants.TEST_COMMIT_ID_2)));
-		assertEquals(true, Files.exists(Paths.get(path).resolve(Constants.TEST_COMMIT_ID_3)));
+		assertEquals(true, Files.exists(Paths.get(path).resolve(COMMIT1)));
+		assertEquals(true, Files.exists(Paths.get(path).resolve(COMMIT2)));
+		assertEquals(true, Files.exists(Paths.get(path).resolve(COMMIT3)));
 	}
 }
