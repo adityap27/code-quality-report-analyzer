@@ -20,7 +20,9 @@ import HotspotChart from '../../hotspot/HotspotChart'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 function HotspotAnalysis() {
-  const { hotspotAnalysisData, setHotspotAnalysisData } = useContext(HotspotAnalysisContext)
+  const { hotspotAnalysisData, setHotspotAnalysisData } = useContext(
+    HotspotAnalysisContext
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [repoLink, setRepoLink] = useState(localStorage.getItem('repoLink'))
   const [selectedBranch, setSelectedBranch] = useState(null)
@@ -34,8 +36,6 @@ function HotspotAnalysis() {
   const Scommit = localStorage.getItem('commitId')
   const AllCommits = JSON.parse(localStorage.getItem('allCommits') || '[]')
 
-
-  console.log(hotspotAnalysisData);
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
     if (!hotspotAnalysisData || currentRepoLink !== repoLink) {
@@ -69,7 +69,7 @@ function HotspotAnalysis() {
         .then((response) => {
           setIsLoading(false)
           if (response.status === 200) {
-            setAnalysisData(response.data)
+            setHotspotAnalysisData(response.data)
           }
         })
         .catch((error) => {
@@ -78,7 +78,7 @@ function HotspotAnalysis() {
 
       setRepoLink(currentRepoLink)
     }
-  }, [repoLink])
+  }, [])
 
   return (
     <>

@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pandas as pd
 from code_quality_analyzer_analysis.trend_analysis.analysis import (
-    analyze_commit_folders_in_folder, get_smell_commit_changes, get_total_lines_of_code, get_smell_density_full_repo
+    analyze_commit_folders_in_folder, get_smell_commit_changes, get_total_lines_of_code, get_smell_density_full_repo, calculate_smell_density
 )
 
 
@@ -336,3 +336,20 @@ class TestTrendAnalysis(unittest.TestCase):
 
         result = get_smell_density_full_repo(full_repo_mock, "test_folder")
         self.assertDictEqual(result, expected)
+
+    def test_calculate_smell_density(self):
+        total_smells = 1
+        total_lines_of_code = 1000
+        expected = 1.0
+        result = calculate_smell_density(total_smells, total_lines_of_code)
+
+        self.assertEqual(result,expected)
+
+    def test_calculate_smell_density_zero_lines(self):
+        total_smells = 0
+        total_lines_of_code = 0
+        expected = 0.0
+        result = calculate_smell_density(total_smells, total_lines_of_code)
+
+        self.assertEqual(result,expected)
+

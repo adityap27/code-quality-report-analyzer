@@ -45,20 +45,47 @@ function OneCommitDashboard() {
   const [localData, setLocalData] = useState([])
 
   useEffect(() => {
-    const localfetchedData = JSON.parse(
-      localStorage.getItem('trendAnalysisData')
-    )
-    if (localfetchedData && localfetchedData.full_repo) {
-      const keys = Object.keys(localfetchedData.full_repo)
-      const latestKey = keys[keys.length - 1]
-      const localData = localfetchedData.full_repo[latestKey]
-      if (localData) {
-        setLocalData(localData)
+    if (!analysisData) {
+      const localfetchedData = JSON.parse(
+        localStorage.getItem('trendAnalysisData')
+      )
+      if (localfetchedData && localfetchedData.full_repo) {
+        const keys = Object.keys(localfetchedData.full_repo)
+        const latestKey = keys[keys.length - 1]
+        const localData = localfetchedData.full_repo[latestKey]
+        if (localData) {
+          setLocalData(localData)
+        }
+      } else {
+        setIsLoading(true)
+        const requestData = {
+          gitRepoLink: repoLink,
+          branch: Sbranch.value,
+          commitId: Scommit.value,
+        }
+        //to make the one-commit api request
+        axios
+          .post(
+            process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis',
+            requestData,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+          .then((response) => {
+            setIsLoading(false)
+            if (response.status === 200) {
+              setAnalysisData(response.data)
+              navigate('/dashboard/oneCommit')
+            }
+          })
+          .catch((error) => {
+            setIsLoading(false)
+          })
       }
     }
-  }, [])
-
-  useEffect(() => {
     setSelectedBranch(Sbranch)
     localStorage.setItem('branch', JSON.stringify(Sbranch))
     setSelectedCommit(Scommit)
