@@ -60,6 +60,7 @@ const Main = () => {
     localStorage.setItem('repoLink', repoLink)
     localStorage.setItem('branch', JSON.stringify(selectedBranch))
     localStorage.setItem('commitId', selcommitSHA)
+    localStorage.setItem('commit' , JSON.stringify(selectedCommit))
     localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
     localStorage.setItem('allCommits', JSON.stringify(commits))
     if (selectedOption === 'one-commit') {

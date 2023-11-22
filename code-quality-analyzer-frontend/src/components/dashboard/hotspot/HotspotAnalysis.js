@@ -103,9 +103,12 @@ const handleExecuteQuery = () => {
     )
     .then((response) => {
       if (response.status === 200) {
-        hotspotAnalysisData(response.data)
+        setHotspotAnalysisData(response.data);
         console.log('Analysis Data after API call:', response.data)
       }
+    })
+    .catch((error) => {
+      console.log(error)
     })
 }
 
