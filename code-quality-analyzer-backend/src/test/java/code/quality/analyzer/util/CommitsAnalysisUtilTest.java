@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -19,10 +20,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import code.quality.analyzer.exception.InvalidCommitsException;
-import code.quality.analyzer.service.CommitsAnalysisService;
-import code.quality.analyzer.service.CommitsAnalysisServiceImpl;
 
 /**
  * Test CommitsAnalysisUtil class methods
@@ -31,13 +31,11 @@ class CommitsAnalysisUtilTest {
 
 	private static List<String> commitIds = null;
 	private static String repoPath;
-	private static CommitsAnalysisService commitsAnalysisService;
 
 	@BeforeEach
 	void setUp() {
 		commitIds = new ArrayList<String>();
-		commitsAnalysisService = new CommitsAnalysisServiceImpl();
-		repoPath = commitsAnalysisService.cloneRepository(REPO_URL);
+		repoPath = CommitsAnalysisUtil.cloneRepository(REPO_URL);
 	}
 
 	@Test
@@ -63,14 +61,18 @@ class CommitsAnalysisUtilTest {
 	}
 
 	@Test
-	void testGetCommitIdsOneCommitExceptionAndHotspot() throws Exception {
-		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, "abc", ONE));
-		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, " ", ONE));
-		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, null, ONE));
-		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds("", BRANCH, ONE));
-		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(null, BRANCH, ONE));
+	void testGetCommitIdsExceptionInvalidBranch() throws Exception {
+		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, "abc", Constants.ONE));
+		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, " ", Constants.ONE));
+		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, null, Constants.ONE));
 	}
 
+	@ParameterizedTest
+	@MethodSource("invalidRepo")
+	void testGetCommitIdsExceptionInvalidRepo(String repo) throws Exception {
+		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repo, BRANCH, ONE));
+	}
+	
 	@Test
 	void testGenerateReportsForOneCommitAndHotspot() throws Exception {
 		commitIds.add(COMMIT1);
@@ -99,4 +101,8 @@ class CommitsAnalysisUtilTest {
 		assertEquals(true, Files.exists(Paths.get(path).resolve(COMMIT2)));
 		assertEquals(true, Files.exists(Paths.get(path).resolve(COMMIT3)));
 	}
+	
+	private static Stream<String> invalidRepo() {
+        return Stream.of(EMPTY, null);
+    }
 }

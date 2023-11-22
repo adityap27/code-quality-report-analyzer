@@ -1,16 +1,17 @@
 package code.quality.analyzer.util;
 
 import java.util.LinkedHashMap;
-
 import java.util.List;
 import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.api.CreateBranchCommand;
+
 import Designite.Designite;
 import code.quality.analyzer.exception.InvalidCommitsException;
 
@@ -18,6 +19,18 @@ public class CommitsAnalysisUtil {
 	
 	private static Logger logger = LogManager.getLogger(CommitsAnalysisUtil.class);
 
+	/**
+	 * Clone git repository
+	 * @param gitRepoLink git repository link
+	 * @return cloned repository path
+	 */
+	public static String cloneRepository(String gitRepoLink) {
+		logger.info("BEGIN cloneRepository()");
+		GitRepository g = new GitRepository(gitRepoLink, Constants.REPO_PATH);
+		g.cloneRepo();
+		return g.getLocalRepoFullPath();
+	}
+	
 	/**
 	 * Fetch commit ids and user info for given repository and number of commits
 	 * @param repoPath repository path
