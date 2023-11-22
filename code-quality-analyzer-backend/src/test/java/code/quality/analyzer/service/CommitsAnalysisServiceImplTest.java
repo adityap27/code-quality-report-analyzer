@@ -78,7 +78,6 @@ class CommitsAnalysisServiceImplTest {
     
     @Test
     void testGenerateOneCommitReportForRemoteBranch() throws Exception {
-    	String repoPath = analysisService.cloneRepository(REPO_URL);
         String path = analysisService.generateOneCommitReport(repoPath, REMOTE_BRANCH, REMOTE_COMMIT);
         assertEquals(repoPath + REPORT_PATH + "/" + REMOTE_COMMIT, path);
         assertEquals(true, Files.exists(Paths.get(path)));
@@ -117,7 +116,6 @@ class CommitsAnalysisServiceImplTest {
 
     @Test
     void testGenerateTrendAnalysisReportForRemoteBranch() throws Exception {
-    	String repoPath = analysisService.cloneRepository(REPO_URL);
     	TrendAnalysisRequest request = analysisService.generateTrendAnalysisReport(repoPath, REMOTE_BRANCH, TOTAL_COMMITS_2);
     	assertNotNull(request);
     	assertEquals(TOTAL_COMMITS_2, request.getCommitsData().size());
