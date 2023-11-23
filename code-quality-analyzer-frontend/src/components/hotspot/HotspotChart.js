@@ -26,6 +26,22 @@ function HotspotChart(props) {
         },
       ]
 
+      let totalSmells = datasets.reduce((acc, dataset) => {
+        dataset.data.forEach((item, index) => {
+          let totalSmellForItem = Object.values(item.smell_distribution).reduce((a, b) => a + b, 0);
+          acc[index] = (acc[index] || 0) + totalSmellForItem;
+        });
+        return acc;
+      }, []);
+
+      datasets.push({
+        type: 'line',
+        label: 'Total Smells',
+        data: totalSmells,
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+      });
+
       // Extract smell distribution labels
       const smellDistributionLabels = Object.keys(
         selectedChartData[0][packages[0]].smell_distribution
