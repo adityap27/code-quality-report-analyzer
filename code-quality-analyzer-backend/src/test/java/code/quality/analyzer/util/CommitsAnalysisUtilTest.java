@@ -61,9 +61,17 @@ class CommitsAnalysisUtilTest {
 	}
 
 	@Test
-	void testGetCommitIdsExceptionInvalidBranch() throws Exception {
+	void testGetCommitIdsExceptionRefNotFound() throws Exception {
 		assertThrows(RefNotFoundException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, "abc", Constants.ONE));
+	}
+
+	@Test
+	void testGetCommitIdsExceptionInvalidRefNameWithSpace() throws Exception {
 		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, " ", Constants.ONE));
+	}
+
+	@Test
+	void testGetCommitIdsExceptionInvalidRefNameWithNull() throws Exception {
 		assertThrows(InvalidRefNameException.class, () -> CommitsAnalysisUtil.getCommitIds(repoPath, null, Constants.ONE));
 	}
 
@@ -82,12 +90,16 @@ class CommitsAnalysisUtilTest {
 	}
 	
 	@Test
-	void testGenerateReportsForException() {
-		List<String> emptyList = new ArrayList<String>();
+	void testGenerateReportsForExceptionWithNullList() {
 		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(null, repoPath, BRANCH));
+	}
+
+	@Test
+	void testGenerateReportsForExceptionWithEmptyList() {
+		List<String> emptyList = new ArrayList<>();
 		assertThrows(InvalidCommitsException.class, () -> CommitsAnalysisUtil.generateReports(emptyList, repoPath, BRANCH));
 	}
-	
+
 	@Test
 	void testGenerateReportsForTrend() throws Exception {
 		commitIds.add(COMMIT1);
