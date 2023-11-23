@@ -1,57 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
+import React, { useState, useEffect, useRef } from 'react'
+import { Bar } from 'react-chartjs-2'
 
 function HotspotChart(props) {
-  const [data, setData] = useState({});
-  const [selectedData, setSelectedData] = useState(props.hotspotAnalysisData.top_classes_list);
+  const [data, setData] = useState({})
+  const [selectedData, setSelectedData] = useState(
+    props.hotspotAnalysisData.top_classes_list
+  )
+  const packagesRef = useRef([])
 
   useEffect(() => {
     const prepareData = () => {
-      const selectedChartData = selectedData;
+      const selectedChartData = selectedData
 
       const packages = selectedChartData.map((item) => {
-        return Object.keys(item)[0];
-      });
+        return Object.keys(item)[0]
+      })
+      packagesRef.current = packages; // Use useRef to store the packages
+      console.log(packages)
 
       const datasets = [
         {
           label: 'Total Smells',
-          data: selectedChartData.map((item) => item[Object.keys(item)[0]].total_smells),
+          data: selectedChartData.map((item) => item[Object.keys(item)[0]]),
           backgroundColor: '#' + ((Math.random() * 0xffffff) << 0).toString(16),
         },
-      ];
+      ]
 
       // Extract smell distribution labels
-      const smellDistributionLabels = Object.keys(selectedChartData[0][packages[0]].smell_distribution);
+      const smellDistributionLabels = Object.keys(
+        selectedChartData[0][packages[0]].smell_distribution
+      )
 
       // Create a dataset for each smell distribution label
+
       smellDistributionLabels.forEach((label) => {
-        const smellDistributionData = selectedChartData.map((item) => item[Object.keys(item)[0]].smell_distribution[label]);
+        const smellDistributionData = selectedChartData.map(
+          (item) => item[Object.keys(item)[0]].smell_distribution[label]
+        )
         datasets.push({
           label: label,
           data: smellDistributionData,
           backgroundColor: '#' + ((Math.random() * 0xffffff) << 0).toString(16),
-        });
-      });
+        })
+      })
 
       setData({
-        labels: packages,
-        datasets: datasets,
-      });
-    };
+        labels: packages.map((label) => {
+          // Truncate the labels for display
+          const parts = label.split('||')
+          return parts[parts.length - 1] // Display the last part
+        }),
 
-    prepareData();
-  }, [selectedData]);
+        datasets: datasets,
+      })
+    }
+
+    prepareData()
+  }, [selectedData])
 
   return (
     <div>
       <div className="test">
         <div className="common-heading">
-          <h2>Smell Details</h2>
+          <h2>
+            {selectedData === props.hotspotAnalysisData.top_classes_list
+              ? 'Classes'
+              : 'Methods'}{' '}
+            Smell Details
+          </h2>
         </div>
         {/* Dropdown to select the user */}
         <div className="user-dropdown">
-          <select onChange={(event) => setSelectedData(props.hotspotAnalysisData[event.target.value])}>
+          <select
+            onChange={(event) =>
+              setSelectedData(props.hotspotAnalysisData[event.target.value])
+            }
+          >
             {props.hotspotAnalysisData &&
               Object.keys(props.hotspotAnalysisData).map((item, index) => (
                 <option key={index} value={item}>
@@ -61,19 +85,37 @@ function HotspotChart(props) {
           </select>
         </div>
       </div>
-      <div style={{ width: '1200px', marginLeft: '20px'}}>
+
+      <div style={{ width: '1200px', marginLeft: '20px', height: '100%' }}>
         {data.labels && data.labels.length > 0 && (
           <Bar
             data={data}
             options={{
               scales: {
-                x: { stacked: true, title: { display: true, text: 'Package' } },
-                y: { stacked: true, title: { display: true, text: 'Number of Smells' } },
+                x: {
+                  stacked: true,
+                  title: {
+                    display: true,
+                    text:
+                      selectedData ===
+                      props.hotspotAnalysisData.top_classes_list
+                        ? 'Classes'
+                        : 'Methods',
+                        font: {
+                          size: 20,
+                        },
+                  },
+                },
+                y: {
+                  stacked: true,
+                  title: { display: true, text: 'Number of Smells',               font: {
+                    size: 20,
+                  }, },
+                },
               },
               plugins: {
                 title: {
                   display: true,
-                  text: 'Hotspot Analysis',
                   font: {
                     size: 20,
                   },
@@ -85,11 +127,14 @@ function HotspotChart(props) {
               tooltips: {
                 callbacks: {
                   label: (tooltipItem, data) => {
+                    const datasetLabel =
+                      data.datasets[tooltipItem.datasetIndex].label;
+                    const fullPackageName =
+                      packagesRef.current[tooltipItem.index]; // Use the packages from useRef
                     if (tooltipItem.datasetIndex === 0) {
-                      return `Total Smells: ${tooltipItem.yLabel}`;
+                      return `Total Smells: ${tooltipItem.yLabel} - ${fullPackageName}`;
                     } else {
-                      const datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
-                      return `${datasetLabel}: ${tooltipItem.yLabel}`;
+                      return `${datasetLabel}: ${tooltipItem.yLabel} - ${fullPackageName}`;
                     }
                   },
                 },
@@ -101,7 +146,7 @@ function HotspotChart(props) {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default HotspotChart;
+export default HotspotChart

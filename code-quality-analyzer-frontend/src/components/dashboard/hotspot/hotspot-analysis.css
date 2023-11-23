@@ -1,4 +1,6 @@
-
+.hotspot {
+  padding: 20px;
+}
 .dropdown-dropdowns {
     display: flex;
     justify-content: flex-start;

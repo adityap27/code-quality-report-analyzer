@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
+import './hotspot-analysis.css'
 import 'chart.js/auto'
-import { Bar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -115,6 +115,7 @@ const handleExecuteQuery = () => {
 
   return (
     <>
+    <div className=''>
       <div className="hotspot">
         <div className="oneCommit-heading">
           <h1>Hotspot Analysis</h1> 
@@ -144,6 +145,7 @@ const handleExecuteQuery = () => {
             <h1>Loading...</h1>
           </div>
         )}
+      </div>
       </div>
     </>
   )
