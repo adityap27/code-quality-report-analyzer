@@ -8,12 +8,17 @@ import Testability from '../../trendAnalysis/Testability'
 import CommonChart from '../../trendAnalysis/CommonChart'
 import { TrendAnalysisContext } from '../../../TrendAnalysisContext'
 import axios from 'axios'
+import api from '../../../utils/api'
+import Select from 'react-select'
 
 const TrendAnalysis = (props) => {
   const { trendAnalysisData, setTrendAnalysisData } =
     useContext(TrendAnalysisContext)
   const [isLoading, setIsLoading] = useState(false)
   const [repoLink, setRepoLink] = useState(localStorage.getItem('repoLink'))
+  const [branch, setBranch] = useState()
+  const { fetchBranches}= api()
+  const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
 
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
@@ -58,7 +63,15 @@ const TrendAnalysis = (props) => {
 
       setRepoLink(currentRepoLink)
     }
+    setSelectedBranch(Sbranch)
+    localStorage.setItem('branch', JSON.stringify(Sbranch))
+    fetchB()
   }, [trendAnalysisData, setTrendAnalysisData, repoLink])
+  const fetchB = async () => {
+    var B = await fetchBranches(repoLink)
+    setBranch(B)
+  };
+  
 
   const commits = trendAnalysisData?.commit_changes
     ? Object.keys(trendAnalysisData.commit_changes)
@@ -91,14 +104,16 @@ const TrendAnalysis = (props) => {
             <div className="branch commits-dropdown dropdown-container">
               <div className="branch-container">
                 <h4>Branches:</h4>
-                <select name="" id="" onChange={handleBranchChange}>
-                  <option value="default">Select Branch</option>
-                  {props?.branches?.map((branch) => (
-                    <option key={branch.id} value={branch.name}>
-                      {branch.name}
-                    </option>
-                  ))}
-                </select>
+                <Select
+              value={selectedBranch}
+              onChange={(option) => {
+                setSelectedBranch(option)
+      
+              }}
+              options={branch}
+              isSearchable={true}
+              placeholder=" Branch..."
+            />
               </div>
               <div className="commits-container">
                 <h4>Number of Commits:</h4>

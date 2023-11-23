@@ -24,7 +24,6 @@ import ImplementationEntity from '../../oneCommit/entities/ImplementationEntity'
 import api from '../../../utils/api'
 import { useEffect, useState } from 'react'
 import Select from 'react-select'
-import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -37,8 +36,6 @@ function OneCommitDashboard() {
   const [commits, setCommits] = useState()
   const { fetchBranches, fetchCommits } = api()
   const [selectedCommit, setSelectedCommit] = useState(null)
-  const location = useLocation()
-  const { state } = location
   const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
   const Scommit = localStorage.getItem('commitId')
   const AllCommits = JSON.parse(localStorage.getItem('allCommits') || '[]')
@@ -56,6 +53,7 @@ function OneCommitDashboard() {
         if (localData) {
           setLocalData(localData)
         }
+
       } else {
         setIsLoading(true)
         const requestData = {
@@ -89,7 +87,7 @@ function OneCommitDashboard() {
     setSelectedBranch(Sbranch)
     localStorage.setItem('branch', JSON.stringify(Sbranch))
     setSelectedCommit(Scommit)
-    localStorage.setItem('commitId', Scommit)
+    localStorage.setItem('commitId', JSON.stringify(Scommit))
     setCommits(AllCommits)
     localStorage.setItem('allCommits', JSON.stringify(AllCommits))
     fetchB()
