@@ -1,12 +1,21 @@
+"""
+This module contains test functions for views present in views.py
+"""
+from unittest.mock import patch
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from unittest.mock import patch
 
+# Disabling C0116 because there is no need for docstrings in the test function
+# pylint: disable=C0116
 
 class SmellAnalysisViewTests(APITestCase):
+    """
+    This class contains test functions for one commit analysis view
+    """
     def setUp(self) -> None:
         self.url = reverse("smell_analysis")
+        self.path = "some/valid/path"
 
     @patch("code_quality_analyzer_analysis.views.analyze_smell_files_in_folder")
     def test_post_with_no_path(self, mock_analyze):
@@ -17,13 +26,16 @@ class SmellAnalysisViewTests(APITestCase):
     @patch("code_quality_analyzer_analysis.views.analyze_smell_files_in_folder")
     def test_post_with_valid_path(self, mock_analyze):
         mock_analyze.return_value = {"result": "some_result"}
-        data = {"reportPath": "some/valid/path"}
+        data = {"reportPath": self.path}
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock_analyze.assert_called_once_with("some/valid/path")
+        mock_analyze.assert_called_once_with(self.path)
 
 
 class TrendAnalysisViewTests(APITestCase):
+    """
+    This class contains test functions for trend analysis view
+    """
     def setUp(self) -> None:
         self.url = reverse("trend_analysis")
         self.path = "some/path"
@@ -53,7 +65,9 @@ class TrendAnalysisViewTests(APITestCase):
         }
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock_analyze.assert_called_once_with(self.path, ["commit1", "commit2"], "", ["user1", "user2"], "")
+        mock_analyze.assert_called_once_with(
+            self.path, ["commit1", "commit2"], "", ["user1", "user2"], ""
+        )
 
     @patch("code_quality_analyzer_analysis.views.analyze_commit_folders_in_folder")
     def test_post_with_complete_data(self, mock_analyze):
@@ -70,12 +84,18 @@ class TrendAnalysisViewTests(APITestCase):
         }
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock_analyze.assert_called_once_with(self.path, ["commit1", "commit2"], "commit0", ["user1", "user2"], "user0")
+        mock_analyze.assert_called_once_with(
+            self.path, ["commit1", "commit2"], "commit0", ["user1", "user2"], "user0"
+        )
 
 
 class HotspotAnalysisViewTests(APITestCase):
+    """
+    This class contains test functions for hotspot analysis
+    """
     def setUp(self) -> None:
         self.url = reverse("hotspot_analysis")
+        self.path = "some/valid/path"
 
     @patch("code_quality_analyzer_analysis.views.get_hotspot_analysis")
     def test_post_with_no_path(self, mock_analyze):
@@ -86,7 +106,7 @@ class HotspotAnalysisViewTests(APITestCase):
     @patch("code_quality_analyzer_analysis.views.get_hotspot_analysis")
     def test_post_with_valid_path(self, mock_analyze):
         mock_analyze.return_value = {"result": "some_result"}
-        data = {"reportPath": "some/valid/path"}
+        data = {"reportPath": self.path}
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock_analyze.assert_called_once_with("some/valid/path")
+        mock_analyze.assert_called_once_with(self.path)

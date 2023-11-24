@@ -10,6 +10,7 @@ import { TrendAnalysisContext } from '../../../TrendAnalysisContext'
 import axios from 'axios'
 import api from '../../../utils/api'
 import Select from 'react-select'
+import Loader from '../../loader/Loader'
 
 const TrendAnalysis = (props) => {
   const { trendAnalysisData, setTrendAnalysisData } =
@@ -19,6 +20,7 @@ const TrendAnalysis = (props) => {
   const [branch, setBranch] = useState()
   const { fetchBranches}= api()
   const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
@@ -78,7 +80,7 @@ const TrendAnalysis = (props) => {
     : []
 
   const [selectedBranch, setSelectedBranch] = useState('')
-  const [numberOfCommits, setNumberOfCommits] = useState(20)
+  const [numberOfCommits, setNumberOfCommits] = useState(10)
   const [selectedUser, setSelectedUser] = useState('')
 
   const handleBranchChange = (event) => {
@@ -93,8 +95,48 @@ const TrendAnalysis = (props) => {
     setNumberOfCommits(parseInt(event.target.value))
   }
 
+  const handleExecuteQuery = () => {
+    setIsLoading(true)
+    const requestData = {
+      gitRepoLink: repoLink,
+      branch: selectedBranch.value,
+      noOfCommits: numberOfCommits,
+    }
+    console.log(requestData);
+    axios
+    .post(
+      process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis',
+      requestData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response.data);
+      if (response.status === 200) {
+        setIsLoading(false)
+        setTrendAnalysisData(response.data)
+        navigate('/dashboard/trend')
+      }
+
+    })
+    .catch((error) => {
+      setIsLoading(false)
+      setErrorMessage('Failed to load analysis. Try again later.')
+  
+    })
+} 
   return (
     <>
+    {isLoading && (
+        <div className="loading-overlay">
+           <div className="loading-spinner"></div>
+            <div className="loading-content"><p>Updating Analysis</p>
+          </div>
+    </div>
+      )}
       {!isLoading ? (
         trendAnalysisData && (
           <div className="trend-analysis-container">
@@ -114,7 +156,14 @@ const TrendAnalysis = (props) => {
               isSearchable={true}
               placeholder=" Branch..."
             />
-              </div>
+
+             
+              <button
+          className={`trend_button ${isLoading ? 'loading' : ''}`}
+          onClick={handleExecuteQuery}
+          disabled={isLoading}>Update Analysis</button>
+             
+      </div>
               <div className="commits-container">
                 <h4>Number of Commits:</h4>
                 <select name="" id="" onChange={handleCommitsChange}>
@@ -161,7 +210,7 @@ const TrendAnalysis = (props) => {
         )
       ) : (
         <div className="loading">
-          <h2>Loading...</h2>
+          <h2></h2>
         </div>
       )}
     </>

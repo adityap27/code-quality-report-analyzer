@@ -23,6 +23,7 @@ import TestabilityEntity from '../../oneCommit/entities/TestabilityEntity'
 import ImplementationEntity from '../../oneCommit/entities/ImplementationEntity'
 import api from '../../../utils/api'
 import { useEffect, useState } from 'react'
+import Loader from '../../loader/Loader'
 import Select from 'react-select'
 import axios from 'axios'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
@@ -110,12 +111,14 @@ function OneCommitDashboard() {
   }
 
   const handleExecuteQuery = () => {
+    setIsLoading(true)
     const selcommitSHA = selectedCommit.value
     const requestData = {
       gitRepoLink: repoLink,
       branch: selectedBranch.value,
       commitId: selcommitSHA,
     }
+    console.log(requestData)
     axios
       .post(
         process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis',
@@ -127,7 +130,9 @@ function OneCommitDashboard() {
         }
       )
       .then((response) => {
+        console.log(response.data)
         if (response.status === 200) {
+          setIsLoading(false)
           setAnalysisData(response.data)
         }
       })
@@ -135,6 +140,13 @@ function OneCommitDashboard() {
 
   return (
     <>
+     {isLoading && (
+        <div className="loading-overlay">
+           <div className="loading-spinner"></div>
+            <div className="loading-content"><p>Updating Analysis</p>
+          </div>
+    </div>
+      )}
       <div className="oneCommit">
         <div className="oneCommit-heading">
           <h1>OneCommit Analysis</h1>
@@ -160,7 +172,6 @@ function OneCommitDashboard() {
               onChange={(option) => {
                 setSelectedCommit(option)
                 localStorage.setItem('commitId', option)
-                handleExecuteQuery()
               }}
               options={commits}
               isSearchable={true}
@@ -169,10 +180,16 @@ function OneCommitDashboard() {
               placeholder="Commit..."
             />
           </div>
-        </div>
+          
+       
+          <button
+          className={`update_button ${isLoading ? 'loading' : ''}`}
+          onClick={handleExecuteQuery}
+          disabled={isLoading}>Update Analysis</button>
+          </div>
+        
 
-        {!isLoading ? (
-          analysisData ? (
+
             <div className="charts">
               <div className="architechture common-chart">
                 <ArchitectureSmell architectureSmellData={analysisData} />
@@ -195,8 +212,8 @@ function OneCommitDashboard() {
                 <ImplementationEntity implementationEntityData={analysisData} />
               </div>
             </div>
-          ) : (
-            localData && (
+     
+  
               <div className="charts">
                 <div className="architechture common-chart">
                   <ArchitectureSmell architectureSmellData={localData} />
@@ -219,13 +236,11 @@ function OneCommitDashboard() {
                   <ImplementationEntity implementationEntityData={localData} />
                 </div>
               </div>
-            )
-          )
-        ) : (
+     
           <div className="loading">
             <h1>Loading...</h1>
           </div>
-        )}
+   
       </div>
     </>
   )

@@ -14,6 +14,7 @@ import api from '../../../utils/api'
 import { useEffect, useState } from 'react'
 import Select from 'react-select'
 import axios from 'axios'
+import Loader from '../../loader/Loader'
 import { HotspotAnalysisContext } from '../../../HotspotAnalysisContext'
 import HotspotChart from '../../hotspot/HotspotChart'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
@@ -32,7 +33,6 @@ function HotspotAnalysis() {
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
     if (!hotspotAnalysisData || currentRepoLink !== repoLink) {
-      setIsLoading(true)
 
       const currentBranchString = localStorage.getItem('branch')
       const currentBranchObject = currentBranchString
@@ -66,7 +66,7 @@ function HotspotAnalysis() {
           }
         })
         .catch((error) => {
-          setIsLoading(false)
+
         })
 
       setRepoLink(currentRepoLink)
@@ -75,17 +75,21 @@ function HotspotAnalysis() {
     setSelectedBranch(Sbranch)
     localStorage.setItem('branch', JSON.stringify(Sbranch))
     fetchB()
+
   }, [])
 
   const fetchB = async () => {
     var B = await fetchBranches(repoLink)
     setBranch(B)
-  }
+  };
+
 
   const handleExecuteQuery = () => {
+    setIsLoading(true)
     const requestData = {
       gitRepoLink: repoLink,
       branch: selectedBranch.value,
+
     }
     axios
       .post(
@@ -99,14 +103,16 @@ function HotspotAnalysis() {
       )
       .then((response) => {
         if (response.status === 200) {
-          setHotspotAnalysisData(response.data)
+          setIsLoading(false)
+          setHotspotAnalysisData(response.data);
+          console.log('Analysis Data after API call:', response.data)
         }
       })
       .catch((error) => {
         console.log(error)
+        setIsLoading(false)
       })
   }
-
   return (
     <>
       <div>

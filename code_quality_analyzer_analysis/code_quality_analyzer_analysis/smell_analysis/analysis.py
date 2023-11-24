@@ -1,11 +1,19 @@
+"""
+This module contains functions for various one commit analysis
+"""
 import os
 from typing import Union
 
 import pandas as pd
 from pandas import DataFrame
+# Disabling R0801 because it is showing duplication in variable with the test file
+# which is intended.
+# pylint: disable=R0801
 
 
-def load_and_prepare_data(file_path: str, columns: list, delimiter: str = "||") -> Union[str, DataFrame]:
+def load_and_prepare_data(
+        file_path: str, columns: list, delimiter: str = "||"
+) -> Union[str, DataFrame]:
     """
     Loads the CSV file, adds concatenated column for entities to the dataframe
     :param file_path: Path to the CSV file
@@ -16,22 +24,27 @@ def load_and_prepare_data(file_path: str, columns: list, delimiter: str = "||") 
     # Load the CSV file while skipping problematic lines
     try:
         df = pd.read_csv(file_path, on_bad_lines='skip')
-    except Exception as e:
+    except FileNotFoundError as e:
         return str(e)
 
     # Create a new concatenated column
-    df['Concatenated_Column'] = df[columns].apply(lambda row: delimiter.join(row.values.astype(str)), axis=1)
+    df['Concatenated_Column'] = df[columns].apply(
+        lambda row: delimiter.join(row.values.astype(str)), axis=1
+    )
 
     return df
 
 
-def analyze_smells(df: pd.DataFrame, smell_column: str, concat_column: str = 'Concatenated_Column') -> dict:
+def analyze_smells(
+        df: pd.DataFrame, smell_column: str, concat_column: str = 'Concatenated_Column'
+) -> dict:
     """
     Calculates the smell distribution as well as top entities with most smells.
     :param df: The dataframe with smells and concatenated column
     :param smell_column: Smell column name in the dataframe
     :param concat_column: Concatenated column name in the dataframe
-    :return: Dictionary containing smell_distribution, top entities with respect to smells and total smells
+    :return: Dictionary containing smell_distribution, top entities with respect
+    to smells and total smells
     """
     # Determine the distribution of smells
     smell_distribution = df[smell_column].value_counts().to_dict()
@@ -46,8 +59,10 @@ def analyze_smells(df: pd.DataFrame, smell_column: str, concat_column: str = 'Co
     }
 
 
-def analyze_smell_files(architecture_path: str, design_path: str, implementation_path: str, testability_path: str,
-                         test_path: str) -> dict:
+def analyze_smell_files(
+        architecture_path: str, design_path: str, implementation_path: str,
+        testability_path: str, test_path: str
+) -> dict:
     """
     Analyzes all the files provided by the paths
     :param architecture_path: Path to the Architecture Smell CSV file
@@ -57,6 +72,9 @@ def analyze_smell_files(architecture_path: str, design_path: str, implementation
     :param test_path: Path to the Architecture Test CSV file
     :return: Dictionary containing analysis of all the files
     """
+    # Disabling R0914 because there can be more than 15 variables for this function
+    # due to its complexity
+    # pylint: disable=R0914
     architecture_smell = "Architecture Smell"
     design_smell = "Design Smell"
     implementation_smell = "Implementation Smell"
@@ -89,16 +107,22 @@ def analyze_smell_files(architecture_path: str, design_path: str, implementation
         implementation_df = load_and_prepare_data(
             implementation_path, [project_name, package_name, type_name, method_name]
         )
-        analysis_dict[implementation_smell] = analyze_smells(implementation_df, implementation_smell)
+        analysis_dict[implementation_smell] = analyze_smells(
+            implementation_df, implementation_smell
+        )
 
     # Analyze Testability Smell
     if testability_path:
-        testability_df = load_and_prepare_data(testability_path, [project_name, package_name, type_name])
+        testability_df = load_and_prepare_data(
+            testability_path, [project_name, package_name, type_name]
+        )
         analysis_dict[testability_smell] = analyze_smells(testability_df, testability_smell)
 
     # Analyze Test Smell
     if test_path:
-        test_df = load_and_prepare_data(test_path, [project_name, package_name, type_name, method_name])
+        test_df = load_and_prepare_data(
+            test_path, [project_name, package_name, type_name, method_name]
+        )
         analysis_dict[test_smell] = analyze_smells(test_df, test_smell)
 
     # Total of all smells counts
@@ -133,7 +157,7 @@ def retrieve_smell_files(folder_path: str) -> dict:
                 files.append(file)
     except FileNotFoundError:
         return smell_files
-    
+
     # Check for each type of smell individually and save the path for it
     for file in files:
         if file == "ArchitectureSmells.csv":

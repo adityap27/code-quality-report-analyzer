@@ -1,19 +1,20 @@
 import React from 'react';
-import { useContext, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import Select from 'react-select'
-import * as PIXI from 'pixi.js'
-import { KawaseBlurFilter } from '@pixi/filter-kawase-blur'
-import { createNoise2D } from 'simplex-noise'
-import hsl from 'hsl-to-hex'
-import debounce from 'debounce'
-import banner from '../../assets/images/banner.gif'
-import './main.css'
-import Navbar from '../navbar/Navbar'
-import { OneCommitAnalysisContext } from '../../OneCommitAnalysisContext'
-import { TrendAnalysisContext } from '../../TrendAnalysisContext'
-import { HotspotAnalysisContext } from '../../HotspotAnalysisContext'
+import { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Select from 'react-select';
+import * as PIXI from 'pixi.js';
+import { KawaseBlurFilter } from '@pixi/filter-kawase-blur';
+import { createNoise2D } from 'simplex-noise';
+import hsl from 'hsl-to-hex';
+import debounce from 'debounce';
+import banner from '../../assets/images/banner.gif';
+import './main.css';
+import Navbar from '../navbar/Navbar';
+import { OneCommitAnalysisContext } from '../../OneCommitAnalysisContext';
+import { TrendAnalysisContext } from '../../TrendAnalysisContext';
+import { HotspotAnalysisContext } from '../../HotspotAnalysisContext';
+import Loader from '../loader/Loader';
 
 const Main = () => {
   const { setAnalysisData } = useContext(OneCommitAnalysisContext)
@@ -49,6 +50,16 @@ const Main = () => {
     }
   }
 
+  let loadingText = '';
+  // Set dynamic loading text based on the selected option
+  if (selectedOption === 'one-commit') {
+    loadingText = 'Loading One-Commit Analysis...';
+  } else if (selectedOption === 'trend-analysis') {
+    loadingText = 'Loading Trend Analysis...';
+  } else if (selectedOption === 'hotspot-analysis') {
+    loadingText = 'Loading Hotspot Analysis...';
+  }
+
   useEffect(() => {
     if (selectedBranch) {
       fetchCommits(selectedBranch)
@@ -82,11 +93,12 @@ const Main = () => {
           }
         )
         .then((response) => {
-          setIsLoading(false)
           if (response.status === 200) {
+            setIsLoading(false)
             setAnalysisData(response.data)
             navigate('/dashboard/oneCommit')
           }
+        
         })
         .catch((error) => {
           setIsLoading(false)
@@ -112,17 +124,22 @@ const Main = () => {
           }
         )
         .then((response) => {
-          setIsLoading(false)
+
           if (response.status === 200) {
+            setIsLoading(false)
             setTrendAnalysisData(response.data)
             navigate('/dashboard/trend')
           }
+    
         })
         .catch((error) => {
           setIsLoading(false)
           setErrorMessage('Failed to load analysis. Try again later.')
+      
         })
-    } else if (selectedOption === 'hotspot-analysis') {
+    } 
+    
+    else if (selectedOption === 'hotspot-analysis') {
       setIsLoading(true)
       const requestData = {
         gitRepoLink: repoLink,
@@ -142,11 +159,13 @@ const Main = () => {
           }
         )
         .then((response) => {
-          setIsLoading(false)
+          
           if (response.status === 200) {
+            setIsLoading(false)
             setHotspotAnalysisData(response.data)
             navigate('/dashboard/hotspot')
           }
+  
         })
         .catch((error) => {
           setIsLoading(false)
@@ -439,17 +458,17 @@ const Main = () => {
 
   return (
     <>
+    {isLoading && (
+        <div className="loading-overlay">
+           <div className="loading-spinner"></div>
+            <div className="loading-content"><p>{loadingText}</p>
+          </div>
+    </div>
+      )}
       <Navbar />
       <div className="main-con">
-      {isLoading ? (
-          <div className="loader">
-            Please Wait While We Load Analysis For You.....
-          </div>
-
-        ) : (
-          
+       ()
           <>
-          
           <canvas className="orb-canvas"></canvas>
             <div className="main-container">
               <div className="main-container__inner">
@@ -466,9 +485,7 @@ const Main = () => {
                     onChange={handleRepoUrlChange}
                   />
                 </div>
-                {errorMessage && (
-                  <p className="error-message">{errorMessage}</p>
-                )}
+               
                 <button
                   className="main-container__button main-container_button--transparent"
                   onClick={fetchBranches}
@@ -559,24 +576,20 @@ const Main = () => {
                         </div>
 
                         <div className="execute-button-container">
-                          <button
-                            className="main-container__button"
-                            onClick={executeAnalysis}
-                          >
-                            Execute
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="execute-button-container">
-                          <button
-                            className="main-container__button"
-                            onClick={executeAnalysis}
-                          >
-                            Execute
-                          </button>
-                        </div>
+        <button
+          className={`main-container__button ${isLoading ? 'loading' : ''}`}
+          onClick={executeAnalysis}
+          disabled={isLoading}>Execute</button>
+      </div>
+        </>
+     ) : (
+     <>
+        <div className="execute-button-container">
+        <button
+          className={`main-container__button ${isLoading ? 'loading' : ''}`}
+          onClick={executeAnalysis}
+          disabled={isLoading} >Execute </button>
+      </div>
                       </>
                     )}
                   </>
@@ -596,14 +609,10 @@ const Main = () => {
                   style={{ width: '100%', height: '400px' }}
                 />
               </div>
-            </div>
-             
+            </div>          
           </>
-        )}
-        
-      </div>
-     
-    </>
+           </div>
+       </>
   )
 }
 export default Main; 
