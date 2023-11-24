@@ -17,19 +17,18 @@ function TestEntity({testEntityData}) {
     labels: [],
     datasets: [
       {
-        label: 'Data from JSON',
+        label: 'Loading Data',
         data: [],
       },
     ],
   })
 
   function getRandomColor() {
-    const letters = '0123456789ABCDEF'
-    let color = '#'
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)]
-    }
-    return color
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const opacity = 0.5; // Set any value between 0 and 1
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   }
 
   useEffect(() => {
@@ -61,12 +60,20 @@ function TestEntity({testEntityData}) {
   const doughnutOptions = {
     scales: {
       x: {
-        ticks: {
-          callback: function (v) {
-            if (v.length > 10) {
-              return v.toString().substring(0, 1) + '...'
-            }
-            return v
+        title: {
+          display: true,
+          text: 'Package',
+          font: {
+            size: 16,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Number of Entities',
+          font: {
+            size: 16,
           },
         },
       },

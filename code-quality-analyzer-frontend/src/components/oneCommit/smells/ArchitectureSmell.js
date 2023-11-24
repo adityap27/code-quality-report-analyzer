@@ -17,11 +17,19 @@ function ArchitectureSmell({ architectureSmellData }) {
     labels: [],
     datasets: [
       {
-        label: 'Data from JSON',
+        label: 'Loading Data',
         data: [],
       },
     ],
   })
+
+  function getRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const opacity = 0.5; // Set any value between 0 and 1
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
 
   useEffect(() => {
     if(architectureSmellData && architectureSmellData['Architecture Smell']) {
@@ -31,21 +39,15 @@ function ArchitectureSmell({ architectureSmellData }) {
       const values = Object.values(
         architectureSmellData['Architecture Smell']?.['smell_distribution']
       )
-  
+        
+      const backgroundColor = labels.map(() => getRandomColor());
       setChartData({
         labels,
         datasets: [
           {
             label: 'Smells',
             data: values,
-            backgroundColor: [
-              'rgb(255, 0, 0)',
-              'rgb(0, 0, 255)',
-              'rgb(50, 205, 50)',
-              'rgb(255, 255, 0)',
-              'rgb(0, 128, 128)',
-              'rgb(128, 0, 128)',
-            ],
+            backgroundColor: backgroundColor,
           },
         ],
       })
