@@ -1,14 +1,24 @@
+"""
+This module contains test functions for functions present in trend_analysis/analysis.py
+"""
 import copy
 import unittest
 from unittest.mock import patch
 
 import pandas as pd
 from code_quality_analyzer_analysis.trend_analysis.analysis import (
-    analyze_commit_folders_in_folder, get_smell_commit_changes, get_total_lines_of_code, get_smell_density_full_repo, calculate_smell_density
+    analyze_commit_folders_in_folder, get_smell_commit_changes,
+    get_total_lines_of_code, get_smell_density_full_repo, calculate_smell_density
 )
+
+# Disabling C0116 because there is no need for docstrings in the test function
+# pylint: disable=C0116
 
 
 class TestTrendAnalysis(unittest.TestCase):
+    """
+    This class contains test functions for functions present in trend_analysis/analysis.py
+    """
     architecture_smell = "Architecture Smell"
     design_smell = "Design Smell"
     implementation_smell = "Implementation Smell"
@@ -232,7 +242,10 @@ class TestTrendAnalysis(unittest.TestCase):
 
     pandas_dataframe_mock = pd.DataFrame({
         "Project Name": ["maven", "maven-core", "maven-compact"],
-        "Package Name": ["org.apache.maven.api", "org.apache.maven.artifact", "org.apache.maven.toolchain.building"],
+        "Package Name": [
+            "org.apache.maven.api", "org.apache.maven.artifact",
+            "org.apache.maven.toolchain.building"
+        ],
         "LOC": [20, 40, 10]
     })
 
@@ -253,7 +266,10 @@ class TestTrendAnalysis(unittest.TestCase):
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.get_smell_density_full_repo",
            return_value={**full_repo_mock, **copy.deepcopy(full_repo_smell_density_mock)})
     @patch("code_quality_analyzer_analysis.trend_analysis.analysis.get_smell_commit_changes",
-           return_value={**full_repo_mock, **copy.deepcopy(full_repo_smell_density_mock), **commit_changes_mock})
+           return_value={
+               **full_repo_mock, **copy.deepcopy(full_repo_smell_density_mock),
+               **commit_changes_mock
+           })
     def test_analyze_commit_folders_in_folder(self, _, __, ___):
         result = analyze_commit_folders_in_folder(
             "/sample_folder/", ["c1", "c2", "c3"], "c0",
@@ -319,7 +335,8 @@ class TestTrendAnalysis(unittest.TestCase):
 
         self.assertEqual(total_lines_of_code, expected_lines_of_code)
 
-    @patch("code_quality_analyzer_analysis.trend_analysis.analysis.get_total_lines_of_code", return_value=10000)
+    @patch("code_quality_analyzer_analysis.trend_analysis.analysis.get_total_lines_of_code",
+           return_value=10000)
     def test_get_smell_density_full_repo(self, _):
         full_repo_mock = {
             "full_repo": {
@@ -352,4 +369,3 @@ class TestTrendAnalysis(unittest.TestCase):
         result = calculate_smell_density(total_smells, total_lines_of_code)
 
         self.assertEqual(result,expected)
-
