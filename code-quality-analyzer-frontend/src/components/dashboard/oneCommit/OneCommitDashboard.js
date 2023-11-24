@@ -54,7 +54,6 @@ function OneCommitDashboard() {
         if (localData) {
           setLocalData(localData)
         }
-
       } else {
         setIsLoading(true)
         const requestData = {
@@ -140,12 +139,13 @@ function OneCommitDashboard() {
 
   return (
     <>
-     {isLoading && (
+      {isLoading && (
         <div className="loading-overlay">
-           <div className="loading-spinner"></div>
-            <div className="loading-content"><p>Updating Analysis</p>
+          <div className="loading-spinner"></div>
+          <div className="loading-content">
+            <p>Updating Analysis</p>
           </div>
-    </div>
+        </div>
       )}
       <div className="oneCommit">
         <div className="oneCommit-heading">
@@ -180,67 +180,38 @@ function OneCommitDashboard() {
               placeholder="Commit..."
             />
           </div>
-          
-       
+
           <button
-          className={`update_button ${isLoading ? 'loading' : ''}`}
-          onClick={handleExecuteQuery}
-          disabled={isLoading}>Update Analysis</button>
-          </div>
-        
+            className={`update_button ${isLoading ? 'loading' : ''}`}
+            onClick={handleExecuteQuery}
+            disabled={isLoading}
+          >
+            Update Analysis
+          </button>
+        </div>
 
-
-            <div className="charts">
-              <div className="architechture common-chart">
-                <ArchitectureSmell architectureSmellData={analysisData} />
-                <ArchitechtureEntity architectureEntityData={analysisData} />
-              </div>
-              <div className="design common-chart">
-                <DesignSmell designSmellData={analysisData} />
-                <DesignEntity designEntityData={analysisData} />
-              </div>
-              <div className="test common-chart">
-                <TestSmell testsmSmellData={analysisData} />
-                <TestEntity testEntityData={analysisData} />
-              </div>
-              <div className="testability common-chart">
-                <TestabilitySmell testabilitySmellData={analysisData} />
-                <TestabilityEntity testabilityEntityData={analysisData} />
-              </div>
-              <div className="implementation common-chart">
-                <ImplementationSmell implementationSmellData={analysisData} />
-                <ImplementationEntity implementationEntityData={analysisData} />
-              </div>
-            </div>
-     
-  
-              <div className="charts">
-                <div className="architechture common-chart">
-                  <ArchitectureSmell architectureSmellData={localData} />
-                  <ArchitechtureEntity architectureEntityData={localData} />
-                </div>
-                <div className="design common-chart">
-                  <DesignSmell designSmellData={localData} />
-                  <DesignEntity designEntityData={localData} />
-                </div>
-                <div className="test common-chart">
-                  <TestSmell testsmSmellData={localData} />
-                  <TestEntity testEntityData={localData} />
-                </div>
-                <div className="testability common-chart">
-                  <TestabilitySmell testabilitySmellData={localData} />
-                  <TestabilityEntity testabilityEntityData={localData} />
-                </div>
-                <div className="implementation common-chart">
-                  <ImplementationSmell implementationSmellData={localData} />
-                  <ImplementationEntity implementationEntityData={localData} />
-                </div>
-              </div>
-     
-          <div className="loading">
-            <h1>Loading...</h1>
+        <div className="charts">
+          <div className="architechture common-chart">
+            <ArchitectureSmell architectureSmellData={analysisData} />
+            <ArchitechtureEntity architectureEntityData={analysisData} />
           </div>
-   
+          <div className="design common-chart">
+            <DesignSmell designSmellData={analysisData} />
+            <DesignEntity designEntityData={analysisData} />
+          </div>
+          <div className="test common-chart">
+            <TestSmell testsmSmellData={analysisData} />
+            <TestEntity testEntityData={analysisData} />
+          </div>
+          <div className="testability common-chart">
+            <TestabilitySmell testabilitySmellData={analysisData} />
+            <TestabilityEntity testabilityEntityData={analysisData} />
+          </div>
+          <div className="implementation common-chart">
+            <ImplementationSmell implementationSmellData={analysisData} />
+            <ImplementationEntity implementationEntityData={analysisData} />
+          </div>
+        </div>
       </div>
     </>
   )
