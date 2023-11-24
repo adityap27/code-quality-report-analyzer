@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
+import './hotspot-analysis.css'
 import 'chart.js/auto'
-import { Bar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,7 +29,6 @@ function HotspotAnalysis() {
   const [branch, setBranch] = useState()
   const { fetchBranches } = api()
   const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
-
 
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
@@ -116,48 +115,38 @@ function HotspotAnalysis() {
   }
   return (
     <>
-      {isLoading && (
-        <div className="loading-overlay">
-          <div className="loading-spinner"></div>
-          <div className="loading-content"><p>Updating Analysis</p>
+      <div>
+        <div className="hotspot">
+          <div className="hotspot-heading">
+            <h1>Hotspot Analysis</h1>
           </div>
-        </div>
-      )}
-      <div className="hotspot">
-        <div className="oneCommit-heading">
-          <h1>Hotspot Analysis</h1>
-        </div>
-        <div className="dropdown-dropdowns">
-          <div className="branch-dropdowns">
-            <h4>Branches:</h4>
-            <Select
-              value={selectedBranch}
-              onChange={(option) => {
-                setSelectedBranch(option)
-
-              }}
-              options={branch}
-              isSearchable={true}
-              placeholder=" Branch..."
-
-            />
-
-            <button
-              className={`update_button ${isLoading ? 'loading' : ''}`}
-              onClick={handleExecuteQuery}
-              disabled={isLoading}>Update Analysis</button>
-          </div>
-        </div>
-        {!isLoading ? (
-          hotspotAnalysisData && (
-            <div className="charts">
-              <HotspotChart hotspotAnalysisData={hotspotAnalysisData} />
+          <div className="dropdown-dropdowns">
+            <div className="branch-dropdowns">
+              <h4>Branches:</h4>
+              <Select
+                value={selectedBranch}
+                onChange={(option) => {
+                  setSelectedBranch(option)
+                  handleExecuteQuery()
+                }}
+                options={branch}
+                isSearchable={true}
+                placeholder=" Branch..."
+              />
             </div>
-          )
-        ) : (
-          <div className="loading">
           </div>
-        )}
+          {!isLoading ? (
+            hotspotAnalysisData && (
+              <div className="charts">
+                <HotspotChart hotspotAnalysisData={hotspotAnalysisData} />
+              </div>
+            )
+          ) : (
+            <div className="loading">
+              <h1>Loading...</h1>
+            </div>
+          )}
+        </div>
       </div>
     </>
   )
