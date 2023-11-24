@@ -46,10 +46,11 @@
   }
 
   .chart-container {
-    background-color: #DDF2FD;
-    padding: 15px;
-    border-radius: 15px;
-    margin-bottom: 20px;
+    background-color: #ffffff02;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    text-align: center;
 }
 
 .test {
