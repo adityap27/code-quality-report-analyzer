@@ -35,6 +35,10 @@
   text-decoration: none;
 }
 
+.common-item.active {
+  background-color: #555;
+}
+
 .common-item:hover {
   background-color: #555;
 }

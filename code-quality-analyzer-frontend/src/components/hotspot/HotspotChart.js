@@ -7,6 +7,7 @@ function HotspotChart(props) {
     props.hotspotAnalysisData.top_classes_list
   )
   const packagesRef = useRef([])
+  const selectedDataRef = useRef(selectedData)
 
   useEffect(() => {
     const prepareData = () => {
@@ -15,8 +16,7 @@ function HotspotChart(props) {
       const packages = selectedChartData.map((item) => {
         return Object.keys(item)[0]
       })
-      packagesRef.current = packages; // Use useRef to store the packages
-      console.log(packages)
+      packagesRef.current = packages // Use useRef to store the packages
 
       const datasets = [
         {
@@ -28,19 +28,23 @@ function HotspotChart(props) {
 
       let totalSmells = datasets.reduce((acc, dataset) => {
         dataset.data.forEach((item, index) => {
-          let totalSmellForItem = Object.values(item.smell_distribution).reduce((a, b) => a + b, 0);
-          acc[index] = (acc[index] || 0) + totalSmellForItem;
-        });
-        return acc;
-      }, []);
+          let totalSmellForItem = Object.values(item.smell_distribution).reduce(
+            (a, b) => a + b,
+            0
+          )
+          acc[index] = (acc[index] || 0) + totalSmellForItem
+        })
+        return acc
+      }, [])
 
       datasets.push({
         type: 'line',
-        label: 'Total Smells',
+        label: 'Total Smell',
         data: totalSmells,
         fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-      });
+        backgroundColor: '#373030',
+        borderColor: 'rgb(0,0,0)',
+      })
 
       // Extract smell distribution labels
       const smellDistributionLabels = Object.keys(
@@ -56,7 +60,10 @@ function HotspotChart(props) {
         datasets.push({
           label: label,
           data: smellDistributionData,
-          backgroundColor: '#' + ((Math.random() * 0xffffff) << 0).toString(16),
+          // backgroundColor: '#' + ((Math.random() * 0xffffff) << 0).toString(16),
+          backgroundColor: `rgba(${Math.random() * 255},${
+            Math.random() * 255
+          },${Math.random() * 255},0.5)`,
         })
       })
 
@@ -67,15 +74,18 @@ function HotspotChart(props) {
           return parts[parts.length - 1] // Display the last part
         }),
 
-        datasets: datasets,
+        // I want to remove the label of "Total Smells" from the data
+        datasets: datasets.filter(
+          (dataset) => dataset.label !== 'Total Smells'
+        ),
       })
     }
-
+    selectedDataRef.current = selectedData;
     prepareData()
   }, [selectedData])
 
   return (
-    <div>
+    <div className="hotspot-container">
       <div className="test">
         <div className="common-heading">
           <h2>
@@ -102,7 +112,16 @@ function HotspotChart(props) {
         </div>
       </div>
 
-      <div style={{ width: '1200px', marginLeft: '20px', height: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center0',
+          alignItems: 'center',
+          width: '1200px',
+          marginLeft: '20px',
+          height: '100%',
+        }}
+      >
         {data.labels && data.labels.length > 0 && (
           <Bar
             data={data}
@@ -117,16 +136,20 @@ function HotspotChart(props) {
                       props.hotspotAnalysisData.top_classes_list
                         ? 'Classes'
                         : 'Methods',
-                        font: {
-                          size: 20,
-                        },
+                    font: {
+                      size: 20,
+                    },
                   },
                 },
                 y: {
                   stacked: true,
-                  title: { display: true, text: 'Number of Smells',               font: {
-                    size: 20,
-                  }, },
+                  title: {
+                    display: true,
+                    text: 'Number of Smells',
+                    font: {
+                      size: 20,
+                    },
+                  },
                 },
               },
               plugins: {
@@ -139,21 +162,26 @@ function HotspotChart(props) {
                 legend: {
                   position: 'right',
                 },
-              },
-              tooltips: {
-                callbacks: {
-                  label: (tooltipItem, data) => {
-                    const datasetLabel =
-                      data.datasets[tooltipItem.datasetIndex].label;
-                    const fullPackageName =
-                      packagesRef.current[tooltipItem.index]; // Use the packages from useRef
-                    if (tooltipItem.datasetIndex === 0) {
-                      return `Total Smells: ${tooltipItem.yLabel} - ${fullPackageName}`;
-                    } else {
-                      return `${datasetLabel}: ${tooltipItem.yLabel} - ${fullPackageName}`;
+                tooltip: {
+                  callbacks: {
+
+                    label: function(context) {
+                      const labelIndex = context.dataIndex;
+                      const datasetLabel = context.dataset.label;
+                      const originalLabel = packagesRef.current[labelIndex];
+                      const splitLabel = originalLabel.split('||');
+                      const isClass = selectedDataRef.current === props.hotspotAnalysisData.top_classes_list;
+                      const classOrMethodLabel = isClass ? 'Class' : 'Method';
+                      const classNameOrMethodName = isClass ? splitLabel[2] : splitLabel[splitLabel.length - 1];
+                      return [
+                        `${datasetLabel}: ${context.parsed.y}`,
+                        `Project: ${splitLabel[0]}`,
+                        `Package: ${splitLabel[1]}`,
+                        `${classOrMethodLabel}: ${classNameOrMethodName}`
+                      ];
                     }
-                  },
-                },
+                  }
+                }
               },
             }}
             height={window.innerHeight}

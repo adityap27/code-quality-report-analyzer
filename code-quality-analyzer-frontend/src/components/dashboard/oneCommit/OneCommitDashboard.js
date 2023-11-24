@@ -100,12 +100,10 @@ function OneCommitDashboard() {
   }
 
   const fetchC = async () => {
-    console.log(repoLink, selectedBranch)
     if (selectedBranch) {
       var C = await fetchCommits(repoLink, selectedBranch)
       setSelectedCommit(C[0])
       localStorage.setItem('commitId', C[0])
-      console.log(C)
       setCommits(C)
       localStorage.setItem('allCommits', JSON.stringify(AllCommits))
     }
@@ -131,7 +129,6 @@ function OneCommitDashboard() {
       .then((response) => {
         if (response.status === 200) {
           setAnalysisData(response.data)
-          console.log('Analysis Data after API call:', response.data)
         }
       })
   }
