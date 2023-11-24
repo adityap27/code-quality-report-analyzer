@@ -166,7 +166,7 @@ const TrendAnalysis = (props) => {
       </div>
               <div className="commits-container">
                 <h4>Number of Commits:</h4>
-                <select name="" id="" onChange={handleCommitsChange}>
+                <select name="" id="" onChange={handleCommitsChange} defaultValue={10}>
                   {[...Array(10)].map((_, index) => (
                     <option key={index} value={index + 1}>
                       {index + 1}

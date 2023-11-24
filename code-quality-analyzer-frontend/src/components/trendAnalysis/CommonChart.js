@@ -99,8 +99,21 @@ function CommonChart(props) {
             data={data}
             options={{
               scales: {
-                x: { stacked: true },
-                y: { stacked: true },
+                x: { stacked: true, title: {
+                  display: true,
+                  text: 'Commit ID',
+                  font: {
+                    size: 20,
+                  }
+                } },
+                y: { stacked: true,
+                  title: {
+                    display: true,
+                    text: 'Smell Count',
+                    font: {
+                      size: 20,
+                    }
+                  } },
               },
               plugins: {
                 legend: {
