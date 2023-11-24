@@ -9,33 +9,7 @@
       hsl(var(--hue), 15%, 19%),
       hsl(var(--hue), 15%, 14%));
 }
-.loader {
-  /*position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999; /* Ensure loader is on top */
-  max-width: 100%;
-    height: auto!important;
-    font-size: 1.2rem;
-    top: 50%;
-    left: 50%;
-    color: #000;
-    overflow-wrap: break-word;
-    border-radius: 8px;
-    padding: 4rem;
-    position: absolute;
-    
-}
-  /* Your loader styles */
 
-
-.loader img{
-  border: 0;
-  overflow-clip-margin: content-box;
-  overflow: clip;
-  align-items: center;
-}
 
 .blur-background {
   /* Apply a blur effect to the background */
@@ -182,7 +156,6 @@ strong {
   justify-content: center;
   align-items: center;
 }
-
 
 .main-container__button {
   width: 200px;
