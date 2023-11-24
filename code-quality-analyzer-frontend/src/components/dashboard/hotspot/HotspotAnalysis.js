@@ -14,6 +14,7 @@ import api from '../../../utils/api'
 import { useEffect, useState } from 'react'
 import Select from 'react-select'
 import axios from 'axios'
+import Loader from '../../loader/Loader'
 import { HotspotAnalysisContext } from '../../../HotspotAnalysisContext'
 import HotspotChart from '../../hotspot/HotspotChart'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
@@ -26,14 +27,13 @@ function HotspotAnalysis() {
   const [repoLink, setRepoLink] = useState(localStorage.getItem('repoLink'))
   const [selectedBranch, setSelectedBranch] = useState(null)
   const [branch, setBranch] = useState()
-  const { fetchBranches}= api()
+  const { fetchBranches } = api()
   const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
- 
+
 
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
     if (!hotspotAnalysisData || currentRepoLink !== repoLink) {
-      setIsLoading(true)
 
       const currentBranchString = localStorage.getItem('branch')
       const currentBranchObject = currentBranchString
@@ -67,57 +67,65 @@ function HotspotAnalysis() {
           }
         })
         .catch((error) => {
-          setIsLoading(false)
+
         })
 
       setRepoLink(currentRepoLink)
     }
 
-  setSelectedBranch(Sbranch)
-  localStorage.setItem('branch', JSON.stringify(Sbranch))
-  fetchB()
- 
-}, [])
+    setSelectedBranch(Sbranch)
+    localStorage.setItem('branch', JSON.stringify(Sbranch))
+    fetchB()
 
-const fetchB = async () => {
-  var B = await fetchBranches(repoLink)
-  setBranch(B)
-};
+  }, [])
+
+  const fetchB = async () => {
+    var B = await fetchBranches(repoLink)
+    setBranch(B)
+  };
 
 
-const handleExecuteQuery = () => {
-  const requestData = {
-    gitRepoLink: repoLink,
-    branch: selectedBranch.value,
-    
+  const handleExecuteQuery = () => {
+    setIsLoading(true)
+    const requestData = {
+      gitRepoLink: repoLink,
+      branch: selectedBranch.value,
+
+    }
+    axios
+      .post(
+        process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis',
+        requestData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          setIsLoading(false)
+          setHotspotAnalysisData(response.data);
+          console.log('Analysis Data after API call:', response.data)
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+      })
   }
-  axios
-    .post(
-      process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis',
-      requestData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-    .then((response) => {
-      if (response.status === 200) {
-        setHotspotAnalysisData(response.data);
-        console.log('Analysis Data after API call:', response.data)
-      }
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
-
-
   return (
     <>
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+          <div className="loading-content"><p>Updating Analysis</p>
+          </div>
+        </div>
+      )}
       <div className="hotspot">
         <div className="oneCommit-heading">
-          <h1>Hotspot Analysis</h1> 
+          <h1>Hotspot Analysis</h1>
         </div>
         <div className="dropdown-dropdowns">
           <div className="branch-dropdowns">
@@ -126,13 +134,20 @@ const handleExecuteQuery = () => {
               value={selectedBranch}
               onChange={(option) => {
                 setSelectedBranch(option)
-                handleExecuteQuery()
+
               }}
               options={branch}
               isSearchable={true}
               placeholder=" Branch..."
+
             />
-          </div></div>
+
+            <button
+              className={`update_button ${isLoading ? 'loading' : ''}`}
+              onClick={handleExecuteQuery}
+              disabled={isLoading}>Update Analysis</button>
+          </div>
+        </div>
         {!isLoading ? (
           hotspotAnalysisData && (
             <div className="charts">
@@ -141,7 +156,6 @@ const handleExecuteQuery = () => {
           )
         ) : (
           <div className="loading">
-            <h1>Loading...</h1>
           </div>
         )}
       </div>
