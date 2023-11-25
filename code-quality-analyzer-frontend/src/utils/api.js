@@ -26,7 +26,7 @@ const api = () => {
 
   const fetchCommits = async (repoLink, branch) => {
     console.log(branch);
-    if (!repoLink) {
+    if (!repoLink || !branch){
       // Handle the case where repoLink is undefined
       console.error("Repo link is undefined");
       return [];
@@ -52,3 +52,4 @@ const api = () => {
 };
 
 export default api;
+
