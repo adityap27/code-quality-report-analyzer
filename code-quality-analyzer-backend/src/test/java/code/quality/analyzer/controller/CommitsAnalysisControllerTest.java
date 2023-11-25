@@ -1,10 +1,9 @@
 package code.quality.analyzer.controller;
 
+import static code.quality.analyzer.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -25,9 +25,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import code.quality.analyzer.model.CommitAnalysisRequest;
+import code.quality.analyzer.model.HotspotAnalysisRequest;
+import code.quality.analyzer.model.OneCommitAnalysisRequest;
 import code.quality.analyzer.model.TrendAnalysisRequest;
-import code.quality.analyzer.service.CommitsAnalysisServiceImpl;
-import code.quality.analyzer.util.Constants;
+import code.quality.analyzer.service.CallAnalysisService;
+import code.quality.analyzer.service.GenerateReportService;
 
 /**
  * Test OneCommitAnalysisController rest services
@@ -37,60 +39,58 @@ import code.quality.analyzer.util.Constants;
 public class CommitsAnalysisControllerTest {
 
 	@InjectMocks
-	CommitsAnalysisController oneCommitAnalysisController;
+	CommitsAnalysisController commitsAnalysisController;
 	
 	@Autowired
-	@Mock CommitsAnalysisServiceImpl commitsAnalysisService;
+	GenerateReportService reportService;
+	
+	@Autowired
+	@Mock CallAnalysisService analysisService;
 	
 	CommitAnalysisRequest commitAnalysisRequest;
 	MockMvc mockMvc;
 	
 	@BeforeEach
 	void setUp() {
+		ReflectionTestUtils.setField(commitsAnalysisController, "reportService", reportService);
 		commitAnalysisRequest = new CommitAnalysisRequest();
-		commitAnalysisRequest.setGitRepoLink(Constants.TEST_REPO_URL);
-		commitAnalysisRequest.setBranch(Constants.TEST_BRANCH);
-		mockMvc = MockMvcBuilders.standaloneSetup(oneCommitAnalysisController).build();
-		when(commitsAnalysisService.cloneRepository(anyString())).thenCallRealMethod();
+		commitAnalysisRequest.setGitRepoLink(REPO_URL);
+		commitAnalysisRequest.setBranch(BRANCH);
+		mockMvc = MockMvcBuilders.standaloneSetup(commitsAnalysisController).build();
 	}
 	
 	@Test
 	void testGetOneCommitAnalysis() throws Exception {
-		when(commitsAnalysisService.generateOneCommitReport(anyString(), anyString(), any())).thenCallRealMethod();
-		when(commitsAnalysisService.callAnalysisServiceOneCommit(anyString())).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		callServiceAndTest(Constants.ONE_COMMIT_URL);
+		when(analysisService.callOneCommitAnalysisService(any(OneCommitAnalysisRequest.class))).thenReturn(ANALYSIS_RESPONSE);
+		callServiceAndTest(ONE_COMMIT_URL);
 	}
 	
 	@Test
 	void testGetTrendAnalysis() throws Exception {
-		commitAnalysisRequest.setNoOfCommits(Constants.TEST_TOTAL_COMMITS_2);
-		when(commitsAnalysisService.generateTrendAnalysisReport(anyString(), anyString(), anyInt())).thenCallRealMethod();
-		when(commitsAnalysisService.callAnalysisServiceTrend(any(TrendAnalysisRequest.class))).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		callServiceAndTest(Constants.TREND_URL);
+		commitAnalysisRequest.setNoOfCommits(TOTAL_COMMITS_2);
+		when(analysisService.callTrendAnalysisService(any(TrendAnalysisRequest.class))).thenReturn(ANALYSIS_RESPONSE);
+		callServiceAndTest(TREND_URL);
 	}
 	
 	@Test
 	void testGetOneCommitAnalysisForRemoteBranch() throws Exception {
-		commitAnalysisRequest.setBranch(Constants.TEST_REMOTE_BRANCH);
-		when(commitsAnalysisService.generateOneCommitReport(anyString(), anyString(), any())).thenCallRealMethod();
-		when(commitsAnalysisService.callAnalysisServiceOneCommit(anyString())).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		callServiceAndTest(Constants.ONE_COMMIT_URL);
+		commitAnalysisRequest.setBranch(REMOTE_BRANCH);
+		when(analysisService.callOneCommitAnalysisService(any(OneCommitAnalysisRequest.class))).thenReturn(ANALYSIS_RESPONSE);
+		callServiceAndTest(ONE_COMMIT_URL);
 	}
 	
 	@Test
 	void testGetTrendAnalysisForRemoteBranch() throws Exception {
-		commitAnalysisRequest.setBranch(Constants.TEST_REMOTE_BRANCH);
-		commitAnalysisRequest.setNoOfCommits(Constants.TEST_TOTAL_COMMITS_2);
-		when(commitsAnalysisService.generateTrendAnalysisReport(anyString(), anyString(), anyInt())).thenCallRealMethod();
-		when(commitsAnalysisService.callAnalysisServiceTrend(any(TrendAnalysisRequest.class))).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		callServiceAndTest(Constants.TREND_URL);
+		commitAnalysisRequest.setBranch(REMOTE_BRANCH);
+		commitAnalysisRequest.setNoOfCommits(TOTAL_COMMITS_2);
+		when(analysisService.callTrendAnalysisService(any(TrendAnalysisRequest.class))).thenReturn(ANALYSIS_RESPONSE);
+		callServiceAndTest(TREND_URL);
 	}
 	
 	@Test
 	void testGetHotspotAnalysis() throws Exception {
-		when(commitsAnalysisService.generateHotspotReport(anyString(), anyString())).thenCallRealMethod();
-		when(commitsAnalysisService.callAnalysisServiceHotspot(anyString())).thenReturn(Constants.ANALYSIS_SERVICE_TEST_RESPONSE);
-		callServiceAndTest(Constants.HOTSPOT_URL);
+		when(analysisService.callHotspotAnalysisService(any(HotspotAnalysisRequest.class))).thenReturn(ANALYSIS_RESPONSE);
+		callServiceAndTest(HOTSPOT_URL);
 	}
 	
 	public void callServiceAndTest(String url) throws Exception {
@@ -101,6 +101,6 @@ public class CommitsAnalysisControllerTest {
 				.andReturn();
 		String response = mvcResult.getResponse().getContentAsString();
 		assertNotNull(response);
-		assertEquals(Constants.ANALYSIS_SERVICE_TEST_RESPONSE, response);
+		assertEquals(ANALYSIS_RESPONSE, response);
 	}
 }

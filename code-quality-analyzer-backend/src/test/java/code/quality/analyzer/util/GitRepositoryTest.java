@@ -19,7 +19,7 @@ class GitRepositoryTest {
 
     @BeforeEach
     void setUp() {
-    	gitRepository = new GitRepository(Constants.TEST_REPO_URL, GitRepositoryTest.localRepoBaseTestPath);
+    	gitRepository = new GitRepository(Constants.REPO_URL, GitRepositoryTest.localRepoBaseTestPath);
     }
 
     @AfterEach
