@@ -26,9 +26,9 @@ public class CommitsAnalysisUtil {
 	 */
 	public static String cloneRepository(String gitRepoLink) {
 		logger.info("BEGIN cloneRepository()");
-		GitRepository g = new GitRepository(gitRepoLink, Constants.REPO_PATH);
-		g.cloneRepo();
-		return g.getLocalRepoFullPath();
+		GitRepository gitRepository = new GitRepository(gitRepoLink, Constants.REPO_PATH);
+		gitRepository.cloneRepo();
+		return gitRepository.getLocalRepoFullPath();
 	}
 	
 	/**

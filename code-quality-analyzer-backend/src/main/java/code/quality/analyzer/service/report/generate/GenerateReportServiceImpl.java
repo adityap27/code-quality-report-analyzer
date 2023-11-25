@@ -1,4 +1,4 @@
-package code.quality.analyzer.service;
+package code.quality.analyzer.service.report.generate;
 
 import java.util.ArrayList;
 import java.util.HashMap;

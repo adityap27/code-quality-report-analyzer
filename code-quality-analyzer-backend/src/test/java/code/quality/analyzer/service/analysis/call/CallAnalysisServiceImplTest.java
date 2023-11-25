@@ -1,4 +1,4 @@
-package code.quality.analyzer.service;
+package code.quality.analyzer.service.analysis.call;
 
 import static code.quality.analyzer.util.Constants.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;

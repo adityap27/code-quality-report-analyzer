@@ -28,8 +28,8 @@ import code.quality.analyzer.model.CommitAnalysisRequest;
 import code.quality.analyzer.model.HotspotAnalysisRequest;
 import code.quality.analyzer.model.OneCommitAnalysisRequest;
 import code.quality.analyzer.model.TrendAnalysisRequest;
-import code.quality.analyzer.service.CallAnalysisService;
-import code.quality.analyzer.service.GenerateReportService;
+import code.quality.analyzer.service.analysis.call.CallAnalysisService;
+import code.quality.analyzer.service.report.generate.GenerateReportService;
 
 /**
  * Test OneCommitAnalysisController rest services
