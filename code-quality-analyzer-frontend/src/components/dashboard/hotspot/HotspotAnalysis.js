@@ -20,7 +20,7 @@ import HotspotChart from '../../hotspot/HotspotChart'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 function HotspotAnalysis() {
-  const { hotspotAnalysisData, setHotspotAnalysisData } = useContext(
+  const { hotspotAnalysisData, setHotspotAnalysisData} = useContext(
     HotspotAnalysisContext
   )
   const [isLoading, setIsLoading] = useState(false)
@@ -30,7 +30,7 @@ function HotspotAnalysis() {
   const { fetchBranches } = api()
   const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
 
-  useEffect(() => {
+useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
     if (!hotspotAnalysisData || currentRepoLink !== repoLink) {
 
@@ -48,6 +48,7 @@ function HotspotAnalysis() {
         branch: currentBranchValue,
         commitId: commitId,
       }
+      
 
       axios
         .post(
@@ -71,7 +72,6 @@ function HotspotAnalysis() {
 
       setRepoLink(currentRepoLink)
     }
-
     setSelectedBranch(Sbranch)
     localStorage.setItem('branch', JSON.stringify(Sbranch))
     fetchB()
@@ -83,7 +83,6 @@ function HotspotAnalysis() {
     setBranch(B)
   };
 
-
   const handleExecuteQuery = () => {
     setIsLoading(true)
     const requestData = {
@@ -91,6 +90,7 @@ function HotspotAnalysis() {
       branch: selectedBranch.value,
 
     }
+    console.log(requestData);
     axios
       .post(
         process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis',
@@ -113,8 +113,16 @@ function HotspotAnalysis() {
         setIsLoading(false)
       })
   }
+ 
   return (
     <>
+    {isLoading && (
+        <div className="loading-overlay">
+           <div className="loading-spinner"></div>
+            <div className="loading-content"><p>Updating Analysis</p>
+          </div>
+    </div>
+      )}
       <div>
         <div className="hotspot">
           <div className="hotspot-heading">
@@ -122,30 +130,31 @@ function HotspotAnalysis() {
           </div>
           <div className="dropdown-dropdowns">
             <div className="branch-dropdowns">
-              <h4>Branches:</h4>
+            <h4>Branches:</h4>
               <Select
-                value={selectedBranch}
-                onChange={(option) => {
-                  setSelectedBranch(option)
-                  handleExecuteQuery()
-                }}
-                options={branch}
-                isSearchable={true}
-                placeholder=" Branch..."
-              />
+            value={selectedBranch}
+            onChange={(option) => {
+              setSelectedBranch(option);
+            }}
+            options={branch}
+            isSearchable={true}
+            placeholder="Branch..."
+          /> 
+
+          <button
+          className={`trend_button ${isLoading ? 'loading' : ''}`}
+          onClick={handleExecuteQuery}
+          disabled={isLoading}>Update Analysis</button>
+             
+    
             </div>
           </div>
-          {!isLoading ? (
-            hotspotAnalysisData && (
+          
               <div className="charts">
                 <HotspotChart hotspotAnalysisData={hotspotAnalysisData} />
               </div>
-            )
-          ) : (
-            <div className="loading">
-              <h1>Loading...</h1>
-            </div>
-          )}
+
+        
         </div>
       </div>
     </>
