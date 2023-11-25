@@ -1,4 +1,4 @@
-package code.quality.analyzer.service;
+package code.quality.analyzer.service.report.generate;
 
 import code.quality.analyzer.model.AnalysisServiceRequest;
 import code.quality.analyzer.model.CommitAnalysisRequest;

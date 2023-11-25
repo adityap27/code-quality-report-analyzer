@@ -1,8 +1,6 @@
 package code.quality.analyzer.util;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,9 +24,9 @@ public class CommitsAnalysisUtil {
 	 */
 	public static String cloneRepository(String gitRepoLink) {
 		logger.info("BEGIN cloneRepository()");
-		GitRepository g = new GitRepository(gitRepoLink, Constants.REPO_PATH);
-		g.cloneRepo();
-		return g.getLocalRepoFullPath();
+		GitRepository gitRepository = new GitRepository(gitRepoLink, Constants.REPO_PATH);
+		gitRepository.cloneRepo();
+		return gitRepository.getLocalRepoFullPath();
 	}
 	
 	/**
@@ -91,13 +89,16 @@ public class CommitsAnalysisUtil {
 		if(!commitIds.isEmpty() && commitIds.size() != 1) {
 			fromCommit = commitIds.get(commitIds.size()-1);
 		}
-		String[] args = new String[] 
-			{"-i", repoPath, 
-			"-o", reportPath, 
-			"-ac", Constants.BRANCH_PREFIX + branch, 
-			"-fr", fromCommit,
-			"-to", commitIds.get(0)};
-		
+
+		List<String> arguments = new ArrayList<>();
+		arguments.addAll(Arrays.asList("-i", repoPath));
+		arguments.addAll(Arrays.asList("-o", reportPath));
+		arguments.addAll(Arrays.asList("-ac", Constants.BRANCH_PREFIX + branch));
+		arguments.addAll(Arrays.asList("-fr", fromCommit));
+		arguments.addAll(Arrays.asList("-to", commitIds.get(0)));
+
+		String[] args = arguments.toArray(String[]::new);
+
 		Designite.main(args);
 		if(commitIds.size() == 1) {
 			reportPath = reportPath + "/" + commitIds.get(0);

@@ -1,4 +1,4 @@
-package code.quality.analyzer.service;
+package code.quality.analyzer.service.analysis.call;
 
 import static code.quality.analyzer.util.Constants.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -6,7 +6,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +68,6 @@ class CallAnalysisServiceImplTest {
         WireMock.configureFor(LOCALHOST, PORT);
         stubFor(post(urlEqualTo(oneCommitUrl)).willReturn(builder));
         String response = analysisService.callOneCommitAnalysisService(new OneCommitAnalysisRequest());
-        assertNotNull(response);
         assertEquals(ANALYSIS_RESPONSE, response);
         wireMockServer.stop();
     }
@@ -81,7 +79,6 @@ class CallAnalysisServiceImplTest {
         WireMock.configureFor(LOCALHOST, PORT);
         stubFor(post(urlEqualTo(trendUrl)).willReturn(builder));
         String response = analysisService.callTrendAnalysisService(new TrendAnalysisRequest());
-        assertNotNull(response);
         assertEquals(ANALYSIS_RESPONSE, response);
         wireMockServer.stop();
     }
@@ -93,7 +90,6 @@ class CallAnalysisServiceImplTest {
         WireMock.configureFor(LOCALHOST, PORT);
         stubFor(post(urlEqualTo(hotspotUrl)).willReturn(builder));
         String response = analysisService.callHotspotAnalysisService(new HotspotAnalysisRequest());
-        assertNotNull(response);
         assertEquals(ANALYSIS_RESPONSE, response);
         wireMockServer.stop();
     }

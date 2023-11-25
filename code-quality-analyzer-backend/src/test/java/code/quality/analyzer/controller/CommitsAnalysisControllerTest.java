@@ -2,7 +2,6 @@ package code.quality.analyzer.controller;
 
 import static code.quality.analyzer.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -28,8 +27,8 @@ import code.quality.analyzer.model.CommitAnalysisRequest;
 import code.quality.analyzer.model.HotspotAnalysisRequest;
 import code.quality.analyzer.model.OneCommitAnalysisRequest;
 import code.quality.analyzer.model.TrendAnalysisRequest;
-import code.quality.analyzer.service.CallAnalysisService;
-import code.quality.analyzer.service.GenerateReportService;
+import code.quality.analyzer.service.analysis.call.CallAnalysisService;
+import code.quality.analyzer.service.report.generate.GenerateReportService;
 
 /**
  * Test OneCommitAnalysisController rest services
@@ -100,7 +99,6 @@ public class CommitsAnalysisControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		String response = mvcResult.getResponse().getContentAsString();
-		assertNotNull(response);
 		assertEquals(ANALYSIS_RESPONSE, response);
 	}
 }

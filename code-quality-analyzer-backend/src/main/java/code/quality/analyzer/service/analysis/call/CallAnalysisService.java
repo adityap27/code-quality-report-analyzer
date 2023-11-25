@@ -1,4 +1,4 @@
-package code.quality.analyzer.service;
+package code.quality.analyzer.service.analysis.call;
 
 import code.quality.analyzer.model.HotspotAnalysisRequest;
 import code.quality.analyzer.model.OneCommitAnalysisRequest;
