@@ -2,7 +2,6 @@ package code.quality.analyzer.controller;
 
 import static code.quality.analyzer.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -100,7 +99,6 @@ public class CommitsAnalysisControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		String response = mvcResult.getResponse().getContentAsString();
-		assertNotNull(response);
 		assertEquals(ANALYSIS_RESPONSE, response);
 	}
 }

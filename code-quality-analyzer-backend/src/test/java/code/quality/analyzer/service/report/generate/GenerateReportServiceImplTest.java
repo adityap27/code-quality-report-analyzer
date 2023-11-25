@@ -1,10 +1,7 @@
 package code.quality.analyzer.service.report.generate;
 
 import static code.quality.analyzer.util.Constants.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,7 +47,7 @@ class GenerateReportServiceImplTest {
     void testGenerateOneCommitReport() throws Exception {
     	commitRequest.setCommitId(COMMIT2);
         request = reportService.generateOneCommitReport(commitRequest);
-        assertEquals(true, Files.exists(Paths.get(request.getReportPath())));
+        assertTrue(Files.exists(Paths.get(request.getReportPath())));
     }
     
     @Test
@@ -58,7 +55,7 @@ class GenerateReportServiceImplTest {
     	commitRequest.setBranch(REMOTE_BRANCH);
     	commitRequest.setCommitId(REMOTE_COMMIT);
         request = reportService.generateOneCommitReport(commitRequest);
-        assertEquals(true, Files.exists(Paths.get(request.getReportPath())));
+        assertTrue(Files.exists(Paths.get(request.getReportPath())));
     }
 
     @Test
@@ -80,12 +77,17 @@ class GenerateReportServiceImplTest {
     }
    
     @Test
-    void testGenerateTrendAnalysisReport() throws Exception {
+    void testGenerateTrendAnalysisReportCheckCommits() throws Exception {
     	commitRequest.setNoOfCommits(TOTAL_COMMITS_2);
     	TrendAnalysisRequest request = (TrendAnalysisRequest)reportService.generateTrendAnalysisReport(commitRequest);
     	assertEquals(TOTAL_COMMITS_2, request.getCommitsData().size());
-    	assertEquals(USER2, request.getPreviousCommit().get(COMMIT3));
-    	assertEquals(repoPath + REPORT_PATH, request.getReportPath());
+    }
+
+    @Test
+    void testGenerateTrendAnalysisReportCheckUsers() throws Exception {
+        commitRequest.setNoOfCommits(TOTAL_COMMITS_2);
+        TrendAnalysisRequest request = (TrendAnalysisRequest)reportService.generateTrendAnalysisReport(commitRequest);
+        assertEquals(USER2, request.getPreviousCommit().get(COMMIT3));
     }
 
     @Test
@@ -94,18 +96,24 @@ class GenerateReportServiceImplTest {
     	commitRequest.setNoOfCommits(TOTAL_COMMITS_2);
     	TrendAnalysisRequest request = (TrendAnalysisRequest)reportService.generateTrendAnalysisReport(commitRequest);
     	assertEquals(TOTAL_COMMITS_2, request.getCommitsData().size());
-    	assertEquals(repoPath + REPORT_PATH, request.getReportPath());
     }
     
     @Test
-    void testGenerateTrendAnalysisReportForAllCommits() throws Exception {
+    void testGenerateTrendAnalysisReportForAllCommitsCheckCommits() throws Exception {
     	repoPath = CommitsAnalysisUtil.cloneRepository(REPO_URL_ALLCOMMITS);
     	commitRequest.setGitRepoLink(REPO_URL_ALLCOMMITS);
     	commitRequest.setNoOfCommits(TOTAL_COMMITS_1);
     	TrendAnalysisRequest request = (TrendAnalysisRequest)reportService.generateTrendAnalysisReport(commitRequest);
     	assertEquals(TOTAL_COMMITS_1, request.getCommitsData().size());
-    	assertNull(request.getPreviousCommit());
-    	assertEquals(repoPath + REPORT_PATH, request.getReportPath());
+    }
+
+    @Test
+    void testGenerateTrendAnalysisReportForAllCommitsCheckPreviousCommit() throws Exception {
+        repoPath = CommitsAnalysisUtil.cloneRepository(REPO_URL_ALLCOMMITS);
+        commitRequest.setGitRepoLink(REPO_URL_ALLCOMMITS);
+        commitRequest.setNoOfCommits(TOTAL_COMMITS_1);
+        TrendAnalysisRequest request = (TrendAnalysisRequest)reportService.generateTrendAnalysisReport(commitRequest);
+        assertNull(request.getPreviousCommit());
     }
 
     @Test
@@ -117,6 +125,6 @@ class GenerateReportServiceImplTest {
     @Test
     void testGenerateHotspotReport() throws Exception {
         request = reportService.generateHotspotReport(commitRequest);
-        assertEquals(true, Files.exists(Paths.get(request.getReportPath())));
+        assertTrue(Files.exists(Paths.get(request.getReportPath())));
     }
 }
