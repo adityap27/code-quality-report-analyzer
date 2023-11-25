@@ -1,4 +1,4 @@
-package code.quality.analyzer.service;
+package code.quality.analyzer.service.analysis.call;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
