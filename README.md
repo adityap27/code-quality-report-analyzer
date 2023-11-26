@@ -207,6 +207,23 @@ The Django app can be accessed using: http://localhost:8000 now.
 
 # Refactored Smells
 
+### Spring Boot:
+
+Before Refactoring: https://git.cs.dal.ca/courses/2023-fall/csci-5308/Group03/-/commit/b5f7526d990476a2eb66a5fe423ae2e52717a412
+
+After Refactoring: https://git.cs.dal.ca/courses/2023-fall/csci-5308/Group03/-/commit/f85b977b9fe5be1a37b64393cdb3efaaf18ff138
+
+All the true positive smells are resolved, others are justified in the csv itself(readme-files/CodeSmells/Spring Boot/f85b977b9fe5be1a37b64393cdb3efaaf18ff138_after) in comments column.
+
+The after & before refactoring version of CSVs are present here in this repo: readme-files/CodeSmells/Spring Boot
+
+### Django:
+
+All the true positive pylint issues are refactored.
+
+Before Refactoring: https://git.cs.dal.ca/courses/2023-fall/csci-5308/Group03/-/jobs/1481262/artifacts/browse for commit https://git.cs.dal.ca/courses/2023-fall/csci-5308/Group03/-/commit/7fc402254cb97245622b8f6d09ef1835e999e014
+
+After Refactoring: https://git.cs.dal.ca/courses/2023-fall/csci-5308/Group03/-/jobs/1491127/artifacts/browse for commit https://git.cs.dal.ca/courses/2023-fall/csci-5308/Group03/-/commit/de9fa19bcc2dab1dcb776060b00808864aca183b
 
 # Test Coverage
 
