@@ -3,6 +3,16 @@
 Deployed Version: http://csci5308vm3.research.cs.dal.ca/
 
 
+# Table of content:
+### 1. [Dependencies](#item-one)
+### 2. [Build and Deployment Instructions](#item-two)
+### 3. [Usage Scenario](#item-three)
+### 4. [Refactored Smells](#item-four)
+### 5. [Test Coverage](#item-five)
+### 6. [Pipeline](#item-six)
+
+<!-- headings -->
+<a id="item-one"></a>
 # Dependencies
 
 ## Git
@@ -77,6 +87,9 @@ Reference: https://docs.docker.com/engine/install/ubuntu/#install-using-the-repo
 For code smell analysis: 
 DesigniteJava Enterprise. Version 2.4.3.0 - https://www.designite-tools.com/
 
+
+<!-- headings -->
+<a id="item-two"></a>
 # Build and Deployment Instructions
 
 There are 3 parts of this system and all of them need to be built and deployed, before the system can work end-to-end. (React, Spring Boot and Django app)
@@ -190,3 +203,19 @@ The Django app can be accessed using: http://localhost:8000 now.
 > Spring Boot app: `application.properties` file analysis.service.base.url=[give valid django app URL]
 > 
 > Django app: `settings.py` file ALLOWED_HOSTS = ["csci5308vm3.research.cs.dal.ca","localhost", (add your host)]
+
+<!-- headings -->
+<a id="item-three"></a>
+# Usage Scenario
+
+<!-- headings -->
+<a id="item-four"></a>
+# Refactored Smells
+
+<!-- headings -->
+<a id="item-five"></a>
+# Test Coverage
+
+<!-- headings -->
+<a id="item-six"></a>
+# Pipeline
