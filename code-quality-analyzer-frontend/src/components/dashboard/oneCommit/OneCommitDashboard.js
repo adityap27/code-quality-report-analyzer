@@ -37,9 +37,12 @@ function OneCommitDashboard() {
   const [commits, setCommits] = useState()
   const { fetchBranches, fetchCommits } = api()
   const [selectedCommit, setSelectedCommit] = useState(null)
-  const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
-  const Scommit = localStorage.getItem('commitId')
-  const AllCommits = JSON.parse(localStorage.getItem('allCommits') || '[]')
+  const Sbranch = JSON.parse(
+    localStorage.getItem('oneCommitBranch') || '{"value": null}'
+  )
+  const Scommit = JSON.parse(
+    localStorage.getItem('commit') || '{"value": null}'
+  )
   const [localData, setLocalData] = useState([])
 
   useEffect(() => {
@@ -85,13 +88,9 @@ function OneCommitDashboard() {
       }
     }
     setSelectedBranch(Sbranch)
-    localStorage.setItem('branch', JSON.stringify(Sbranch))
     setSelectedCommit(Scommit)
-    localStorage.setItem('commitId', JSON.stringify(Scommit))
-    setCommits(AllCommits)
-    localStorage.setItem('allCommits', JSON.stringify(AllCommits))
     fetchB()
-    fetchC()
+    fetchC(Sbranch)
   }, [])
 
   const fetchB = async () => {
@@ -99,13 +98,13 @@ function OneCommitDashboard() {
     setBranch(B)
   }
 
-  const fetchC = async () => {
-    if (selectedBranch) {
-      var C = await fetchCommits(repoLink, selectedBranch)
-      setSelectedCommit(C[0])
-      localStorage.setItem('commitId', C[0])
+  const fetchC = async (branchSelected) => {
+    if (branchSelected) {
+      var C = await fetchCommits(repoLink, branchSelected)
+      if (Sbranch && branchSelected.value != Sbranch.value) {
+        setSelectedCommit(C[0])
+      }
       setCommits(C)
-      localStorage.setItem('allCommits', JSON.stringify(AllCommits))
     }
   }
 
@@ -133,6 +132,11 @@ function OneCommitDashboard() {
         if (response.status === 200) {
           setIsLoading(false)
           setAnalysisData(response.data)
+          localStorage.setItem(
+            'oneCommitBranch',
+            JSON.stringify(selectedBranch)
+          )
+          localStorage.setItem('commit', JSON.stringify(selectedCommit))
         }
       })
   }
@@ -158,7 +162,7 @@ function OneCommitDashboard() {
               value={selectedBranch}
               onChange={(option) => {
                 setSelectedBranch(option)
-                fetchC()
+                fetchC(option)
               }}
               options={branch}
               isSearchable={true}
@@ -171,7 +175,6 @@ function OneCommitDashboard() {
               value={selectedCommit}
               onChange={(option) => {
                 setSelectedCommit(option)
-                localStorage.setItem('commitId', option)
               }}
               options={commits}
               isSearchable={true}

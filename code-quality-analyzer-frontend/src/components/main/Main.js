@@ -1,20 +1,20 @@
-import React from 'react';
-import { useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Select from 'react-select';
-import * as PIXI from 'pixi.js';
-import { KawaseBlurFilter } from '@pixi/filter-kawase-blur';
-import { createNoise2D } from 'simplex-noise';
-import hsl from 'hsl-to-hex';
-import debounce from 'debounce';
-import banner from '../../assets/images/banner.gif';
-import './main.css';
-import Navbar from '../navbar/Navbar';
-import { OneCommitAnalysisContext } from '../../OneCommitAnalysisContext';
-import { TrendAnalysisContext } from '../../TrendAnalysisContext';
-import { HotspotAnalysisContext } from '../../HotspotAnalysisContext';
-import Loader from '../loader/Loader';
+import React from 'react'
+import { useContext, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import Select from 'react-select'
+import * as PIXI from 'pixi.js'
+import { KawaseBlurFilter } from '@pixi/filter-kawase-blur'
+import { createNoise2D } from 'simplex-noise'
+import hsl from 'hsl-to-hex'
+import debounce from 'debounce'
+import banner from '../../assets/images/banner.gif'
+import './main.css'
+import Navbar from '../navbar/Navbar'
+import { OneCommitAnalysisContext } from '../../OneCommitAnalysisContext'
+import { TrendAnalysisContext } from '../../TrendAnalysisContext'
+import { HotspotAnalysisContext } from '../../HotspotAnalysisContext'
+import Loader from '../loader/Loader'
 
 const Main = () => {
   const { setAnalysisData } = useContext(OneCommitAnalysisContext)
@@ -50,14 +50,14 @@ const Main = () => {
     }
   }
 
-  let loadingText = '';
+  let loadingText = ''
   // Set dynamic loading text based on the selected option
   if (selectedOption === 'one-commit') {
-    loadingText = 'Loading One-Commit Analysis...';
+    loadingText = 'Loading One-Commit Analysis...'
   } else if (selectedOption === 'trend-analysis') {
-    loadingText = 'Loading Trend Analysis...';
+    loadingText = 'Loading Trend Analysis...'
   } else if (selectedOption === 'hotspot-analysis') {
-    loadingText = 'Loading Hotspot Analysis...';
+    loadingText = 'Loading Hotspot Analysis...'
   }
 
   useEffect(() => {
@@ -69,11 +69,11 @@ const Main = () => {
   const executeAnalysis = () => {
     const selcommitSHA = selectedCommit.value
     localStorage.setItem('repoLink', repoLink)
-    localStorage.setItem('branch', JSON.stringify(selectedBranch))
-    localStorage.setItem('commitId', selcommitSHA)
-    localStorage.setItem('commit' , JSON.stringify(selectedCommit))
+    localStorage.setItem('oneCommitBranch', JSON.stringify(selectedBranch))
+    localStorage.setItem('trendBranch', JSON.stringify(selectedBranch))
+    localStorage.setItem('hotspotBranch', JSON.stringify(selectedBranch))
+    localStorage.setItem('commit', JSON.stringify(selectedCommit))
     localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
-    localStorage.setItem('allCommits', JSON.stringify(commits))
     if (selectedOption === 'one-commit') {
       setIsLoading(true)
       const requestData = {
@@ -98,7 +98,6 @@ const Main = () => {
             setAnalysisData(response.data)
             navigate('/dashboard/oneCommit')
           }
-        
         })
         .catch((error) => {
           setIsLoading(false)
@@ -124,22 +123,17 @@ const Main = () => {
           }
         )
         .then((response) => {
-
           if (response.status === 200) {
             setIsLoading(false)
             setTrendAnalysisData(response.data)
             navigate('/dashboard/trend')
           }
-    
         })
         .catch((error) => {
           setIsLoading(false)
           setErrorMessage('Failed to load analysis. Try again later.')
-      
         })
-    } 
-    
-    else if (selectedOption === 'hotspot-analysis') {
+    } else if (selectedOption === 'hotspot-analysis') {
       setIsLoading(true)
       const requestData = {
         gitRepoLink: repoLink,
@@ -159,13 +153,11 @@ const Main = () => {
           }
         )
         .then((response) => {
-          
           if (response.status === 200) {
             setIsLoading(false)
             setHotspotAnalysisData(response.data)
             navigate('/dashboard/hotspot')
           }
-  
         })
         .catch((error) => {
           setIsLoading(false)
@@ -458,161 +450,172 @@ const Main = () => {
 
   return (
     <>
-    {isLoading && (
+      {isLoading && (
         <div className="loading-overlay">
-           <div className="loading-spinner"></div>
-            <div className="loading-content"><p>{loadingText}</p>
+          <div className="loading-spinner"></div>
+          <div className="loading-content">
+            <p>{loadingText}</p>
           </div>
-    </div>
+        </div>
       )}
       <Navbar />
       <div className="main-con">
-       ()
-          <>
+        ()
+        <>
           <canvas className="orb-canvas"></canvas>
-            <div className="main-container">
-              <div className="main-container__inner">
-                <h1 className="main-container__title">
-                  Analyze Your
-                  <span className="text-gradient"> CODE</span> Now !!
-                </h1>
-                <div className="search-bar">
-                  <input
-                    className="repo-link"
-                    type="text"
-                    placeholder="Insert Your GitHub Repository Link"
-                    value={repoLink}
-                    onChange={handleRepoUrlChange}
-                  />
-                </div>
-               
-                <button
-                  className="main-container__button main-container_button--transparent"
-                  onClick={fetchBranches}
-                >
-                  Fetch Branches
-                </button>
-
-                {flag ? (
-                  <>
-                    <Select
-                      className="branch_select"
-                      value={selectedBranch}
-                      styles={styles.select}
-                      onChange={(option) => setSelectedBranch(option)}
-                      options={branches}
-                      isSearchable={true}
-                      placeholder=" Branch..."
-                    />
-
-                    <div className="main-container__buttons">
-                      <div className="radio-buttons">
-                        <label
-                          className="radio-label1"
-                          style={{ width: '131px' }}
-                        >
-                          <input
-                            type="radio"
-                            value="one-commit"
-                            checked={selectedOption === 'one-commit'}
-                            onChange={handleRadioChange}
-                            style={{
-                              width: '25px',
-                              height: '100%',
-                              marginRight: '10px',
-                            }}
-                          />
-                          One-Commit
-                        </label>
-                        <label
-                          className="radio-label2"
-                          style={{ width: '140px' }}
-                        >
-                          <input
-                            type="radio"
-                            value="trend-analysis"
-                            checked={selectedOption === 'trend-analysis'}
-                            onChange={handleRadioChange}
-                            style={{
-                              width: '25px',
-                              height: '100%',
-                              marginRight: '10px',
-                            }}
-                          />
-                          Trend Analysis
-                        </label>
-                        <label
-                          className="radio-label3"
-                          style={{ width: '157px' }}
-                        >
-                          <input
-                            type="radio"
-                            value="hotspot-analysis"
-                            checked={selectedOption === 'hotspot-analysis'}
-                            onChange={handleRadioChange}
-                            style={{
-                              width: '25px',
-                              height: '100%',
-                              marginRight: '10px',
-                            }}
-                          />
-                          Hotspot Analysis
-                        </label>
-                      </div>
-                    </div>
-                    {flag1 ? (
-                      <>
-                        <div className="dropbox">
-                          <Select
-                            className="commit_select"
-                            value={selectedCommit}
-                            onChange={(option) => setSelectedCommit(option)}
-                            options={commits}
-                            isSearchable={true}
-                            getOptionLabel={(option) => option.label}
-                            getOptionValue={(option) => option.value}
-                            placeholder="Commit..."
-                          />
-                        </div>
-
-                        <div className="execute-button-container">
-        <button
-          className={`main-container__button ${isLoading ? 'loading' : ''}`}
-          onClick={executeAnalysis}
-          disabled={isLoading}>Execute</button>
-      </div>
-        </>
-     ) : (
-     <>
-        <div className="execute-button-container">
-        <button
-          className={`main-container__button ${isLoading ? 'loading' : ''}`}
-          onClick={executeAnalysis}
-          disabled={isLoading} >Execute </button>
-      </div>
-                      </>
-                    )}
-                  </>
-                ) : null}
-              </div>
-              <div
-                className="image_banner"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <img
-                  src={banner}
-                  alt="Banner"
-                  style={{ width: '100%', height: '400px' }}
+          <div className="main-container">
+            <div className="main-container__inner">
+              <h1 className="main-container__title">
+                Analyze Your
+                <span className="text-gradient"> CODE</span> Now !!
+              </h1>
+              <div className="search-bar">
+                <input
+                  className="repo-link"
+                  type="text"
+                  placeholder="Insert Your GitHub Repository Link"
+                  value={repoLink}
+                  onChange={handleRepoUrlChange}
                 />
               </div>
-            </div>          
-          </>
-           </div>
-       </>
+
+              <button
+                className="main-container__button main-container_button--transparent"
+                onClick={fetchBranches}
+              >
+                Fetch Branches
+              </button>
+
+              {flag ? (
+                <>
+                  <Select
+                    className="branch_select"
+                    value={selectedBranch}
+                    styles={styles.select}
+                    onChange={(option) => setSelectedBranch(option)}
+                    options={branches}
+                    isSearchable={true}
+                    placeholder=" Branch..."
+                  />
+
+                  <div className="main-container__buttons">
+                    <div className="radio-buttons">
+                      <label
+                        className="radio-label1"
+                        style={{ width: '131px' }}
+                      >
+                        <input
+                          type="radio"
+                          value="one-commit"
+                          checked={selectedOption === 'one-commit'}
+                          onChange={handleRadioChange}
+                          style={{
+                            width: '25px',
+                            height: '100%',
+                            marginRight: '10px',
+                          }}
+                        />
+                        One-Commit
+                      </label>
+                      <label
+                        className="radio-label2"
+                        style={{ width: '140px' }}
+                      >
+                        <input
+                          type="radio"
+                          value="trend-analysis"
+                          checked={selectedOption === 'trend-analysis'}
+                          onChange={handleRadioChange}
+                          style={{
+                            width: '25px',
+                            height: '100%',
+                            marginRight: '10px',
+                          }}
+                        />
+                        Trend Analysis
+                      </label>
+                      <label
+                        className="radio-label3"
+                        style={{ width: '157px' }}
+                      >
+                        <input
+                          type="radio"
+                          value="hotspot-analysis"
+                          checked={selectedOption === 'hotspot-analysis'}
+                          onChange={handleRadioChange}
+                          style={{
+                            width: '25px',
+                            height: '100%',
+                            marginRight: '10px',
+                          }}
+                        />
+                        Hotspot Analysis
+                      </label>
+                    </div>
+                  </div>
+                  {flag1 ? (
+                    <>
+                      <div className="dropbox">
+                        <Select
+                          className="commit_select"
+                          value={selectedCommit}
+                          onChange={(option) => setSelectedCommit(option)}
+                          options={commits}
+                          isSearchable={true}
+                          getOptionLabel={(option) => option.label}
+                          getOptionValue={(option) => option.value}
+                          placeholder="Commit..."
+                        />
+                      </div>
+
+                      <div className="execute-button-container">
+                        <button
+                          className={`main-container__button ${
+                            isLoading ? 'loading' : ''
+                          }`}
+                          onClick={executeAnalysis}
+                          disabled={isLoading}
+                        >
+                          Execute
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="execute-button-container">
+                        <button
+                          className={`main-container__button ${
+                            isLoading ? 'loading' : ''
+                          }`}
+                          onClick={executeAnalysis}
+                          disabled={isLoading}
+                        >
+                          Execute{' '}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : null}
+            </div>
+            <div
+              className="image_banner"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={banner}
+                alt="Banner"
+                style={{ width: '100%', height: '400px' }}
+              />
+            </div>
+          </div>
+        </>
+      </div>
+    </>
   )
 }
-export default Main; 
+export default Main
