@@ -87,7 +87,7 @@ class TrendAnalysisViewTests(APITestCase):
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         mock_analyze.assert_called_once_with(
-            self.path, ["commit1", "commit2"], "", ["user1", "user2"], ""
+            self.path, ["commit2", "commit1"], "", ["user2", "user1"], ""
         )
 
     @patch("code_quality_analyzer_analysis.views.analyze_commit_folders_in_folder")
@@ -106,7 +106,7 @@ class TrendAnalysisViewTests(APITestCase):
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         mock_analyze.assert_called_once_with(
-            self.path, ["commit1", "commit2"], "commit0", ["user1", "user2"], "user0"
+            self.path, ["commit2", "commit1"], "commit0", ["user2", "user1"], "user0"
         )
 
     def test_post_full_functionality(self):
@@ -116,10 +116,10 @@ class TrendAnalysisViewTests(APITestCase):
         data = {
             "reportPath": f"{ALL_COMMITS_ANALYSIS_PATH}",
             "commitsData": {
-                "commit2": "user2",
-                "commit3": "user3",
-                "commit4": "user4",
                 "commit5": "user5",
+                "commit4": "user4",
+                "commit3": "user3",
+                "commit2": "user2",
             },
             "previousCommit": {
                 "commit1": "user1"
