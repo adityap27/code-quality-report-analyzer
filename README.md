@@ -4,15 +4,14 @@ Deployed Version: http://csci5308vm3.research.cs.dal.ca/
 
 
 # Table of content:
-### 1. [Dependencies](#item-one)
-### 2. [Build and Deployment Instructions](#item-two)
-### 3. [Usage Scenario](#item-three)
-### 4. [Refactored Smells](#item-four)
-### 5. [Test Coverage](#item-five)
-### 6. [Pipeline](#item-six)
+### 1. [Dependencies](#dependencies)
+### 2. [Build and Deployment Instructions](#build-and-deployment-instructions)
+### 3. [Usage Scenario](#usage-scenario)
+### 4. [Refactored Smells](#refactored-smells)
+### 5. [Test Coverage](#test-coverage)
+### 6. [Pipeline](#pipeline)
 
-<!-- headings -->
-<a id="item-one"></a>
+
 # Dependencies
 
 ## Git
@@ -88,8 +87,7 @@ For code smell analysis:
 DesigniteJava Enterprise. Version 2.4.3.0 - https://www.designite-tools.com/
 
 
-<!-- headings -->
-<a id="item-two"></a>
+
 # Build and Deployment Instructions
 
 There are 3 parts of this system and all of them need to be built and deployed, before the system can work end-to-end. (React, Spring Boot and Django app)
@@ -204,28 +202,27 @@ The Django app can be accessed using: http://localhost:8000 now.
 > 
 > Django app: `settings.py` file ALLOWED_HOSTS = ["csci5308vm3.research.cs.dal.ca","localhost", (add your host)]
 
-<!-- headings -->
-<a id="item-three"></a>
 # Usage Scenario
 
-<!-- headings -->
-<a id="item-four"></a>
+
 # Refactored Smells
 
-<!-- headings -->
-<a id="item-five"></a>
+
 # Test Coverage
 
 ### Spring Boot - 95% Line Coverage.
+
 commit id - https://git.cs.dal.ca/courses/2023-fall/csci-5308/Group03/-/commit/f85b977b9fe5be1a37b64393cdb3efaaf18ff138
+
 ![img.png](readme-files/spring-boot-test-coverage.png)
 
 ### Django - 98% Line Coverage.
+
 commit id - https://git.cs.dal.ca/courses/2023-fall/csci-5308/Group03/-/commit/f447bc8a8f1f37a3e3ea605d98bcc3460ca69a65
+
 ![img.png](readme-files/django-test-coverage.png)
 
-<!-- headings -->
-<a id="item-six"></a>
+
 # Pipeline
 Build & code quality stage is added for Spring Boot, Django and React.
 
