@@ -99,7 +99,7 @@ function HotspotAnalysis() {
         if (response.status === 200) {
           setIsLoading(false)
           setHotspotAnalysisData(response.data)
-          console.log('Analysis Data after API call:', response.data)
+          setSelectedBranch(selectedBranch);
         }
       })
       .catch((error) => {
