@@ -79,12 +79,9 @@ function OneCommitDashboard() {
             setIsLoading(false)
             if (response.status === 200) {
               setAnalysisData(response.data)
-              navigate('/dashboard/oneCommit')
             }
           })
-          .catch((error) => {
-            setIsLoading(false)
-          })
+          .catch((error) => {})
       }
     }
     setSelectedBranch(Sbranch)

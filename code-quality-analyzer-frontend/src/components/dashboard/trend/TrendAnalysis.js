@@ -7,6 +7,7 @@ import Test from '../../trendAnalysis/Test'
 import Testability from '../../trendAnalysis/Testability'
 import CommonChart from '../../trendAnalysis/CommonChart'
 import { TrendAnalysisContext } from '../../../TrendAnalysisContext'
+import { OneCommitAnalysisContext } from '../../../OneCommitAnalysisContext'
 import axios from 'axios'
 import api from '../../../utils/api'
 import Select from 'react-select'
@@ -15,12 +16,16 @@ import Loader from '../../loader/Loader'
 const TrendAnalysis = (props) => {
   const { trendAnalysisData, setTrendAnalysisData } =
     useContext(TrendAnalysisContext)
+  const { analysisData } = useContext(OneCommitAnalysisContext)
   const [isLoading, setIsLoading] = useState(false)
   const [repoLink, setRepoLink] = useState(localStorage.getItem('repoLink'))
   const [branch, setBranch] = useState()
-  const { fetchBranches } = api()
+  const { fetchBranches, fetchCommits } = api()
   const Sbranch = JSON.parse(localStorage.getItem('trendBranch') || '{}')
   const [errorMessage, setErrorMessage] = useState('')
+  const commits = trendAnalysisData?.commit_changes
+    ? Object.keys(trendAnalysisData.commit_changes)
+    : []
 
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
@@ -56,14 +61,20 @@ const TrendAnalysis = (props) => {
           setIsLoading(false)
           if (response.status === 200) {
             setTrendAnalysisData(response.data)
+            if (!analysisData) {
+              fetchLatestCommit(currentBranchObject)
+            }
           }
         })
         .catch((error) => {
-          setIsLoading(false)
           console.error('Failed to fetch trend analysis data:', error)
         })
 
       setRepoLink(currentRepoLink)
+    } else {
+      if (!analysisData) {
+        fetchLatestCommit(currentBranchObject)
+      }
     }
     setSelectedBranch(Sbranch)
     fetchB()
@@ -73,11 +84,15 @@ const TrendAnalysis = (props) => {
     setBranch(B)
   }
 
-  const commits = trendAnalysisData?.commit_changes
-    ? Object.keys(trendAnalysisData.commit_changes)
-    : []
+  const fetchLatestCommit = async (branchSelected) => {
+    if (branchSelected) {
+      const commits = await fetchCommits(repoLink, branchSelected)
+      localStorage.setItem('oneCommitBranch', JSON.stringify(branchSelected))
+      localStorage.setItem('commit', JSON.stringify(commits[0]))
+    }
+  }
 
-  const [selectedBranch, setSelectedBranch] = useState('')
+  const [selectedBranch, setSelectedBranch] = useState(null)
   const [numberOfCommits, setNumberOfCommits] = useState(10)
   const [selectedUser, setSelectedUser] = useState('')
 
@@ -117,10 +132,12 @@ const TrendAnalysis = (props) => {
           setIsLoading(false)
           setTrendAnalysisData(response.data)
           localStorage.setItem('trendBranch', JSON.stringify(selectedBranch))
+          if (!analysisData) {
+            fetchLatestCommit(selectedBranch)
+          }
         }
       })
       .catch((error) => {
-        setIsLoading(false)
         setErrorMessage('Failed to load analysis. Try again later.')
       })
   }

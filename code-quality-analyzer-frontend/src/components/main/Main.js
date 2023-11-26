@@ -100,7 +100,6 @@ const Main = () => {
           }
         })
         .catch((error) => {
-          setIsLoading(false)
           setErrorMessage('Failed to load analysis. Try again later.')
         })
     } else if (selectedOption === 'trend-analysis') {
@@ -130,7 +129,6 @@ const Main = () => {
           }
         })
         .catch((error) => {
-          setIsLoading(false)
           setErrorMessage('Failed to load analysis. Try again later.')
         })
     } else if (selectedOption === 'hotspot-analysis') {
@@ -160,7 +158,6 @@ const Main = () => {
           }
         })
         .catch((error) => {
-          setIsLoading(false)
           setErrorMessage('Failed to load analysis. Try again later.')
         })
     }

@@ -106,7 +106,6 @@ function HotspotAnalysis() {
       })
       .catch((error) => {
         console.log(error)
-        setIsLoading(false)
       })
   }
 
