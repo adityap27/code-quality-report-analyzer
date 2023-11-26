@@ -40,6 +40,17 @@ function CommonChart(props) {
         props.numberOfCommits
       ) // Limit commits
       
+      const totalSmells = commits.map((commit) => {
+        if (
+          selectedChartData &&
+          selectedChartData[commit] &&
+          selectedChartData[commit].user === selectedUser
+        ) {
+          return selectedChartData[commit].total_smells;
+        }
+        return 0;
+      });
+
       const datasets = categories.map((category) => {
         const dataPoints = commits.map((commit) => {
           if (
@@ -59,6 +70,16 @@ function CommonChart(props) {
           backgroundColor: '#' + ((Math.random() * 0xffffff) << 0).toString(16),
         }
       })
+
+      datasets.push({
+        type: 'line',
+        label: 'Total Smells',
+        data: totalSmells,
+        fill: false,
+        backgroundColor: '#373030',
+        borderColor: 'rgb(0,0,0)',
+        tension: 0.1,
+      });
 
       setData({
         labels: commits,

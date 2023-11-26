@@ -22,12 +22,12 @@
   display: flex;
   align-items: center;
   max-width: 400px;
-  margin-left: 30px;
+  margin-left: 20px;
   justify-content: center;
 }
 
 .branch-dropdowns h4 {
-  margin: 0;
+  margin: auto 10px;
 }
 
 .user-dropdown {
@@ -42,8 +42,8 @@
 }
 
 .hotspot-heading h1 {
-  font-size: 35px;
-  margin: 0;
+  font-size: 30px;
+  margin: 10px;
 }
 
 .common-heading h2 {

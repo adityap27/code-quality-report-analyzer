@@ -98,7 +98,8 @@
 }
 .branch-dropdowns h4,
 .commits-dropdowns h4 {
-  margin-right: 10px; 
+  /* margin-right: 10px;  */
+  margin: auto 10px;
 }
 
 .branch-dropdowns select,

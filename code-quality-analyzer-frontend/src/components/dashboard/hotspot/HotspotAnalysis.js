@@ -20,7 +20,7 @@ import HotspotChart from '../../hotspot/HotspotChart'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 function HotspotAnalysis() {
-  const { hotspotAnalysisData, setHotspotAnalysisData} = useContext(
+  const { hotspotAnalysisData, setHotspotAnalysisData } = useContext(
     HotspotAnalysisContext
   )
   const [isLoading, setIsLoading] = useState(false)
@@ -30,10 +30,9 @@ function HotspotAnalysis() {
   const { fetchBranches } = api()
   const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
 
-useEffect(() => {
+  useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
     if (!hotspotAnalysisData || currentRepoLink !== repoLink) {
-
       const currentBranchString = localStorage.getItem('branch')
       const currentBranchObject = currentBranchString
         ? JSON.parse(currentBranchString)
@@ -48,7 +47,6 @@ useEffect(() => {
         branch: currentBranchValue,
         commitId: commitId,
       }
-      
 
       axios
         .post(
@@ -66,31 +64,27 @@ useEffect(() => {
             setHotspotAnalysisData(response.data)
           }
         })
-        .catch((error) => {
-
-        })
+        .catch((error) => {})
 
       setRepoLink(currentRepoLink)
     }
     setSelectedBranch(Sbranch)
     localStorage.setItem('branch', JSON.stringify(Sbranch))
     fetchB()
-
   }, [])
 
   const fetchB = async () => {
     var B = await fetchBranches(repoLink)
     setBranch(B)
-  };
+  }
 
   const handleExecuteQuery = () => {
     setIsLoading(true)
     const requestData = {
       gitRepoLink: repoLink,
       branch: selectedBranch.value,
-
     }
-    console.log(requestData);
+    console.log(requestData)
     axios
       .post(
         process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis',
@@ -104,7 +98,7 @@ useEffect(() => {
       .then((response) => {
         if (response.status === 200) {
           setIsLoading(false)
-          setHotspotAnalysisData(response.data);
+          setHotspotAnalysisData(response.data)
           console.log('Analysis Data after API call:', response.data)
         }
       })
@@ -113,50 +107,52 @@ useEffect(() => {
         setIsLoading(false)
       })
   }
- 
+
   return (
     <>
-    {isLoading && (
+      {isLoading && (
         <div className="loading-overlay">
-           <div className="loading-spinner"></div>
-            <div className="loading-content"><p>Updating Analysis</p>
+          <div className="loading-spinner"></div>
+          <div className="loading-content">
+            <p>Updating Analysis</p>
           </div>
-    </div>
+        </div>
       )}
-      <div>
-        <div className="hotspot">
-          <div className="hotspot-heading">
-            <h1>Hotspot Analysis</h1>
-          </div>
-          <div className="dropdown-dropdowns">
-            <div className="branch-dropdowns">
-            <h4>Branches:</h4>
-              <Select
-            value={selectedBranch}
-            onChange={(option) => {
-              setSelectedBranch(option);
-            }}
-            options={branch}
-            isSearchable={true}
-            placeholder="Branch..."
-          /> 
+      {!isLoading && hotspotAnalysisData && (
+        <div>
+          <div className="hotspot">
+            <div className="hotspot-heading">
+              <h1>Hotspot Analysis</h1>
+            </div>
+            <div className="dropdown-dropdowns">
+              <div className="branch-dropdowns">
+                <h4>Branches:</h4>
+                <Select
+                  value={selectedBranch}
+                  onChange={(option) => {
+                    setSelectedBranch(option)
+                  }}
+                  options={branch}
+                  isSearchable={true}
+                  placeholder="Branch..."
+                />
 
-          <button
-          className={`trend_button ${isLoading ? 'loading' : ''}`}
-          onClick={handleExecuteQuery}
-          disabled={isLoading}>Update Analysis</button>
-             
-    
+                <button
+                  className={`trend_button ${isLoading ? 'loading' : ''}`}
+                  onClick={handleExecuteQuery}
+                  disabled={isLoading}
+                >
+                  Update Analysis
+                </button>
+              </div>
+            </div>
+
+            <div className="charts">
+              <HotspotChart hotspotAnalysisData={hotspotAnalysisData} />
             </div>
           </div>
-          
-              <div className="charts">
-                <HotspotChart hotspotAnalysisData={hotspotAnalysisData} />
-              </div>
-
-        
         </div>
-      </div>
+      )}
     </>
   )
 }
