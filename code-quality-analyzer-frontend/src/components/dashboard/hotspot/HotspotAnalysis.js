@@ -33,6 +33,7 @@ function HotspotAnalysis() {
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
     if (!hotspotAnalysisData || currentRepoLink !== repoLink) {
+      setIsLoading(true)
       const currentBranchString = localStorage.getItem('hotspotBranch')
       const currentBranchObject = currentBranchString
         ? JSON.parse(currentBranchString)
@@ -111,46 +112,47 @@ function HotspotAnalysis() {
 
   return (
     <>
-      {isLoading && (
+      {!isLoading ? (
+        hotspotAnalysisData && (
+          <div>
+            <div className="hotspot">
+              <div className="hotspot-heading">
+                <h1>Hotspot Analysis</h1>
+              </div>
+              <div className="dropdown-dropdowns">
+                <div className="branch-dropdowns">
+                  <h4>Branches:</h4>
+                  <Select
+                    value={selectedBranch}
+                    onChange={(option) => {
+                      setSelectedBranch(option)
+                    }}
+                    options={branch}
+                    isSearchable={true}
+                    placeholder="Branch..."
+                  />
+
+                  <button
+                    className={`trend_button ${isLoading ? 'loading' : ''}`}
+                    onClick={handleExecuteQuery}
+                    disabled={isLoading}
+                  >
+                    Update Analysis
+                  </button>
+                </div>
+              </div>
+
+              <div className="charts">
+                <HotspotChart hotspotAnalysisData={hotspotAnalysisData} />
+              </div>
+            </div>
+          </div>
+        )
+      ) : (
         <div className="loading-overlay">
           <div className="loading-spinner"></div>
           <div className="loading-content">
             <p>Updating Analysis</p>
-          </div>
-        </div>
-      )}
-      {!isLoading && hotspotAnalysisData && (
-        <div>
-          <div className="hotspot">
-            <div className="hotspot-heading">
-              <h1>Hotspot Analysis</h1>
-            </div>
-            <div className="dropdown-dropdowns">
-              <div className="branch-dropdowns">
-                <h4>Branches:</h4>
-                <Select
-                  value={selectedBranch}
-                  onChange={(option) => {
-                    setSelectedBranch(option)
-                  }}
-                  options={branch}
-                  isSearchable={true}
-                  placeholder="Branch..."
-                />
-
-                <button
-                  className={`trend_button ${isLoading ? 'loading' : ''}`}
-                  onClick={handleExecuteQuery}
-                  disabled={isLoading}
-                >
-                  Update Analysis
-                </button>
-              </div>
-            </div>
-
-            <div className="charts">
-              <HotspotChart hotspotAnalysisData={hotspotAnalysisData} />
-            </div>
           </div>
         </div>
       )}
