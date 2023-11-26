@@ -13,7 +13,7 @@
   }
   
   h1 {
-    font-size: 24px;
+    font-size: 30px;
     text-align: center;
     margin-bottom: 20px;
     font-weight: bold;
@@ -118,4 +118,12 @@
   outline-color: hsl(var(--hue), 95%, 50%);
   margin-left: 10px
 
+}
+
+.branch-container h4 {
+  margin: auto 10px;
+}
+
+.commits-container h4 {
+  margin: auto 10px;
 }
