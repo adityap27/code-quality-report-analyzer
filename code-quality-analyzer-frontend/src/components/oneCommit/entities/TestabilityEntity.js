@@ -42,7 +42,7 @@ function TestabilityEntity(props) {
       return lastPart
     }) : null;
 
-    const backgroundColor = labels.map(() => getRandomColor())
+    const backgroundColor = labels?.map(() => getRandomColor())
 
     setChartData({
       labels,

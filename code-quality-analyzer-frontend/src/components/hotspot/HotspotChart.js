@@ -80,7 +80,7 @@ function HotspotChart(props) {
         ),
       })
     }
-    selectedDataRef.current = selectedData;
+    selectedDataRef.current = selectedData
     prepareData()
   }, [selectedData])
 
@@ -164,24 +164,27 @@ function HotspotChart(props) {
                 },
                 tooltip: {
                   callbacks: {
-
-                    label: function(context) {
-                      const labelIndex = context.dataIndex;
-                      const datasetLabel = context.dataset.label;
-                      const originalLabel = packagesRef.current[labelIndex];
-                      const splitLabel = originalLabel.split('||');
-                      const isClass = selectedDataRef.current === props.hotspotAnalysisData.top_classes_list;
-                      const classOrMethodLabel = isClass ? 'Class' : 'Method';
-                      const classNameOrMethodName = isClass ? splitLabel[2] : splitLabel[splitLabel.length - 1];
+                    label: function (context) {
+                      const labelIndex = context.dataIndex
+                      const datasetLabel = context.dataset.label
+                      const originalLabel = packagesRef.current[labelIndex]
+                      const splitLabel = originalLabel.split('||')
+                      const isClass =
+                        selectedDataRef.current ===
+                        props.hotspotAnalysisData.top_classes_list
+                      const classOrMethodLabel = isClass ? 'Class' : 'Method'
+                      const classNameOrMethodName = isClass
+                        ? splitLabel[2]
+                        : splitLabel[splitLabel.length - 1]
                       return [
                         `${datasetLabel}: ${context.parsed.y}`,
                         `Project: ${splitLabel[0]}`,
                         `Package: ${splitLabel[1]}`,
-                        `${classOrMethodLabel}: ${classNameOrMethodName}`
-                      ];
-                    }
-                  }
-                }
+                        `${classOrMethodLabel}: ${classNameOrMethodName}`,
+                      ]
+                    },
+                  },
+                },
               },
             }}
             height={window.innerHeight}
