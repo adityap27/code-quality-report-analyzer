@@ -92,7 +92,7 @@ class TrendAnalysisView(APIView):
             before_oldest_commit_user = list(previous_commit.values())[0]
 
         results = analyze_commit_folders_in_folder(
-            report_path, commits, before_oldest_commit, users, before_oldest_commit_user
+            report_path, commits[::-1], before_oldest_commit, users[::-1], before_oldest_commit_user
         )
         return Response(results, status=status.HTTP_200_OK)
 
