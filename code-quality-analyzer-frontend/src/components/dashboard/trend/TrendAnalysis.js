@@ -7,6 +7,7 @@ import Test from '../../trendAnalysis/Test'
 import Testability from '../../trendAnalysis/Testability'
 import CommonChart from '../../trendAnalysis/CommonChart'
 import { TrendAnalysisContext } from '../../../TrendAnalysisContext'
+import { OneCommitAnalysisContext } from '../../../OneCommitAnalysisContext'
 import axios from 'axios'
 import api from '../../../utils/api'
 import Select from 'react-select'
@@ -15,16 +16,20 @@ import Loader from '../../loader/Loader'
 const TrendAnalysis = (props) => {
   const { trendAnalysisData, setTrendAnalysisData } =
     useContext(TrendAnalysisContext)
+  const { analysisData } = useContext(OneCommitAnalysisContext)
   const [isLoading, setIsLoading] = useState(false)
   const [repoLink, setRepoLink] = useState(localStorage.getItem('repoLink'))
   const [branch, setBranch] = useState()
-  const { fetchBranches}= api()
-  const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
+  const { fetchBranches, fetchCommits } = api()
+  const Sbranch = JSON.parse(localStorage.getItem('trendBranch') || '{}')
   const [errorMessage, setErrorMessage] = useState('')
+  const commits = trendAnalysisData?.commit_changes
+    ? Object.keys(trendAnalysisData.commit_changes)
+    : []
 
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
-    const currentBranchString = localStorage.getItem('branch')
+    const currentBranchString = localStorage.getItem('trendBranch')
     const currentBranchObject = currentBranchString
       ? JSON.parse(currentBranchString)
       : null
@@ -56,30 +61,38 @@ const TrendAnalysis = (props) => {
           setIsLoading(false)
           if (response.status === 200) {
             setTrendAnalysisData(response.data)
+            if (!analysisData) {
+              fetchLatestCommit(currentBranchObject)
+            }
           }
         })
         .catch((error) => {
-          setIsLoading(false)
           console.error('Failed to fetch trend analysis data:', error)
         })
 
       setRepoLink(currentRepoLink)
+    } else {
+      if (!analysisData) {
+        fetchLatestCommit(currentBranchObject)
+      }
     }
     setSelectedBranch(Sbranch)
-    localStorage.setItem('branch', JSON.stringify(Sbranch))
     fetchB()
   }, [trendAnalysisData, setTrendAnalysisData, repoLink])
   const fetchB = async () => {
     var B = await fetchBranches(repoLink)
     setBranch(B)
-  };
-  
+  }
 
-  const commits = trendAnalysisData?.commit_changes
-    ? Object.keys(trendAnalysisData.commit_changes)
-    : []
+  const fetchLatestCommit = async (branchSelected) => {
+    if (branchSelected) {
+      const commits = await fetchCommits(repoLink, branchSelected)
+      localStorage.setItem('oneCommitBranch', JSON.stringify(branchSelected))
+      localStorage.setItem('commit', JSON.stringify(commits[0]))
+    }
+  }
 
-  const [selectedBranch, setSelectedBranch] = useState('')
+  const [selectedBranch, setSelectedBranch] = useState(null)
   const [numberOfCommits, setNumberOfCommits] = useState(10)
   const [selectedUser, setSelectedUser] = useState('')
 
@@ -102,40 +115,41 @@ const TrendAnalysis = (props) => {
       branch: selectedBranch.value,
       noOfCommits: numberOfCommits,
     }
-    console.log(requestData);
+    console.log(requestData)
     axios
-    .post(
-      process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis',
-      requestData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-    .then((response) => {
-      console.log(response.data);
-      if (response.status === 200) {
-        setIsLoading(false)
-        setTrendAnalysisData(response.data)
-        navigate('/dashboard/trend')
-      }
-
-    })
-    .catch((error) => {
-      setIsLoading(false)
-      setErrorMessage('Failed to load analysis. Try again later.')
-  
-    })
-} 
+      .post(
+        process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis',
+        requestData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        if (response.status === 200) {
+          setIsLoading(false)
+          setTrendAnalysisData(response.data)
+          localStorage.setItem('trendBranch', JSON.stringify(selectedBranch))
+          if (!analysisData) {
+            fetchLatestCommit(selectedBranch)
+          }
+        }
+      })
+      .catch((error) => {
+        setErrorMessage('Failed to load analysis. Try again later.')
+      })
+  }
   return (
     <>
-    {isLoading && (
+      {isLoading && (
         <div className="loading-overlay">
-           <div className="loading-spinner"></div>
-            <div className="loading-content"><p>Updating Analysis</p>
+          <div className="loading-spinner"></div>
+          <div className="loading-content">
+            <p>Updating Analysis</p>
           </div>
-    </div>
+        </div>
       )}
       {!isLoading ? (
         trendAnalysisData && (
@@ -147,26 +161,31 @@ const TrendAnalysis = (props) => {
               <div className="branch-container">
                 <h4>Branches:</h4>
                 <Select
-              value={selectedBranch}
-              onChange={(option) => {
-                setSelectedBranch(option)
-      
-              }}
-              options={branch}
-              isSearchable={true}
-              placeholder=" Branch..."
-            />
+                  value={selectedBranch}
+                  onChange={(option) => {
+                    setSelectedBranch(option)
+                  }}
+                  options={branch}
+                  isSearchable={true}
+                  placeholder=" Branch..."
+                />
 
-             
-              <button
-          className={`trend_button ${isLoading ? 'loading' : ''}`}
-          onClick={handleExecuteQuery}
-          disabled={isLoading}>Update Analysis</button>
-             
-      </div>
+                <button
+                  className={`trend_button ${isLoading ? 'loading' : ''}`}
+                  onClick={handleExecuteQuery}
+                  disabled={isLoading}
+                >
+                  Update Analysis
+                </button>
+              </div>
               <div className="commits-container">
                 <h4>Number of Commits:</h4>
-                <select name="" id="" onChange={handleCommitsChange} defaultValue={10}>
+                <select
+                  name=""
+                  id=""
+                  onChange={handleCommitsChange}
+                  defaultValue={10}
+                >
                   {[...Array(10)].map((_, index) => (
                     <option key={index} value={index + 1}>
                       {index + 1}

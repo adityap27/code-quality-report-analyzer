@@ -28,19 +28,21 @@ function HotspotAnalysis() {
   const [selectedBranch, setSelectedBranch] = useState(null)
   const [branch, setBranch] = useState()
   const { fetchBranches } = api()
-  const Sbranch = JSON.parse(localStorage.getItem('branch') || '{}')
+  const Sbranch = JSON.parse(localStorage.getItem('hotspotBranch') || '{}')
 
   useEffect(() => {
     const currentRepoLink = localStorage.getItem('repoLink')
     if (!hotspotAnalysisData || currentRepoLink !== repoLink) {
-      const currentBranchString = localStorage.getItem('branch')
+      const currentBranchString = localStorage.getItem('hotspotBranch')
       const currentBranchObject = currentBranchString
         ? JSON.parse(currentBranchString)
         : null
       const currentBranchValue = currentBranchObject
         ? currentBranchObject.value
         : ''
-      const commitId = localStorage.getItem('commitId')
+      const commitId = JSON.parse(
+        localStorage.getItem('commit') || '{"value": null}'
+      ).value
 
       const requestData = {
         gitRepoLink: currentRepoLink,
@@ -69,7 +71,6 @@ function HotspotAnalysis() {
       setRepoLink(currentRepoLink)
     }
     setSelectedBranch(Sbranch)
-    localStorage.setItem('branch', JSON.stringify(Sbranch))
     fetchB()
   }, [])
 
@@ -99,12 +100,12 @@ function HotspotAnalysis() {
         if (response.status === 200) {
           setIsLoading(false)
           setHotspotAnalysisData(response.data)
-          setSelectedBranch(selectedBranch);
+          setSelectedBranch(selectedBranch)
+          localStorage.setItem('hotspotBranch', JSON.stringify(selectedBranch))
         }
       })
       .catch((error) => {
         console.log(error)
-        setIsLoading(false)
       })
   }
 
