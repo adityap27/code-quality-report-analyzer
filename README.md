@@ -203,6 +203,106 @@ The Django app can be accessed using: http://localhost:8000 now.
 > Django app: `settings.py` file ALLOWED_HOSTS = ["csci5308vm3.research.cs.dal.ca","localhost", (add your host)]
 
 # Usage Scenario
+### Introduction
+The Code Quality Report Analyzer is a web-based application for assessing and visualizing types of smells in a git repository. The main features are as follows:
+1. **One commit analysis**: Analyze smells for user selected one commit and branch. Display analysis in form of pie charts and bar charts​
+
+2. **Trend analysis**: Compare code smell analysis of last few commits and display the trend of changes in form of line charts along with stacked bar charts.​
+
+3. **Hotspot analysis**: Analyze and show top problematic areas of repository code.​
+
+### Landing Page
+URL: http://csci5308vm3.research.cs.dal.ca/
+Once the user has landed on the website, user will be prompted to enter the Github repository link as shown below:
+
+![img.png](readme-files/homepage.png)
+
+One-Commit Selection:
+![img.png](readme-files/homepage-onecommit.png)
+
+Trend Analysis Selection:
+![img.png](readme-files/homepage-trend.png)
+
+Hotspot Analysis Selection:
+![img.png](readme-files/homepage-hotspot.png)
+
+After the user has entered the Github repository and clicked on "Fetch Branches" button, dropdown with list of branches and radio buttons will appear, where option for changing branches and selecting from three different options, i.e. **One-Commit**, **Trend Analysis** and **Hotspot Analysis** will be available as shown below:
+
+![img.png](readme-files/fetch-branches.png)
+
+Once selecting the desired branch, analysis then clicking on "Execute" button, it will redirect to the specified dashboard page. For example, if user selects One-Commit option, the user will be redirected to the OneCommit Dashboard page once the data is loaded.
+
+### One-Commit Analysis:
+
+Welcome to the One Commit Analysis Dashboard! This dashboard provides valuable insights into your project's latest commit in the form of "Pie" and "Bar" charts.
+
+There are several types of Smells being displayed in the dashboard like ```Architecture Smells```, ```Design Smells```, ```Implementation Smells```, ```Test Smells``` and ```Testability Smells```, along with their "entities".
+
+#### Dropdowns
+The One Commit Analysis Dashboard offers two dropdowns for refining your analysis:
+**Branch**: Select the branch you want to analyze from the available options.
+**Commits**: Choose the specific commit you are interested in.
+
+After selecting your desired branch and commit range, click the ```Update Analysis``` button to refresh the charts. This dynamic feature ensures that the Pie and Bar charts always reflect the most up-to-date information based on your selected parameters.
+
+![img.png](readme-files/one-commit-dashboard.png)
+
+### Trend Analysis:
+
+This dashboard provides insightful visualizations to help you understand the distribution of smells, the relationship with commits, and the overall health of your codebase.
+
+#### Features:
+
+##### Branch Dropdown
+**Branch**: Select the branch you want to analyze from the available options. This allows you to focus on a specific branch's trends and code smells.
+##### Stacked Bar Chart
+The main visualization in this dashboard is the stacked bar chart. Each bar represents an individual smell, and the height of the bars indicates the total number of smells. Smells are color-coded for easy identification.
+
+**Line Chart**
+Above each bar in the stacked bar chart, there is a connected line chart that shows the total number of smells over time. This provides an additional layer of insight into the historical progression of smells.
+
+**Additional Dropdowns**
+Number of Commits Dropdown - Choose the scope of your analysis using the "Number of Commits" dropdown
+
+**Full Repository**: Analyze the entire repository for the selected branch.
+**Commit Changes**: Focus the analysis on commits made within the specified range.
+**Smell Density**: Explore the density of smells relative to the number of commits.
+
+**User Specific Dropdown**
+Select a user from the dropdown to view trends specific to that user within the repository. This is particularly useful for understanding individual contributions to code smells.
+
+![img.png](readme-files/trend-analysis-dashboard.png)
+
+When scrolled down the page, there will be chart present for individual smells as shown below:
+
+![img.png](readme-files/trend-analysis-dashboard-individual.png)
+
+
+### Hotspot Analysis:
+
+Hotspot Analysis allows you to identify and analyze code smells within specific classes and methods, providing targeted insights for efficient code maintenance.
+
+#### Features:
+
+**Branch Dropdown**
+
+**Branch**: Select the branch you want to analyze from the available options. Focus your hotspot analysis on a specific branch to understand code quality variations.
+
+**Stacked Bar Chart**
+The main visualization in this dashboard is the stacked bar chart, which represents individual smells within your codebase. Each bar showcases a specific type of smell, and the total number of smells is displayed at the top of each bar. The connected line chart above the bars illustrates the historical progression of total smells.
+
+**Top Classes List Dropdown**
+Choose a specific option from the "Top Classes List" dropdown to dynamically update the chart with data related to the selected class. This allows you to pinpoint and analyze the smells within specific classes, helping you focus your efforts on critical areas.
+
+
+![img.png](readme-files/hotspot-analysis-dashboard.png)
+
+**Top Methods List Dropdown**
+Similar to the "Top Classes List" dropdown, the "Top Methods List" dropdown enables you to select a specific method for detailed analysis. This feature is particularly useful for understanding code smells at a granular level within your methods.
+
+![img.png](readme-files/hotspot-analysis-dashboard-method.png)
+
+
 
 
 # Refactored Smells
