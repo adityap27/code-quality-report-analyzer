@@ -217,6 +217,11 @@ Once the user has landed on the website, user will be prompted to enter the Gith
 
 ![img.png](readme-files/homepage.png)
 
+After the user has entered the Github repository and clicked on "Fetch Branches" button, dropdown with list of branches and radio buttons will appear, where option for changing branches and selecting from three different options, i.e. **One-Commit**, **Trend Analysis** and **Hotspot Analysis** will be available as shown below:
+
+![img.png](readme-files/fetch-branches.png)
+
+
 One-Commit Selection:
 ![img.png](readme-files/homepage-onecommit.png)
 
@@ -225,10 +230,6 @@ Trend Analysis Selection:
 
 Hotspot Analysis Selection:
 ![img.png](readme-files/homepage-hotspot.png)
-
-After the user has entered the Github repository and clicked on "Fetch Branches" button, dropdown with list of branches and radio buttons will appear, where option for changing branches and selecting from three different options, i.e. **One-Commit**, **Trend Analysis** and **Hotspot Analysis** will be available as shown below:
-
-![img.png](readme-files/fetch-branches.png)
 
 Once selecting the desired branch, analysis then clicking on "Execute" button, it will redirect to the specified dashboard page. For example, if user selects One-Commit option, the user will be redirected to the OneCommit Dashboard page once the data is loaded.
 
@@ -280,7 +281,7 @@ When scrolled down the page, there will be chart present for individual smells a
 
 ### Hotspot Analysis:
 
-Hotspot Analysis allows you to identify and analyze code smells within specific classes and methods, providing targeted insights for efficient code maintenance.
+Hotspot Analysis allows you to identify classes and methods with most smells in your project, which helps you prioritize what to refactor first.
 
 #### Features:
 
