@@ -12,55 +12,68 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function TestEntity(props) {
+function TestEntity({testEntityData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
       {
-        label: 'Data from JSON',
+        label: 'Loading Data',
         data: [],
       },
     ],
   })
 
+  function getRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const opacity = 0.5; // Set any value between 0 and 1
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+
   useEffect(() => {
-    const topEntities = props.testEntityData['Test Smell']['top_entities']
+    if (testEntityData && testEntityData['Test Smell']) {
+    const topEntities = testEntityData['Test Smell']?.['top_entities']
 
     const labels = Object.keys(topEntities).map((key) => {
       const parts = key.split('||')
       const lastPart = parts[parts.length - 1]
       return lastPart
-    })
+    });
 
-    const values = Object.values(topEntities)
+    const backgroundColor = labels.map(() => getRandomColor());
+
+    const values = Object.values(topEntities);
     setChartData({
       labels,
       datasets: [
         {
-          label: 'Entity Name',
+          label: 'Test Entity',
           data: values,
-          backgroundColor: [
-            'rgb(128, 255, 255)',
-            'rgb(255, 128, 255)',
-            'rgb(255, 255, 128)',
-            'rgb(192, 64, 0)',
-            'rgb(64, 192, 0)',
-            'rgb(64, 0, 192)',
-          ],
+          backgroundColor
         },
       ],
     })
-  }, [props.testEntityData])
+  }
+  }, [testEntityData])
 
   const doughnutOptions = {
     scales: {
       x: {
-        ticks: {
-          callback: function (v) {
-            if (v.length > 10) {
-              return v.toString().substring(0, 1) + '...'
-            }
-            return v
+        title: {
+          display: true,
+          text: 'Package',
+          font: {
+            size: 16,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Number of Entities',
+          font: {
+            size: 16,
           },
         },
       },

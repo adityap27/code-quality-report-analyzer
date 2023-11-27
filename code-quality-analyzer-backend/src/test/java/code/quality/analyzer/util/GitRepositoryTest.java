@@ -15,11 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GitRepositoryTest {
 
     private static final String localRepoBaseTestPath = "./test-cloned-repos";
-    private GitRepository g;
+    private GitRepository gitRepository;
 
     @BeforeEach
     void setUp() {
-        g = new GitRepository("https://github.com/adityap27/linear_regression.git", GitRepositoryTest.localRepoBaseTestPath);
+    	gitRepository = new GitRepository(Constants.REPO_URL, GitRepositoryTest.localRepoBaseTestPath);
     }
 
     @AfterEach
@@ -33,7 +33,7 @@ class GitRepositoryTest {
 
     @Test
     void testCloneRepoSuccess() {
-        g.cloneRepo();
+    	gitRepository.cloneRepo();
         File file = new File(GitRepositoryTest.localRepoBaseTestPath);
         assertTrue(file.exists() && file.isDirectory());
     }
@@ -44,8 +44,8 @@ class GitRepositoryTest {
         PrintStream outMain = System.out;
         System.setOut(new PrintStream(outTemp)); // Switch from Standard output stream(console) to our temporary one. This helps in checking output string, in current test case.
 
-        g.cloneRepo();
-        g.cloneRepo();
+        gitRepository.cloneRepo();
+        gitRepository.cloneRepo();
         File file = new File(GitRepositoryTest.localRepoBaseTestPath);
 
         String outputString = outTemp.toString();

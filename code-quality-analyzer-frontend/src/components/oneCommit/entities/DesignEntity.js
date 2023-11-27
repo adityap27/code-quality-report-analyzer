@@ -12,57 +12,74 @@ import {
 } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-function DesignEntity(props) {
+function DesignEntity({designEntityData}) {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
       {
-        label: 'Data from JSON',
+        label: 'Loading Data',
         data: [],
       },
     ],
   })
 
+  function getRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const opacity = 0.5; // Set any value between 0 and 1
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+
   useEffect(() => {
-    const topEntities = props.designEntityData['Design Smell']['top_entities']
-
-    const labels = Object.keys(topEntities).map((key) => {
-      const parts = key.split('||')
-      const lastPart = parts[parts.length - 1]
-      return lastPart
-    })
-
-    const values = Object.values(topEntities)
-
-    setChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: 'Entity Name',
-          data: values,
-          backgroundColor: [
-            'rgb(192, 128, 0)',
-            'rgb(192, 0, 128)',
-            'rgb(0, 192, 128)',
-            'rgb(64, 128, 0)',
-            'rgb(64, 0, 128)',
-            'rgb(0, 64, 128)',
-            'rgb(128, 64, 0)',
+    const topEntities = designEntityData?.['Design Smell']?.['top_entities'];
+  
+    // Check if topEntities is defined and not null
+    if (topEntities) {
+      const labels = Object.keys(topEntities).map((key) => {
+        const parts = key.split('||');
+        const lastPart = parts[parts.length - 1];
+        return lastPart;
+      });
+  
+      const values = Object.values(topEntities);
+      
+      // Ensure labels is an array before using map
+      if (Array.isArray(labels)) {
+        const backgroundColor = labels.map(() => getRandomColor());
+  
+        setChartData({
+          labels: labels,
+          datasets: [
+            {
+              label: 'Design Entity',
+              data: values,
+              backgroundColor,
+            },
           ],
-        },
-      ],
-    })
-  }, [props.designEntityData])
+        });
+      }
+    }
+  }, [designEntityData]);
+  
 
   const doughnutOptions = {
     scales: {
       x: {
-        ticks: {
-          callback: function (v) {
-            if (v.length > 10) {
-              return v.toString().substring(0, 10) + '...'
-            }
-            return v
+        title: {
+          display: true,
+          text: 'Package',
+          font: {
+            size: 16,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Number of Entities',
+          font: {
+            size: 16,
           },
         },
       },

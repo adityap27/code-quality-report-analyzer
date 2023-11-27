@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../../assets/images/logo.png'
 import './navbar.css'
@@ -13,7 +14,7 @@ class Navbar extends Component {
       <>
         <nav>
           <div className="mylogo">
-            <Link to={'/dashboard'}>
+            <Link to={'/'}>
               <img src={Logo} alt="" />
             </Link>
           </div>
@@ -23,21 +24,7 @@ class Navbar extends Component {
               id="navbar"
               className={this.state.clicked ? '#navbar active' : '#navbae'}
             >
-              <li>
-                <a className="active" href="index.html">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="index.html">Blog</a>
-              </li>
-              <li>
-                <a href="index.html">About</a>
-              </li>
-              <li>
-                <a href="index.html">Contact</a>
-              </li>
-            </ul>
+          </ul>
           </div>
         </nav>
       </>

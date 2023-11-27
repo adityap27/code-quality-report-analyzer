@@ -1,13 +1,31 @@
+"""
+This module contains test functions for functions present in smell_analysis/analysis.py
+"""
+# Disabling C0116 because there is no need for docstrings in the test function
+# pylint: disable=C0116
+
 import unittest
 from unittest.mock import patch
 import pandas as pd
 
 from code_quality_analyzer_analysis.smell_analysis.analysis import (
-    analyze_smells, analyze_smell_files, analyze_smell_files_in_folder, load_and_prepare_data, retrieve_smell_files
+    analyze_smells, analyze_smell_files, analyze_smell_files_in_folder,
+    load_and_prepare_data, retrieve_smell_files
 )
 
-
 class TestSmellAnalysis(unittest.TestCase):
+    """
+    This class contains test functions for functions present in smell_analysis/analysis.py
+    """
+    project_name = "Project Name"
+    package_name = "Package Name"
+    architecture_smell = "Architecture Smell"
+    sample_folder = "/sample_folder/"
+    design_smell_file_path = f"{sample_folder}DesignSmells.csv"
+    testability_smell_file_path = f"{sample_folder}TestabilitySmells.csv"
+    architecture_smell_file_path = f"{sample_folder}ArchitectureSmells.csv"
+    implementation_smell_file_path = f"{sample_folder}ImplementationSmells.csv"
+    test_smell_file_path = f"{sample_folder}TestSmells.csv"
 
     # Mocked return values for functions
     load_and_prepare_data_mock = pd.DataFrame({
@@ -22,16 +40,17 @@ class TestSmellAnalysis(unittest.TestCase):
     }
 
     pandas_dataframe_mock = pd.DataFrame({
-        "Project Name": ["maven", "maven-core", "maven-compact"],
-        "Package Name": ["org.apache.maven.api", "org.apache.maven.artifact", "org.apache.maven.toolchain.building"],
-        "Architecture Smell": ["Feature Concentration", "Dense Structure", "Unstable Dependency"]
+        project_name: ["maven", "maven-core", "maven-compact"],
+        package_name: ["org.apache.maven.api", "org.apache.maven.artifact",
+                       "org.apache.maven.toolchain.building"],
+        architecture_smell: ["Feature Concentration", "Dense Structure", "Unstable Dependency"]
     })
 
     retrieve_smell_files_mock = {
         "Architecture": None,
-        "Design": "/sample_folder/DesignSmells.csv",
+        "Design": design_smell_file_path,
         "Implementation": None,
-        "Testability": "/sample_folder/TestabilitySmells.csv",
+        "Testability": testability_smell_file_path,
         "Test": None
     }
 
@@ -44,7 +63,7 @@ class TestSmellAnalysis(unittest.TestCase):
     }
 
     analyze_smell_files_mock = {
-        "Architecture Smell": None,
+        architecture_smell: None,
         "Design Smell": {
             "smell_distribution": {"Smell1": 2, "Smell2": 1},
             "top_entities": {"EntityA": 2, "EntityB": 1},
@@ -56,20 +75,24 @@ class TestSmellAnalysis(unittest.TestCase):
             "top_entities": {"EntityC": 7, "EntityD": 10},
             "total_smells": 17,
         },
-        "Test Smell": None
+        "Test Smell": None,
+        "total_smells": 20
     }
 
     analyze_smell_files_empty_mock = {
-        "Architecture Smell": None,
+        architecture_smell: None,
         "Design Smell": None,
         "Implementation Smell": None,
         "Testability Smell": None,
-        "Test Smell": None
+        "Test Smell": None,
+        "total_smells": 0
     }
 
     @patch("pandas.read_csv", return_value=pandas_dataframe_mock)
     def test_load_and_prepare_data_file_exists(self, _):
-        result = load_and_prepare_data("/sample_folder/ArchitectureSmells.csv", ["Project Name", "Package Name"])
+        result = load_and_prepare_data(
+            self.architecture_smell_file_path, [self.project_name, self.package_name]
+        )
         expected = self.pandas_dataframe_mock.copy()
         expected["Concatenated_Column"] = pd.Series(
             ["maven||org.apache.maven.api", "maven-core||org.apache.maven.artifact",
@@ -79,7 +102,9 @@ class TestSmellAnalysis(unittest.TestCase):
 
     @patch("pandas.read_csv", side_effect=FileNotFoundError("File not found"))
     def test_load_and_prepare_data_file_does_not_exist(self, _):
-        result = load_and_prepare_data("/sample_folder/ArchitectureSmells.csv", ["Project Name", "Package Name"])
+        result = load_and_prepare_data(
+            self.architecture_smell_file_path, [self.project_name, self.package_name]
+        )
         self.assertEqual(result, "File not found")
 
     def test_analyze_smell_some(self):
@@ -113,13 +138,18 @@ class TestSmellAnalysis(unittest.TestCase):
            return_value=analyze_smells_mock)
     def test_analyze_smell_files_all(self, _, __):
         result = analyze_smell_files(
-            "/sample_folder/ArchitectureSmells.csv", "/sample_folder/DesignSmells.csv", "/sample_folder/ImplementationSmells.csv",
-            "/sample_folder/TestabilitySmells.csv", "/sample_folder/TestSmells.csv"
+            self.architecture_smell_file_path, self.design_smell_file_path,
+            self.implementation_smell_file_path, self.testability_smell_file_path,
+            self.test_smell_file_path
         )
-        for key in result:
-            self.assertEqual(result[key]["total_smells"], 3)
-            self.assertDictEqual(result[key]["smell_distribution"], {"Smell1": 2, "Smell2": 1})
-            self.assertDictEqual(result[key]["top_entities"], {"EntityA": 2, "EntityB": 1})
+        self.assertEqual(result["total_smells"], 15)
+        for key, value in result.items():
+            if key == "total_smells":
+                continue
+            # pylint: disable=E1136
+            self.assertEqual(value["total_smells"], 3)
+            self.assertDictEqual(value["smell_distribution"], {"Smell1": 2, "Smell2": 1})
+            self.assertDictEqual(value["top_entities"], {"EntityA": 2, "EntityB": 1})
 
     @patch("code_quality_analyzer_analysis.smell_analysis.analysis.load_and_prepare_data",
            return_value=load_and_prepare_data_mock)
@@ -127,14 +157,20 @@ class TestSmellAnalysis(unittest.TestCase):
            return_value=analyze_smells_mock)
     def test_analyze_smell_files_missing(self, _, __):
         result = analyze_smell_files(
-            "", "/sample_folder/DesignSmells.csv", "/sample_folder/ImplementationSmells.csv","", "/sample_folder/TestSmells.csv"
+            "", self.design_smell_file_path,
+            self.implementation_smell_file_path,"", self.test_smell_file_path
         )
-
+        self.assertEqual(result["total_smells"], 9)
         for key, value in result.items():
             if value:
-                self.assertEqual(result[key]["total_smells"], 3)
-                self.assertDictEqual(result[key]["smell_distribution"], {"Smell1": 2, "Smell2": 1})
-                self.assertDictEqual(result[key]["top_entities"], {"EntityA": 2, "EntityB": 1})
+                if key == "total_smells":
+                    continue
+                # pylint: disable=E1136
+                self.assertEqual(value["total_smells"], 3)
+                self.assertDictEqual(
+                    value["smell_distribution"], {"Smell1": 2, "Smell2": 1}
+                )
+                self.assertDictEqual(value["top_entities"], {"EntityA": 2, "EntityB": 1})
             else:
                 self.assertIsNone(value)
 
@@ -145,35 +181,40 @@ class TestSmellAnalysis(unittest.TestCase):
     def test_analyze_smell_files_none(self, _, __):
         result = analyze_smell_files("", "", "", "", "")
 
+        self.assertEqual(result["total_smells"], 0)
         for key, value in result.items():
+            if key == "total_smells":
+                continue
             self.assertIsNone(value)
 
-    @patch("os.listdir", return_value=["ArchitectureSmells.csv", "DesignSmells.csv", "ImplementationSmells.csv",
-                                       "TestabilitySmells.csv", "TestSmells.csv"])
+    @patch("os.listdir", return_value=[
+        "ArchitectureSmells.csv", "DesignSmells.csv", "ImplementationSmells.csv",
+        "TestabilitySmells.csv", "TestSmells.csv"])
     @patch("os.path.isfile", return_value=True)
     def test_retrieve_smell_files_all(self, _, __):
-        result = retrieve_smell_files("/sample_folder/")
-        self.assertEqual(result["Architecture"], "/sample_folder/ArchitectureSmells.csv")
-        self.assertEqual(result["Design"], "/sample_folder/DesignSmells.csv")
-        self.assertEqual(result["Implementation"], "/sample_folder/ImplementationSmells.csv")
-        self.assertEqual(result["Testability"], "/sample_folder/TestabilitySmells.csv")
-        self.assertEqual(result["Test"], "/sample_folder/TestSmells.csv")
+        result = retrieve_smell_files(self.sample_folder)
+        self.assertEqual(result["Architecture"], self.architecture_smell_file_path)
+        self.assertEqual(result["Design"], self.design_smell_file_path)
+        self.assertEqual(result["Implementation"], self.implementation_smell_file_path)
+        self.assertEqual(result["Testability"], self.testability_smell_file_path)
+        self.assertEqual(result["Test"], self.test_smell_file_path)
 
-    @patch("os.listdir", return_value=["ArchitectureSmells.csv", "DesignSmells.csv", "TestSmells.csv"])
+    @patch("os.listdir", return_value=[
+        "ArchitectureSmells.csv", "DesignSmells.csv", "TestSmells.csv"])
     @patch("os.path.isfile", return_value=True)
     def test_retrieve_smell_files_missing(self, _, __):
-        result = retrieve_smell_files("/sample_folder/")
-        self.assertEqual(result["Architecture"], "/sample_folder/ArchitectureSmells.csv")
-        self.assertEqual(result["Design"], "/sample_folder/DesignSmells.csv")
+        result = retrieve_smell_files(self.sample_folder)
+        self.assertEqual(result["Architecture"], self.architecture_smell_file_path)
+        self.assertEqual(result["Design"], self.design_smell_file_path)
         self.assertIsNone(result["Implementation"])
         self.assertIsNone(result["Testability"])
-        self.assertEqual(result["Test"], "/sample_folder/TestSmells.csv")
+        self.assertEqual(result["Test"], self.test_smell_file_path)
 
     @patch("os.listdir", return_value=[])
     @patch("os.path.isfile", return_value=True)
     def test_retrieve_smell_files_none(self, _, __):
         # body of test_retrieve_no_smell_files
-        result = retrieve_smell_files("/sample_folder/")
+        result = retrieve_smell_files(self.sample_folder)
         self.assertIsNone(result["Architecture"])
         self.assertIsNone(result["Design"])
         self.assertIsNone(result["Implementation"])
@@ -185,7 +226,7 @@ class TestSmellAnalysis(unittest.TestCase):
     @patch("code_quality_analyzer_analysis.smell_analysis.analysis.analyze_smell_files",
            return_value=analyze_smell_files_mock)
     def test_analyze_smell_files_in_folder_some(self, _, __):
-        result = analyze_smell_files_in_folder("/sample_folder/")
+        result = analyze_smell_files_in_folder(self.sample_folder)
         self.assertEqual(result, self.analyze_smell_files_mock)
 
     @patch("code_quality_analyzer_analysis.smell_analysis.analysis.retrieve_smell_files",
@@ -193,5 +234,5 @@ class TestSmellAnalysis(unittest.TestCase):
     @patch("code_quality_analyzer_analysis.smell_analysis.analysis.analyze_smell_files",
            return_value=analyze_smell_files_empty_mock)
     def test_analyze_smell_files_in_folder_empty(self, _, __):
-        result = analyze_smell_files_in_folder("/sample_folder/")
+        result = analyze_smell_files_in_folder(self.sample_folder)
         self.assertEqual(result, self.analyze_smell_files_empty_mock)

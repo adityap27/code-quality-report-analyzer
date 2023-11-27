@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Select from 'react-select'
@@ -11,9 +12,14 @@ import banner from '../../assets/images/banner.gif'
 import './main.css'
 import Navbar from '../navbar/Navbar'
 import { OneCommitAnalysisContext } from '../../OneCommitAnalysisContext'
+import { TrendAnalysisContext } from '../../TrendAnalysisContext'
+import { HotspotAnalysisContext } from '../../HotspotAnalysisContext'
+import Loader from '../loader/Loader'
 
 const Main = () => {
   const { setAnalysisData } = useContext(OneCommitAnalysisContext)
+  const { setTrendAnalysisData } = useContext(TrendAnalysisContext)
+  const { setHotspotAnalysisData } = useContext(HotspotAnalysisContext)
   const [repoLink, setRepoLink] = useState('')
   const [branches, setBranches] = useState([])
   const [selectedBranch, setSelectedBranch] = useState(null)
@@ -23,6 +29,139 @@ const Main = () => {
   const [flag, setFlag] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const [selectedOption, setSelectedOption] = useState(null)
+  const [maxCommits, setMaxCommits] = useState('')
+  const [flag1, setFlag1] = useState()
+
+  const handleRadioChange = (e) => {
+    const selected = e.target.value
+
+    setSelectedOption(selected)
+
+    if (selected === 'one-commit') {
+      setFlag1(true)
+    } else if (
+      selected === 'trend-analysis' ||
+      selected === 'hotspot-analysis'
+    ) {
+      setFlag1(false)
+    } else {
+      setFlag1(true)
+    }
+  }
+
+  let loadingText = ''
+  // Set dynamic loading text based on the selected option
+  if (selectedOption === 'one-commit') {
+    loadingText = 'Loading One-Commit Analysis...'
+  } else if (selectedOption === 'trend-analysis') {
+    loadingText = 'Loading Trend Analysis...'
+  } else if (selectedOption === 'hotspot-analysis') {
+    loadingText = 'Loading Hotspot Analysis...'
+  }
+
+  useEffect(() => {
+    if (selectedBranch) {
+      fetchCommits(selectedBranch)
+    }
+  }, [selectedBranch])
+
+  const executeAnalysis = () => {
+    const selcommitSHA = selectedCommit.value
+    localStorage.setItem('repoLink', repoLink)
+    localStorage.setItem('oneCommitBranch', JSON.stringify(selectedBranch))
+    localStorage.setItem('trendBranch', JSON.stringify(selectedBranch))
+    localStorage.setItem('hotspotBranch', JSON.stringify(selectedBranch))
+    localStorage.setItem('commit', JSON.stringify(selectedCommit))
+    localStorage.setItem('maxCommits', Math.min(maxCommits || 10, 10))
+    if (selectedOption === 'one-commit') {
+      setIsLoading(true)
+      const requestData = {
+        gitRepoLink: repoLink,
+        branch: selectedBranch.value,
+        commitId: selcommitSHA,
+      }
+      //to make the one-commit api request
+      axios
+        .post(
+          process.env.REACT_APP_BACKEND_URL + '/onecommit/getanalysis',
+          requestData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            setIsLoading(false)
+            setAnalysisData(response.data)
+            navigate('/dashboard/oneCommit')
+          }
+        })
+        .catch((error) => {
+          setErrorMessage('Failed to load analysis. Try again later.')
+        })
+    } else if (selectedOption === 'trend-analysis') {
+      setIsLoading(true)
+      const requestData = {
+        gitRepoLink: repoLink,
+        branch: selectedBranch.value,
+        noOfCommits: Math.min(maxCommits || 10, 10), // Use the smaller of maxCommits or 10
+      }
+
+      // to make the trend analysis API request
+      axios
+        .post(
+          process.env.REACT_APP_BACKEND_URL + '/trend/getanalysis',
+          requestData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            setIsLoading(false)
+            setTrendAnalysisData(response.data)
+            navigate('/dashboard/trend')
+          }
+        })
+        .catch((error) => {
+          setErrorMessage('Failed to load analysis. Try again later.')
+        })
+    } else if (selectedOption === 'hotspot-analysis') {
+      setIsLoading(true)
+      const requestData = {
+        gitRepoLink: repoLink,
+        branch: selectedBranch.value,
+        noOfCommits: Math.min(maxCommits || 10, 10), // Use the smaller of maxCommits or 10
+      }
+
+      // to make the trend analysis API request
+      axios
+        .post(
+          process.env.REACT_APP_BACKEND_URL + '/hotspot/getanalysis',
+          requestData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            setIsLoading(false)
+            setHotspotAnalysisData(response.data)
+            navigate('/dashboard/hotspot')
+          }
+        })
+        .catch((error) => {
+          setErrorMessage('Failed to load analysis. Try again later.')
+        })
+    }
+  }
 
   const styles = {
     backColor: 'grey',
@@ -37,7 +176,6 @@ const Main = () => {
     }
 
     const simplex = createNoise2D()
-
     class ColorPalette {
       constructor() {
         this.setColors()
@@ -202,13 +340,16 @@ const Main = () => {
   }
 
   const validateRepoUrl = () => {
+    // Remove .git if it's present at the end of the repoLink
+    const normalizedRepoLink = repoLink.replace(/\.git$/, '')
+
     if (
-      !repoLink.match(
-        /^(https:\/\/|http:\/\/)?(www\.)?github\.com\/[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+/
+      !normalizedRepoLink.match(
+        /^(https:\/\/|http:\/\/)?(www\.)?github\.com\/[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+(\.git)?$/
       )
     ) {
       setErrorMessage(
-        'Please enter a valid GitHub repository link (e.g., https://github.com/username/repo)'
+        'Please enter a valid GitHub repository link (e.g., https://github.com/username/repo or https://github.com/username/repo.git)'
       )
       return false
     }
@@ -219,7 +360,11 @@ const Main = () => {
 
   const fetchBranches = () => {
     if (validateRepoUrl()) {
-      const ownerAndRepo = repoLink.split('/').slice(-2).join('/')
+      const ownerAndRepo = repoLink
+        .replace(/\.git$/, '')
+        .split('/')
+        .slice(-2)
+        .join('/')
       const branchUrl = `${API_URL}/repos/${ownerAndRepo}/branches`
 
       axios
@@ -243,15 +388,29 @@ const Main = () => {
         .catch((error) => {
           console.error(error)
           setBranches([])
-          setErrorMessage(
-            'Failed to fetch branches. Please check your repository link.'
-          )
+          if (error.response) {
+            setErrorMessage(
+              `Failed to fetch branches. Status: ${error.response.status}`
+            )
+          } else if (error.request) {
+            setErrorMessage(
+              'Failed to fetch branches. No response received from the server.'
+            )
+          } else {
+            setErrorMessage(
+              'Failed to fetch branches. Please check your repository link.'
+            )
+          }
         })
     }
   }
 
   const fetchCommits = (branch) => {
-    const ownerAndRepo = repoLink.split('/').slice(-2).join('/')
+    const ownerAndRepo = repoLink
+      .replace(/\.git$/, '')
+      .split('/')
+      .slice(-2)
+      .join('/')
     const commitsUrl = `${API_URL}/repos/${ownerAndRepo}/commits?sha=${branch.value}`
 
     axios
@@ -262,132 +421,198 @@ const Main = () => {
           label: `#${commit.sha.substring(0, 7)} - ${commit.commit.message}`,
         }))
         setCommits(commitOptions)
-
         if (commitOptions.length > 0) {
           setSelectedCommit(commitOptions[0])
+          setMaxCommits(response.data.length)
         }
       })
       .catch((error) => {
         console.error(error)
-      })
-  }
-
-  const executeAnalysis = () => {
-    setIsLoading(true)
-    const selcommitSHA = selectedCommit.value
-    const requestData = {
-      gitRepoLink: repoLink,
-      branch: selectedBranch.value,
-      commitId: selcommitSHA,
-    }
-
-    axios
-      .post('http://localhost:8080/onecommit/getanalysis', requestData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((response) => {
-        setIsLoading(false)
-        if (response.status === 200) {
-          setAnalysisData(response.data)
-          navigate('/dashboard')
+        setCommits([])
+        if (error.response) {
+          setErrorMessage(
+            `Failed to fetch commits for ${branch.label}. Status: ${error.response.status}`
+          )
+        } else if (error.request) {
+          setErrorMessage(
+            `Failed to fetch commits for ${branch.label}. No response received from the server.`
+          )
+        } else {
+          setErrorMessage(
+            `Failed to fetch commits for ${branch.label}. Please check your repository link.`
+          )
         }
-      })
-      .catch((error) => {
-        setIsLoading(false)
       })
   }
 
   return (
     <>
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+          <div className="loading-content">
+            <p>{loadingText}</p>
+          </div>
+        </div>
+      )}
       <Navbar />
       <div className="main-con">
-        {isLoading ? (
-          <div className="loader">
-            Please Wait While We Load Analysis For You.....
-          </div>
-        ) : (
-          <>
-            <canvas className="orb-canvas"></canvas>
-            <div className="main-container">
-              <div className="main-container__inner">
-                <h1 className="main-container__title">
-                  Analyze Your
-                  <span className="text-gradient"> CODE</span> Now !!
-                </h1>
-                <div className="search-bar">
-                  <input
-                    type="text"
-                    placeholder="Insert Your GitHub Repository Link"
-                    value={repoLink}
-                    onChange={handleRepoUrlChange}
-                  />
-                </div>
-                {errorMessage && (
-                  <p className="error-message">{errorMessage}</p>
-                )}
-                <button
-                  className="main-container__button main-container_button--transparent"
-                  onClick={fetchBranches}
-                >
-                  Fetch Branches
-                </button>
-
-                {flag ? (
-                  <>
-                    <div className="dropdowns" style={{ display: 'flex' }}>
-                      <Select
-                        className="select"
-                        value={selectedBranch}
-                        styles={styles.select}
-                        onChange={(option) => setSelectedBranch(option)}
-                        options={branches}
-                        isSearchable={true}
-                        placeholder=" Branch..."
-                      />
-                      <Select
-                        className="select"
-                        value={selectedCommit}
-                        onChange={(option) => setSelectedCommit(option)}
-                        options={commits}
-                        isSearchable={true}
-                        getOptionLabel={(option) => option.label}
-                        getOptionValue={(option) => option.value}
-                        placeholder="Commit..."
-                      />
-                    </div>
-                    <div className="main-container__buttons">
-                      <button
-                        className="main-container__button"
-                        onClick={executeAnalysis}
-                      >
-                        Execute
-                      </button>
-                    </div>
-                  </>
-                ) : null}
-              </div>
-              <div
-                className="image_banner"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <img
-                  src={banner}
-                  alt="Banner"
-                  style={{ width: '100%', height: '400px' }}
+        ()
+        <>
+          <canvas className="orb-canvas"></canvas>
+          <div className="main-container">
+            <div className="main-container__inner">
+              <h1 className="main-container__title">
+                Analyze Your
+                <span className="text-gradient"> CODE</span> Now !!
+              </h1>
+              <div className="search-bar">
+                <input
+                  className="repo-link"
+                  type="text"
+                  placeholder="Insert Your GitHub Repository Link"
+                  value={repoLink}
+                  onChange={handleRepoUrlChange}
                 />
               </div>
+
+              <button
+                className="main-container__button main-container_button--transparent"
+                onClick={fetchBranches}
+              >
+                Fetch Branches
+              </button>
+
+              {flag ? (
+                <>
+                  <Select
+                    className="branch_select"
+                    value={selectedBranch}
+                    styles={styles.select}
+                    onChange={(option) => setSelectedBranch(option)}
+                    options={branches}
+                    isSearchable={true}
+                    placeholder=" Branch..."
+                  />
+
+                  <div className="main-container__buttons">
+                    <div className="radio-buttons">
+                      <label
+                        className="radio-label1"
+                        style={{ width: '131px' }}
+                      >
+                        <input
+                          type="radio"
+                          value="one-commit"
+                          checked={selectedOption === 'one-commit'}
+                          onChange={handleRadioChange}
+                          style={{
+                            width: '25px',
+                            height: '100%',
+                            marginRight: '10px',
+                          }}
+                        />
+                        One-Commit
+                      </label>
+                      <label
+                        className="radio-label2"
+                        style={{ width: '140px' }}
+                      >
+                        <input
+                          type="radio"
+                          value="trend-analysis"
+                          checked={selectedOption === 'trend-analysis'}
+                          onChange={handleRadioChange}
+                          style={{
+                            width: '25px',
+                            height: '100%',
+                            marginRight: '10px',
+                          }}
+                        />
+                        Trend Analysis
+                      </label>
+                      <label
+                        className="radio-label3"
+                        style={{ width: '157px' }}
+                      >
+                        <input
+                          type="radio"
+                          value="hotspot-analysis"
+                          checked={selectedOption === 'hotspot-analysis'}
+                          onChange={handleRadioChange}
+                          style={{
+                            width: '25px',
+                            height: '100%',
+                            marginRight: '10px',
+                          }}
+                        />
+                        Hotspot Analysis
+                      </label>
+                    </div>
+                  </div>
+                  {flag1 ? (
+                    <>
+                      <div className="dropbox">
+                        <Select
+                          className="commit_select"
+                          value={selectedCommit}
+                          onChange={(option) => setSelectedCommit(option)}
+                          options={commits}
+                          isSearchable={true}
+                          getOptionLabel={(option) => option.label}
+                          getOptionValue={(option) => option.value}
+                          placeholder="Commit..."
+                        />
+                      </div>
+
+                      <div className="execute-button-container">
+                        <button
+                          className={`main-container__button ${
+                            isLoading ? 'loading' : ''
+                          }`}
+                          onClick={executeAnalysis}
+                          disabled={isLoading}
+                        >
+                          Execute
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="execute-button-container">
+                        <button
+                          className={`main-container__button ${
+                            isLoading ? 'loading' : ''
+                          }`}
+                          onClick={executeAnalysis}
+                          disabled={isLoading}
+                        >
+                          Execute{' '}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : null}
             </div>
-          </>
-        )}
+            <div
+              className="image_banner"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={banner}
+                alt="Banner"
+                style={{ width: '100%', height: '400px' }}
+              />
+            </div>
+          </div>
+        </>
       </div>
     </>
   )
 }
-
 export default Main
