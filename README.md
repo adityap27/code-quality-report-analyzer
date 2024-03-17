@@ -7,6 +7,14 @@ Deployed Version: http://csci5308vm3.research.cs.dal.ca/ (Requires Dal VPN)
 A Web Application developed using React, Spring Boot and Django for assessing and visualizing types of smells in a git repository. 
 Features: One Commit Analysis, Trend Analysis and Hotspot Analysis. This was an academic project created during course CSCI-5308 Advanced Topics in Software Development at Dalhousie University in the Fall 2023 term of my Master of Applied Computer Science (MACS) Program.
 
+# Techonology Overview:
+
+- **Frontend**: `React`
+- **Backends**: `Spring Boot and Django`
+- **CI/CD**: `GitLab CI/CD`
+- **Containerization**: `Docker`
+- **Deployment Platform**: `Dalhousie Virtual Machine (On-premises)`
+
 # Table of contents:
 ### 1. [Dependencies](#dependencies)
 ### 2. [Build and Deployment Instructions](#build-and-deployment-instructions)
